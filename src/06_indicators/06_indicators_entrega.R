@@ -5,13 +5,14 @@
 #   <NOMBRE APELLIDO (ROL)> - <correo>                                         #
 #                                                                              #
 # FECHA DE CREACION: <dd/mm/aaaa>                                              #
-# NOMBRE: 06_wrangle_indicadores                                               #
-# DETALLE: crea las variables derivadas, indicadores y scores sobre la base    #
-#   integrada. Deja la base final analítica: la que leen el análisis y los     #
-#   productos. EJEMPLO: renombrar o borrar según las fuentes del proyecto.     #
+# NOMBRE: 06_indicators_entrega                                                #
+# DETALLE: arma la versión de entrega de la base final: solo registros         #
+#   válidos, sin datos personales ni columnas de trabajo, en el orden del      #
+#   instrumento. Verifica con stop() que no quede ningún dato personal.        #
+#   EJEMPLO: renombrar o borrar según las fuentes del proyecto.                #
 #                                                                              #
-# CORRE DESPUES DE: 05_integrate (o la última etapa que exista)                #
-# LEE: data/05_integrate/<proyecto>_integrate.RData                            #
-# ESCRIBE: data/06_final/<proyecto>_final.RData                                #
+# CORRE DESPUES DE: 06_indicators_variables                                    #
+# LEE: data/06_final/<proyecto>_final.RData                                    #
+# ESCRIBE: data/06_final/<proyecto>_entrega.RData                              #
 #-----------------------------------------------------------------------------.#
 

@@ -43,8 +43,8 @@ source('src/04_enrich/04_enrich_registro.R')
 source('src/05_integrate/05_integrate_1_apilar.R')
 source('src/05_integrate/05_integrate_2_entidades.R')
 
-source('src/06_wrangle/06_wrangle_indicadores.R')
-source('src/06_wrangle/06_wrangle_entrega.R')
+source('src/06_indicators/06_indicators_variables.R')
+source('src/06_indicators/06_indicators_entrega.R')
 
 # analizar y producir
 source('src/07_analysis/07_analysis_descriptivos.R')

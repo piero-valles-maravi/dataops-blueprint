@@ -9,7 +9,7 @@
 # DETALLE: respalda en Google Drive cada carpeta de data/, con la fecha en el  #
 #   nombre del archivo. No modifica nada.                                      #
 #                                                                              #
-# CORRE DESPUES DE: 06_wrangle                                                 #
+# CORRE DESPUES DE: 06_indicators                                              #
 # LEE: data/01_raw a data/06_final                                             #
 # ESCRIBE: una carpeta de Drive por etapa                                      #
 #-----------------------------------------------------------------------------.#

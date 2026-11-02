@@ -11,7 +11,7 @@
 #   estimaciones y figuras. Etapa opcional. EJEMPLO: renombrar o borrar según  #
 #   las fuentes del proyecto.                                                  #
 #                                                                              #
-# CORRE DESPUES DE: 06_wrangle                                                 #
+# CORRE DESPUES DE: 06_indicators                                              #
 # LEE: data/06_final/                                                          #
 # ESCRIBE: outputs/07_analysis/modelo/ (tablas/ y figuras/)                    #
 #-----------------------------------------------------------------------------.#

@@ -10,7 +10,7 @@
 #   .dta, con su diccionario de variables. No modifica los datos. EJEMPLO:     #
 #   renombrar o borrar según las fuentes del proyecto.                         #
 #                                                                              #
-# CORRE DESPUES DE: 06_wrangle_entrega                                         #
+# CORRE DESPUES DE: 06_indicators_entrega                                      #
 # LEE: data/06_final/<proyecto>_entrega.RData y sources/01_instrumento/        #
 # ESCRIBE: outputs/08_products/entrega/entrega_<aaaa-mm-dd>/                   #
 #-----------------------------------------------------------------------------.#

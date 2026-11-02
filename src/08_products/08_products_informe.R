@@ -11,7 +11,7 @@
 #   calcula modelos. EJEMPLO: renombrar o borrar según las fuentes del         #
 #   proyecto.                                                                  #
 #                                                                              #
-# CORRE DESPUES DE: 07_analysis (o 06_wrangle)                                 #
+# CORRE DESPUES DE: 07_analysis (o 06_indicators)                              #
 # LEE: data/06_final/ y outputs/07_analysis/                                   #
 # ESCRIBE: outputs/08_products/informe/informe_<aaaa-mm-dd>.docx               #
 #-----------------------------------------------------------------------------.#

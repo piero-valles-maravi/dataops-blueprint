@@ -11,7 +11,7 @@
 #   quedan solo en pantalla. Etapa opcional. EJEMPLO: renombrar o borrar según #
 #   las fuentes del proyecto.                                                  #
 #                                                                              #
-# CORRE DESPUES DE: 06_wrangle                                                 #
+# CORRE DESPUES DE: 06_indicators                                              #
 # LEE: data/06_final/                                                          #
 # ESCRIBE: outputs/07_analysis/descriptivos/ (tablas/ y figuras/)              #
 #-----------------------------------------------------------------------------.#

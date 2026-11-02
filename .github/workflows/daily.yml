@@ -1,5 +1,5 @@
 # Flujo completo + respaldo: una vez al día.
-# 01_import → … → 06_wrangle → 08_products_* → 09_publish. 07_analysis no corre
+# 01_import → … → 06_indicators → 08_products_* → 09_publish. 07_analysis no corre
 # acá: se corre a mano al cierre. 08_monitoring tampoco: es del flujo de
 # monitoreo (hourly.yml).
 #
@@ -82,11 +82,11 @@ jobs:
       - name: 05_integrate_2_entidades
         run: Rscript src/05_integrate/05_integrate_2_entidades.R
 
-      - name: 06_wrangle_indicadores
-        run: Rscript src/06_wrangle/06_wrangle_indicadores.R
+      - name: 06_indicators_variables
+        run: Rscript src/06_indicators/06_indicators_variables.R
 
-      - name: 06_wrangle_entrega
-        run: Rscript src/06_wrangle/06_wrangle_entrega.R
+      - name: 06_indicators_entrega
+        run: Rscript src/06_indicators/06_indicators_entrega.R
 
       - name: 08_products_informe
         run: Rscript src/08_products/08_products_informe.R

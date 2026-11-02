@@ -77,7 +77,7 @@ flowchart LR
     AUD --> CLN["03_clean"]
     CLN --> ENR["04_enrich"]
     ENR --> INT["05_integrate"]
-    INT --> WRG["06_wrangle<br/>▼<br/>data/06_final"]
+    INT --> WRG["06_indicators<br/>▼<br/>data/06_final"]
     WRG --> ANA["07_analysis"]
     WRG --> PRD["08_products"]
     ANA --> PRD
@@ -107,7 +107,7 @@ Cada etapa responde **una sola pregunta**. Si una tarea no responde la pregunta 
 | `03` | `clean` | ¿Cómo queda usable, una fuente a la vez? | `data/02_audit/` | `data/03_clean/` | No |
 | `04` | `enrich` | ¿Qué le agregamos desde afuera? | `data/03_clean/` | `data/04_enrich/` | Sí |
 | `05` | `integrate` | ¿Cómo se unen fuentes y rondas? | `data/04_enrich/` | `data/05_integrate/` | Sí |
-| `06` | `wrangle` | ¿Qué variables e indicadores necesitamos? | la última etapa | `data/06_final/` | No |
+| `06` | `indicators` | ¿Qué variables e indicadores necesitamos? | la última etapa | `data/06_final/` | No |
 | `07` | `analysis` | ¿Qué resultados obtenemos? | `data/06_final/` | `outputs/07_analysis/` | Sí |
 | `08` | `products` | ¿Qué mira o recibe una persona? | `data/06_final/`, `outputs/07_analysis/` | `outputs/08_products/` | Sí |
 | `09` | `publish` | ¿Dónde tiene que estar? | `outputs/`, `data/` | Sheets, Drive, Pages | Sí |
@@ -119,10 +119,12 @@ Lo que hace cada una, y sobre todo lo que **no** hace:
 - **`03_clean`** corrige, normaliza y etiqueta **una fuente a la vez**. **No** carga ninguna otra fuente.
 - **`04_enrich`** agrega información que la fuente no trae: IA, geocodificación, APIs externas. **No** vuelve a procesar lo que no cambió.
 - **`05_integrate`** une fuentes y rondas: apila, cruza, deduplica, resuelve quién es quién. **No** crea indicadores.
-- **`06_wrangle`** crea variables, indicadores y scores, y deja la base final en dos versiones: la analítica y la de entrega sin datos personales. **No** limpia.
+- **`06_indicators`** crea variables derivadas, indicadores y scores sobre la base integrada, y deja la base final en dos versiones: la analítica y la de entrega sin datos personales. **No** limpia.
 - **`07_analysis`** calcula resultados: modelos, índices, cruces. Guarda tablas y figuras; **nunca** quedan solo en pantalla.
 - **`08_products`** arma lo que mira una persona: tablas del dashboard, informes, diccionario, base de entrega.
 - **`09_publish`** lleva cada cosa a su destino. **No** calcula nada.
+
+**`04_enrich` frente a `06_indicators`:** las dos agregan columnas, pero `04` trae información **de afuera** (IA, APIs, geocodificación), una fuente a la vez y antes de integrar; `06` calcula con lo que **ya está adentro**, después de integrar, cuando ya están todas las fuentes y rondas juntas. Las recodificaciones simples de una sola fuente (tramos de edad, grupos de NPS) se quedan en `03_clean`.
 
 **Los números no se corren.** Si un proyecto no tiene enriquecimiento, no existe `04_enrich`, y `05_integrate` sigue siendo `05`. Así, en todos los proyectos `03` es limpieza y `06` es la base final.
 
@@ -206,9 +208,9 @@ La regla es **qué es y quién lo lee**:
 │   ├── 05_integrate/                      pasos numerados con subíndice
 │   │   ├── 05_integrate_1_apilar.R        apila fuentes y rondas
 │   │   └── 05_integrate_2_entidades.R     resuelve quién es quién
-│   ├── 06_wrangle/                        un script por tema o versión
-│   │   ├── 06_wrangle_indicadores.R       variables derivadas, indicadores, scores
-│   │   └── 06_wrangle_entrega.R           la versión sin datos personales
+│   ├── 06_indicators/                     un script por tema o versión
+│   │   ├── 06_indicators_variables.R      variables derivadas, indicadores, scores
+│   │   └── 06_indicators_entrega.R        la versión sin datos personales
 │   ├── 07_analysis/                       un script por análisis
 │   │   ├── 07_analysis_descriptivos.R
 │   │   └── 07_analysis_modelo.R
@@ -356,7 +358,7 @@ src/08_products/08_products_entrega.R       ─►  outputs/08_products/entrega/
 | `03_clean` | etiquetas, códigos | etiquetas, códigos | correcciones | una por fuente | `processing` | `clean_<fuente>` |
 | `04_enrich` | — | — | — | — | CPI, población | `enrichAI_<fuente>` |
 | `05_integrate` | encuestas + semillas + casos | — | — | base maestra | panel trimestral | apilar fuentes |
-| `06_wrangle` | base codificada | NPS, tramos | corte | tablas de fases | insumos del índice | score |
+| `06_indicators` | base codificada | NPS, tramos | corte | tablas de fases | insumos del índice | score |
 | `07_analysis` | conjoint | Van Westendorp | — | diseño muestral | índice | — |
 | `08_products` | monitoreo, diccionario, validación | monitoreo, entrega | monitoreo, entrega | Looker, informes | dashboard | — |
 | `09_publish` | Sheets, Drive, SurveyCTO | Sheets, Drive | Sheets, Drive | Drive, SFTP | Pages | Sheets |
