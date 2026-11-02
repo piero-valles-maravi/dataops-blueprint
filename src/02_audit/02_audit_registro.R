@@ -5,14 +5,13 @@
 #   <NOMBRE APELLIDO (ROL)> - <correo>                                         #
 #                                                                              #
 # FECHA DE CREACION: <dd/mm/aaaa>                                              #
-# NOMBRE: 04_enrich                                                            #
-# DETALLE: agrega a UNA fuente información que no trae: clasificación con IA,  #
-#   geocodificación, datos de APIs externas. Es idempotente: no vuelve a       #
-#   procesar (ni a pagar) lo que no cambió. Etapa opcional. Con varias         #
-#   fuentes: 04_enrich_<fuente>.R                                              #
+# NOMBRE: 02_audit_registro                                                    #
+# DETALLE: marca el registro con las dimensiones que le aplican (completitud,  #
+#   validez, consistencia, duplicados, atípicos). Acá NO se corrige ni se      #
+#   borra nada. EJEMPLO: renombrar o borrar según las fuentes del proyecto.    #
 #                                                                              #
-# CORRE DESPUES DE: 03_clean                                                   #
-# LEE: data/03_clean/<ronda>/                                                  #
-# ESCRIBE: data/04_enrich/<ronda>/<proyecto>_<fuente>_enrich.RData             #
+# CORRE DESPUES DE: 01_import_registro                                         #
+# LEE: data/01_raw/<ronda>/                                                    #
+# ESCRIBE: data/02_audit/<ronda>/<proyecto>_registro_audit.RData               #
 #-----------------------------------------------------------------------------.#
 

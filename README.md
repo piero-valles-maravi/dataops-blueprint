@@ -47,6 +47,29 @@ Este blueprint es para **proyectos con datos tabulares**. Un proyecto cualitativ
 
 ## 2. El flujo de los datos
 
+Hay **dos flujos**, que comparten las tres primeras etapas y corren con workflows distintos:
+
+| Flujo | Para qué | Etapas | Workflow | Cuándo |
+|---|---|---|---|---|
+| **Monitoreo** | seguir el campo mientras ocurre: avance, cuotas, alertas, encuestadores | `01` → `02` → `03` → `08_monitoring` → `09_publish_sheets` | `hourly.yml` | cada hora, solo mientras dura el levantamiento |
+| **Completo** | la base final, el análisis y las entregas | `01` → `02` → … → `06` → `07` → `08` → `09` | `daily.yml` | una vez al día, o a mano al cierre |
+
+### 2.1 Flujo de monitoreo
+
+```mermaid
+flowchart LR
+    SRC[("Fuente<br/>SurveyCTO,<br/>Kobo, Sheet")] --> IMP["01_import"]
+    IMP --> AUD["02_audit"]
+    AUD --> CLN["03_clean<br/>▼<br/>data/03_clean"]
+    CLN --> MON["08_monitoring<br/>▼<br/>outputs/08_products/monitoreo"]
+    MON --> PUB["09_publish_sheets"]
+    PUB --> LOOK[("Sheet ·<br/>Looker Studio")]
+```
+
+Es corto a propósito: corre cada hora y tiene que terminar rápido. Lee la base **limpia pero sin filtrar**: están todos los intentos, con sus alertas y su clasificación, porque el monitoreo mide el proceso de campo, incluidas las encuestas inválidas. Las etapas `04` a `07` no participan.
+
+### 2.2 Flujo completo
+
 ```mermaid
 flowchart LR
     SRC[("Fuente<br/>API, Sheet,<br/>base, web")] --> IMP["01_import"]
@@ -58,9 +81,8 @@ flowchart LR
     WRG --> ANA["07_analysis"]
     WRG --> PRD["08_products"]
     ANA --> PRD
-    AUD -. monitoreo .-> PRD
     PRD --> PUB["09_publish"]
-    PUB --> DEST[("Sheets · Looker<br/>Drive · Pages")]
+    PUB --> DEST[("Sheets · Drive<br/>Pages · cliente")]
 ```
 
 Se lee en tres bloques:
@@ -119,7 +141,7 @@ La regla es **qué es y quién lo lee**:
 
 **En `data/` solo van bases de datos.** Ninguna tabla de resultados, gráfico ni informe.
 
-`data/06_final/` es la **frontera**: de ahí para atrás todo es preparación; de ahí para adelante, todo usa la base final. La única excepción es el monitoreo de campo (`08_monitoring_*`), que lee de `data/02_audit/` porque mide el proceso, incluidas las encuestas inválidas.
+`data/06_final/` es la **frontera**: de ahí para atrás todo es preparación; de ahí para adelante, todo usa la base final. La única excepción es el flujo de monitoreo (`08_monitoring_*`), que lee de `data/03_clean/` porque mide el proceso de campo mientras ocurre (sección 2.1).
 
 ---
 
@@ -146,8 +168,8 @@ La regla es **qué es y quién lo lee**:
 ├── .github/
 │   ├── images/                            banner y diagramas de ESTE proyecto
 │   └── workflows/
-│       ├── hourly.yml                     monitoreo durante el campo
-│       ├── daily.yml                      corrida completa + respaldo
+│       ├── hourly.yml                     flujo de monitoreo: 01 → 02 → 03 → 08_monitoring → 09_sheets
+│       ├── daily.yml                      flujo completo: 01 → … → 09, con respaldo
 │       └── dashboard.yml                  (opcional) publica tools/dashboard en Pages
 │
 ├── .secrets/                              en git solo .gitkeep y la plantilla
@@ -161,65 +183,93 @@ La regla es **qué es y quién lo lee**:
 │   ├── 02_referencias/                    catálogos, metas, umbrales, prompts
 │   └── 03_correcciones/                   correcciones del analista (sin datos personales)
 │
-├── src/
-│   ├── 00_master.R                        corre todo en orden, solo para probar en local
+├── src/                                   los archivos _encuesta, _registro, etc. son EJEMPLOS:
+│   │                                      se renombran o borran según las fuentes del proyecto
+│   ├── 00_master.R                        corre los dos flujos en orden, solo para probar en local
 │   ├── 00_setup/
 │   │   ├── packages.R                     solo paquetes
 │   │   ├── functions.R                    solo funciones
 │   │   └── auth.R                         solo autenticación
-│   ├── 01_import/01_import.R
-│   ├── 02_audit/02_audit.R
-│   ├── 03_clean/03_clean.R
-│   ├── 04_enrich/04_enrich.R
-│   ├── 05_integrate/05_integrate.R
-│   ├── 06_wrangle/06_wrangle.R
-│   ├── 07_analysis/07_analysis.R
-│   ├── 08_products/
-│   │   ├── 08_monitoring.R                tablas del monitoreo de campo
-│   │   └── 08_products.R
-│   └── 09_publish/
+│   ├── 01_import/                         un script por fuente
+│   │   ├── 01_import_encuesta.R           la encuesta (SurveyCTO, Kobo)
+│   │   ├── 01_import_registro.R           una segunda fuente: registro, padrón, Sheet del cliente
+│   │   └── 01_import_validacion.R         las decisiones de las supervisoras
+│   ├── 02_audit/                          un script por fuente
+│   │   ├── 02_audit_encuesta.R
+│   │   └── 02_audit_registro.R
+│   ├── 03_clean/                          un script por fuente
+│   │   ├── 03_clean_encuesta.R
+│   │   └── 03_clean_registro.R
+│   ├── 04_enrich/                         un script por fuente (opcional)
+│   │   ├── 04_enrich_encuesta.R           IA sobre las respuestas abiertas
+│   │   └── 04_enrich_registro.R           geocodificación, APIs externas
+│   ├── 05_integrate/                      pasos numerados con subíndice
+│   │   ├── 05_integrate_1_apilar.R        apila fuentes y rondas
+│   │   └── 05_integrate_2_entidades.R     resuelve quién es quién
+│   ├── 06_wrangle/                        un script por tema o versión
+│   │   ├── 06_wrangle_indicadores.R       variables derivadas, indicadores, scores
+│   │   └── 06_wrangle_entrega.R           la versión sin datos personales
+│   ├── 07_analysis/                       un script por análisis
+│   │   ├── 07_analysis_descriptivos.R
+│   │   └── 07_analysis_modelo.R
+│   ├── 08_products/                       un script por producto
+│   │   ├── 08_monitoring.R                tablas del flujo de monitoreo
+│   │   ├── 08_products_informe.R
+│   │   └── 08_products_entrega.R
+│   └── 09_publish/                        un script por destino
 │       ├── 09_publish_sheets.R            el Sheet del dashboard
 │       └── 09_publish_drive.R             el respaldo diario de data/
 │
 ├── data/                                  SOLO bases de datos (en git solo las carpetas)
-│   ├── 01_raw/<ronda>/
-│   ├── 02_audit/<ronda>/
-│   ├── 03_clean/<ronda>/
-│   ├── 04_enrich/<ronda>/
-│   ├── 05_integrate/
-│   └── 06_final/                          base analítica + versión de entrega
+│   ├── 01_raw/
+│   │   ├── piloto/                        una subcarpeta por ronda de sources/rondas.csv
+│   │   │   ├── <proyecto>_encuesta_raw.RData
+│   │   │   ├── <proyecto>_registro_raw.RData
+│   │   │   └── <proyecto>_validaciones_raw.RData
+│   │   └── r1/                            los mismos archivos, para la ronda 1
+│   ├── 02_audit/
+│   │   ├── piloto/
+│   │   │   ├── <proyecto>_encuesta_audit.RData
+│   │   │   └── <proyecto>_registro_audit.RData
+│   │   └── r1/
+│   ├── 03_clean/
+│   │   ├── piloto/
+│   │   │   ├── <proyecto>_encuesta_clean.RData
+│   │   │   └── <proyecto>_registro_clean.RData
+│   │   └── r1/
+│   ├── 04_enrich/
+│   │   ├── piloto/
+│   │   │   ├── <proyecto>_encuesta_enrich.RData
+│   │   │   └── <proyecto>_encuesta_hist.RData     memoria para no reprocesar
+│   │   └── r1/
+│   ├── 05_integrate/                      ya sin subcarpetas: aquí se juntan las rondas
+│   │   ├── <proyecto>_apilada.RData
+│   │   └── <proyecto>_integrate.RData
+│   └── 06_final/
+│       ├── <proyecto>_final.RData         la base analítica
+│       └── <proyecto>_entrega.RData       la versión sin datos personales
 │
 ├── outputs/                               todo lo que NO es base de datos (en git solo las carpetas)
-│   ├── 07_analysis/<analisis>/            tablas/ y figuras/
-│   └── 08_products/<producto>/            <producto>_<fecha>.<ext>
+│   ├── 07_analysis/                       una carpeta por análisis
+│   │   ├── descriptivos/
+│   │   │   ├── tablas/
+│   │   │   └── figuras/
+│   │   └── modelo/
+│   │       ├── tablas/
+│   │       └── figuras/
+│   └── 08_products/                       una carpeta por producto
+│       ├── monitoreo/                     tablas del monitoreo (las sube 09_publish_sheets)
+│       ├── informe/
+│       │   └── informe_<aaaa-mm-dd>.docx
+│       └── entrega/
+│           └── entrega_<aaaa-mm-dd>/      .xlsx, .csv, .dta y diccionario
 │
 └── tools/                                 (opcional) código que corre fuera del pipeline
     ├── apps_script/disparador.gs          dispara los workflows
     └── dashboard/                         dashboard web propio (GitHub Pages)
 ```
 
-Ejemplos de lo que va en `outputs/`, tomados de nuestros proyectos:
-
-```
-outputs/
-├── 07_analysis/
-│   ├── conjoint/                  AMCE, medias marginales, curva de umbral
-│   ├── van_westendorp/            puntos de precio, rango aceptable
-│   ├── indice/                    índice trimestral, sensibilidad, bootstrap
-│   └── diseno_muestral/           marco, asignación, muestra seleccionada
-└── 08_products/
-    ├── monitoreo/                 tablas del monitoreo de campo
-    ├── tablas_dashboard/          tablas que alimentan Looker
-    ├── informe_avance/            informe_avance_<fecha>.docx
-    ├── informe_trimestral/        informe_trimestral_<trimestre>.xlsx
-    ├── inconsistencias/           casos a revisar
-    ├── validacion_supervisoras/   casos para que las supervisoras decidan
-    ├── diccionario/               diccionario de variables
-    ├── plan_datos/                listado para el SFTP del cliente
-    └── entrega_cliente/           base final .xlsx/.csv/.dta + diccionario
-```
-
-Si una corrida deja varios archivos de un mismo producto, van en una subcarpeta con la fecha de corte: `inconsistencias/inconsistencias_2026-11-02/`.
+Los archivos de `src/` y `data/` y las carpetas de `outputs/` son ejemplos de un proyecto con una encuesta y un registro, y con una ronda piloto y una ronda 1: cada proyecto los renombra según sus fuentes, rondas, análisis y productos. Si una corrida deja varios archivos de un mismo producto, van en una subcarpeta con la fecha de corte.
 
 ---
 
@@ -247,12 +297,15 @@ La estructura **no cambia**; solo se agregan archivos dentro de las mismas carpe
 **Varias fuentes:** un script por fuente en `01` a `04`, y se unen en `05`.
 
 ```
-src/01_import/01_import_mec.R      ─►  data/01_raw/<ronda>/<proyecto>_mec_raw.RData
-src/01_import/01_import_coursera.R ─►  data/01_raw/<ronda>/<proyecto>_coursera_raw.RData
-src/03_clean/03_clean_mec.R        ─►  data/03_clean/<ronda>/<proyecto>_mec_clean.RData
-src/03_clean/03_clean_coursera.R   ─►  data/03_clean/<ronda>/<proyecto>_coursera_clean.RData
-src/05_integrate/05_integrate.R    ─►  data/05_integrate/<proyecto>_integrate.RData
+src/01_import/01_import_encuesta.R         ─►  data/01_raw/<ronda>/<proyecto>_encuesta_raw.RData
+src/01_import/01_import_registro.R         ─►  data/01_raw/<ronda>/<proyecto>_registro_raw.RData
+src/03_clean/03_clean_encuesta.R           ─►  data/03_clean/<ronda>/<proyecto>_encuesta_clean.RData
+src/03_clean/03_clean_registro.R           ─►  data/03_clean/<ronda>/<proyecto>_registro_clean.RData
+src/05_integrate/05_integrate_1_apilar.R   ─►  data/05_integrate/<proyecto>_apilada.RData
+src/05_integrate/05_integrate_2_entidades.R ─► data/05_integrate/<proyecto>_integrate.RData
 ```
+
+Una etapa con un solo script (`05_integrate.R`) se divide en pasos con subíndice (`05_integrate_1_`, `05_integrate_2_`) cuando crece o cuando cada paso deja su propia base.
 
 **Varias rondas:** el código es **uno solo** y la ronda es un parámetro. `sources/rondas.csv` dice qué formulario e instrumento usa cada ronda y cuál está activa. Los datos de cada ronda van en una subcarpeta dentro de cada etapa, y `05_integrate` las une.
 
@@ -268,14 +321,15 @@ El piloto es una ronda más. Nunca se copia el código por ronda (`src/ronda_1/`
 **Varios análisis y productos:** un script por cada uno, con su carpeta en `outputs/`:
 
 ```
-src/07_analysis/07_conjoint.R          ─►  outputs/07_analysis/conjoint/
-src/08_products/08_informe_avance.R    ─►  outputs/08_products/informe_avance/
-src/08_products/08_entrega_cliente.R   ─►  outputs/08_products/entrega_cliente/
+src/07_analysis/07_analysis_descriptivos.R  ─►  outputs/07_analysis/descriptivos/
+src/07_analysis/07_analysis_modelo.R        ─►  outputs/07_analysis/modelo/
+src/08_products/08_products_informe.R       ─►  outputs/08_products/informe/
+src/08_products/08_products_entrega.R       ─►  outputs/08_products/entrega/
 ```
 
 **Decisiones humanas** (validación de supervisoras, correcciones): son una fuente más.
 
-- Si vienen de un Sheet, se importan con `01_import_validacion.R`; `02_audit` aplica los veredictos y `03_clean` las correcciones.
+- Si vienen de un Sheet, se importan con `01_import_validacion.R`, y `02_audit` aplica las correcciones (antes de las alertas) y los veredictos (al final).
 - Si son correcciones del analista sin datos personales, van en `sources/03_correcciones/`.
 - Nunca listas de ids, encuestadores o fechas escritas en el código.
 
@@ -303,7 +357,7 @@ src/08_products/08_entrega_cliente.R   ─►  outputs/08_products/entrega_clien
 - [ ] Cada etapa lee **solo** la anterior que exista y escribe **solo** en su carpeta.
 - [ ] Los números no se corren: si una etapa no aplica, se borra.
 - [ ] En `data/` solo van bases de datos.
-- [ ] `07` y `08` leen **solo** de `data/06_final/` (salvo `08_monitoring_*`, que lee de `02_audit`).
+- [ ] `07` y `08` leen **solo** de `data/06_final/` (salvo `08_monitoring_*`, que lee de `03_clean`).
 - [ ] Nada que produzca el pipeline va en `sources/`.
 - [ ] Ninguna credencial, id, UUID ni dato personal en un script: todo sale de `.secrets/.Renviron`, `sources/` o una fuente importada.
 - [ ] `.Renviron.example` tiene todas las variables que usa el proyecto.

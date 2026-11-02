@@ -1,4 +1,7 @@
-# Corrida completa + respaldo: una vez al día.
+# Flujo completo + respaldo: una vez al día.
+# 01_import → … → 06_wrangle → 08_products_* → 09_publish. 07_analysis no corre
+# acá: se corre a mano al cierre. 08_monitoring tampoco: es del flujo de
+# monitoreo (hourly.yml).
 #
 # No usa "schedule": lo dispara tools/apps_script/disparador.gs con
 # workflow_dispatch. También se puede correr a mano desde la pestaña Actions.
@@ -46,26 +49,50 @@ jobs:
       - name: Escribir la clave de la cuenta de servicio
         run: echo '${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}' > .secrets/cuenta_servicio.json
 
-      - name: 01_import
-        run: Rscript src/01_import/01_import.R
+      - name: 01_import_encuesta
+        run: Rscript src/01_import/01_import_encuesta.R
 
-      - name: 02_audit
-        run: Rscript src/02_audit/02_audit.R
+      - name: 01_import_registro
+        run: Rscript src/01_import/01_import_registro.R
 
-      - name: 03_clean
-        run: Rscript src/03_clean/03_clean.R
+      - name: 01_import_validacion
+        run: Rscript src/01_import/01_import_validacion.R
 
-      - name: 04_enrich
-        run: Rscript src/04_enrich/04_enrich.R
+      - name: 02_audit_encuesta
+        run: Rscript src/02_audit/02_audit_encuesta.R
 
-      - name: 05_integrate
-        run: Rscript src/05_integrate/05_integrate.R
+      - name: 02_audit_registro
+        run: Rscript src/02_audit/02_audit_registro.R
 
-      - name: 06_wrangle
-        run: Rscript src/06_wrangle/06_wrangle.R
+      - name: 03_clean_encuesta
+        run: Rscript src/03_clean/03_clean_encuesta.R
 
-      - name: 08_products
-        run: Rscript src/08_products/08_products.R
+      - name: 03_clean_registro
+        run: Rscript src/03_clean/03_clean_registro.R
+
+      - name: 04_enrich_encuesta
+        run: Rscript src/04_enrich/04_enrich_encuesta.R
+
+      - name: 04_enrich_registro
+        run: Rscript src/04_enrich/04_enrich_registro.R
+
+      - name: 05_integrate_1_apilar
+        run: Rscript src/05_integrate/05_integrate_1_apilar.R
+
+      - name: 05_integrate_2_entidades
+        run: Rscript src/05_integrate/05_integrate_2_entidades.R
+
+      - name: 06_wrangle_indicadores
+        run: Rscript src/06_wrangle/06_wrangle_indicadores.R
+
+      - name: 06_wrangle_entrega
+        run: Rscript src/06_wrangle/06_wrangle_entrega.R
+
+      - name: 08_products_informe
+        run: Rscript src/08_products/08_products_informe.R
+
+      - name: 08_products_entrega
+        run: Rscript src/08_products/08_products_entrega.R
 
       - name: 09_publish_sheets
         run: Rscript src/09_publish/09_publish_sheets.R

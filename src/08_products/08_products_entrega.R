@@ -5,13 +5,13 @@
 #   <NOMBRE APELLIDO (ROL)> - <correo>                                         #
 #                                                                              #
 # FECHA DE CREACION: <dd/mm/aaaa>                                              #
-# NOMBRE: 08_products                                                          #
-# DETALLE: arma lo que mira o recibe una persona: tablas del dashboard,        #
-#   informes, diccionario, base de entrega al cliente. Lee de data/06_final o  #
-#   de outputs/07_analysis. Con varios productos: 08_<producto>.R              #
+# NOMBRE: 08_products_entrega                                                  #
+# DETALLE: arma la entrega al cliente: la base de entrega en .xlsx, .csv y     #
+#   .dta, con su diccionario de variables. No modifica los datos. EJEMPLO:     #
+#   renombrar o borrar según las fuentes del proyecto.                         #
 #                                                                              #
-# CORRE DESPUES DE: 06_wrangle (o 07_analysis)                                 #
-# LEE: data/06_final/ y outputs/07_analysis/                                   #
-# ESCRIBE: outputs/08_products/<producto>/<producto>_<fecha>.<ext>             #
+# CORRE DESPUES DE: 06_wrangle_entrega                                         #
+# LEE: data/06_final/<proyecto>_entrega.RData y sources/01_instrumento/        #
+# ESCRIBE: outputs/08_products/entrega/entrega_<aaaa-mm-dd>/                   #
 #-----------------------------------------------------------------------------.#
 

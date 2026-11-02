@@ -1,4 +1,6 @@
-# Monitoreo de campo: corre cada hora mientras dura el levantamiento.
+# Flujo de monitoreo: corre cada hora mientras dura el levantamiento.
+# 01_import → 02_audit → 03_clean → 08_monitoring → 09_publish_sheets.
+# Las etapas 04 a 07 no participan: son del flujo completo (daily.yml).
 #
 # No usa "schedule": el cron de GitHub no es confiable para repos con poca
 # actividad. Lo dispara tools/apps_script/disparador.gs con workflow_dispatch.
@@ -42,11 +44,26 @@ jobs:
       - name: Escribir la clave de la cuenta de servicio
         run: echo '${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}' > .secrets/cuenta_servicio.json
 
-      - name: 01_import
-        run: Rscript src/01_import/01_import.R
+      - name: 01_import_encuesta
+        run: Rscript src/01_import/01_import_encuesta.R
 
-      - name: 02_audit
-        run: Rscript src/02_audit/02_audit.R
+      - name: 01_import_registro
+        run: Rscript src/01_import/01_import_registro.R
+
+      - name: 01_import_validacion
+        run: Rscript src/01_import/01_import_validacion.R
+
+      - name: 02_audit_encuesta
+        run: Rscript src/02_audit/02_audit_encuesta.R
+
+      - name: 02_audit_registro
+        run: Rscript src/02_audit/02_audit_registro.R
+
+      - name: 03_clean_encuesta
+        run: Rscript src/03_clean/03_clean_encuesta.R
+
+      - name: 03_clean_registro
+        run: Rscript src/03_clean/03_clean_registro.R
 
       - name: 08_monitoring
         run: Rscript src/08_products/08_monitoring.R
