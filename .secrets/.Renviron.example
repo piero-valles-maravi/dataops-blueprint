@@ -1,0 +1,38 @@
+# Plantilla de variables del proyecto. Copiarla como .secrets/.Renviron y
+# completar los valores. Este archivo SÍ se sube: solo tiene nombres.
+#
+# Una variable por línea, NOMBRE=valor. Los comentarios van en su propia
+# línea: un comentario después del valor pasa a formar parte del valor.
+#
+# En GitHub Actions las mismas variables llegan como secrets con el mismo
+# nombre, así el código es uno solo.
+#
+# Lo que NO va aquí: el formid y el instrumento de cada ronda. Eso no es
+# secreto y vive en sources/rondas.csv.
+
+# Prefijo de todos los archivos que guarda el pipeline, en snake_case
+NOMBRE_PROYECTO=
+
+# (Opcional) Ronda a procesar. Vacía = la que figura como "activa" en
+# sources/rondas.csv. Se usa para reprocesar una ronda cerrada.
+RONDA=
+
+# Ruta a la clave JSON de la cuenta de servicio de Google, dentro de .secrets/
+GOOGLE_SERVICE_ACCOUNT_KEY=.secrets/cuenta_servicio.json
+
+# Credenciales de la fuente (una por fuente; ejemplo con SurveyCTO)
+SURVEYCTO_SERVER=
+SURVEYCTO_USERNAME=
+SURVEYCTO_PASSWORD=
+
+# Destinos de 09_publish: Sheets
+GSHEET_ID_MONITOREO=
+GSHEET_ID_DASHBOARD=
+
+# Destinos de 09_publish: una carpeta de Drive por etapa de data/
+GDRIVE_ID_RAW=
+GDRIVE_ID_AUDIT=
+GDRIVE_ID_CLEAN=
+GDRIVE_ID_ENRICH=
+GDRIVE_ID_INTEGRATE=
+GDRIVE_ID_FINAL=

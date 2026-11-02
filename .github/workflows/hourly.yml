@@ -1,0 +1,59 @@
+# Monitoreo de campo: corre cada hora mientras dura el levantamiento.
+#
+# No usa "schedule": el cron de GitHub no es confiable para repos con poca
+# actividad. Lo dispara tools/apps_script/disparador.gs con workflow_dispatch.
+# Al cerrar el campo, se desactiva el disparador (no este archivo).
+#
+# Regla: el workflow no tiene lógica. Un paso por script, en el orden del flujo.
+
+name: hourly
+
+on:
+  workflow_dispatch:
+
+# Una sola corrida a la vez entre todos los workflows del proyecto
+concurrency:
+  group: pipeline
+  cancel-in-progress: false
+
+jobs:
+  monitoreo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      TZ: America/Lima
+      NOMBRE_PROYECTO: ${{ secrets.NOMBRE_PROYECTO }}
+      GOOGLE_SERVICE_ACCOUNT_KEY: .secrets/cuenta_servicio.json
+      SURVEYCTO_SERVER: ${{ secrets.SURVEYCTO_SERVER }}
+      SURVEYCTO_USERNAME: ${{ secrets.SURVEYCTO_USERNAME }}
+      SURVEYCTO_PASSWORD: ${{ secrets.SURVEYCTO_PASSWORD }}
+      GSHEET_ID_MONITOREO: ${{ secrets.GSHEET_ID_MONITOREO }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      # Instala exactamente lo que dice renv.lock (sin repetir la lista acá)
+      - uses: r-lib/actions/setup-renv@v2
+
+      - name: Escribir la clave de la cuenta de servicio
+        run: echo '${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}' > .secrets/cuenta_servicio.json
+
+      - name: 01_import
+        run: Rscript src/01_import/01_import.R
+
+      - name: 02_audit
+        run: Rscript src/02_audit/02_audit.R
+
+      - name: 08_monitoring
+        run: Rscript src/08_products/08_monitoring.R
+
+      - name: 09_publish_sheets
+        run: Rscript src/09_publish/09_publish_sheets.R
+
+      - name: Borrar la clave
+        if: always()
+        run: rm -f .secrets/cuenta_servicio.json

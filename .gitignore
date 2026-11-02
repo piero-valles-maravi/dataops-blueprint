@@ -1,0 +1,60 @@
+# Archivos y sesiones de R
+.Rproj.user/
+.Rhistory
+.RData
+.RDataTmp*
+.RData.tmp
+.Ruserdata
+
+# el .Renviron va en .secrets/; esto es por si alguien vuelve a crear uno en la raíz
+.Renviron
+
+
+# renv: se versiona renv.lock (y renv/activate.R); la librería es local
+renv/library/
+renv/local/
+renv/staging/
+renv/cellar/
+
+
+# Borradores y exploración: nunca son parte del pipeline
+src/borradores/
+
+
+# Editores
+.posit/
+.positai
+.vscode/
+
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# el archivo temporal que deja Excel mientras está abierto un .xlsx de sources/
+~$*
+
+
+# Datos: se ignora el contenido, pero se conserva la estructura de carpetas
+data/**
+!data/**/
+!data/**/.gitkeep
+
+
+# Resultados y productos: lo mismo que data/. Se regeneran con el pipeline
+outputs/**
+!outputs/**/
+!outputs/**/.gitkeep
+
+
+# Credenciales
+# Nada de .secrets/ se sube, salvo el archivo que conserva la carpeta y la
+# plantilla con los nombres de las variables (sin valores)
+.secrets/*
+!.secrets/.gitkeep
+!.secrets/.Renviron.example
+
+
+# Configuración local de Claude de cada persona
+.claude/settings.local.json

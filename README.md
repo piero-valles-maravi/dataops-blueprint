@@ -1,0 +1,314 @@
+<div align="center">
+
+![banner](.github/images/banner.svg)
+
+**La estructura y el flujo de datos que siguen nuestros proyectos de datos.**
+
+Se clona, se renombra y se completa. Sirve igual para una encuesta de una sola ronda que para un proyecto con varias fuentes, varias rondas y análisis.
+
+![estado](https://img.shields.io/badge/estado-borrador-F59E0B)
+![R](https://img.shields.io/badge/R-4.5-065F46)
+![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-automatizaci%C3%B3n-1E3A8A)
+
+</div>
+
+> [!NOTE]
+> **Por ahora el repositorio solo define la estructura.** Los scripts tienen su encabezado, pero todavía no tienen contenido.
+
+---
+
+## Contenido
+
+1. [Cómo usar este blueprint](#1-cómo-usar-este-blueprint)
+2. [El flujo de los datos](#2-el-flujo-de-los-datos)
+3. [Las etapas](#3-las-etapas)
+4. [Dónde queda cada cosa](#4-dónde-queda-cada-cosa)
+5. [Estructura del repositorio](#5-estructura-del-repositorio)
+6. [Las carpetas que no son del pipeline](#6-las-carpetas-que-no-son-del-pipeline)
+7. [Cómo escala](#7-cómo-escala)
+8. [Cómo calzan los proyectos que ya tenemos](#8-cómo-calzan-los-proyectos-que-ya-tenemos)
+9. [Reglas que no se negocian](#9-reglas-que-no-se-negocian)
+
+---
+
+## 1. Cómo usar este blueprint
+
+1. **Use this template** en GitHub y nombrar el repositorio `pipeline_<proyecto>`.
+2. Renombrar `dataops-blueprint.Rproj` a `<proyecto>.Rproj`.
+3. Borrar las etapas que el proyecto no usa (su carpeta en `src/` y `data/`, y su paso en los workflows). **Los números de las demás no cambian.**
+4. Copiar `.secrets/.Renviron.example` como `.secrets/.Renviron`, completar los valores y dejar la clave de Google en `.secrets/`.
+5. Completar `sources/rondas.csv` y dejar el instrumento en `sources/01_instrumento/`.
+6. Completar `.claude/CONTEXTO_PROYECTO.md` y el README siguiendo `.claude/skills/skill_readme.md`.
+7. Llenar `src/00_setup/packages.R` y correr `renv::init()` para generar `renv.lock`.
+
+Este blueprint es para **proyectos con datos tabulares**. Un proyecto cualitativo o de revisión de literatura no usa estas etapas.
+
+---
+
+## 2. El flujo de los datos
+
+```mermaid
+flowchart LR
+    SRC[("Fuente<br/>API, Sheet,<br/>base, web")] --> IMP["01_import"]
+    IMP --> AUD["02_audit"]
+    AUD --> CLN["03_clean"]
+    CLN --> ENR["04_enrich"]
+    ENR --> INT["05_integrate"]
+    INT --> WRG["06_wrangle<br/>▼<br/>data/06_final"]
+    WRG --> ANA["07_analysis"]
+    WRG --> PRD["08_products"]
+    ANA --> PRD
+    AUD -. monitoreo .-> PRD
+    PRD --> PUB["09_publish"]
+    PUB --> DEST[("Sheets · Looker<br/>Drive · Pages")]
+```
+
+Se lee en tres bloques:
+
+| Bloque | Etapas | Para quién es | Escribe en |
+|---|---|---|---|
+| **Preparar los datos** | `01` a `06` | para el pipeline: cada script lee lo que dejó el anterior | `data/` |
+| **Analizar y producir** | `07` y `08` | para una persona: lo que se mira, se analiza o se entrega | `outputs/` |
+| **Publicar** | `09` | para un sistema: llevarlo a donde se mira | Sheets, Drive, Pages |
+
+---
+
+## 3. Las etapas
+
+Cada etapa responde **una sola pregunta**. Si una tarea no responde la pregunta de la etapa, no va ahí.
+
+| # | Etapa | La pregunta que responde | Lee | Escribe | ¿Se puede saltar? |
+|---|---|---|---|---|---|
+| `00` | `setup` | ¿Qué necesita todo script para correr? | — | — | No |
+| `01` | `import` | ¿Qué llegó de la fuente? | la fuente | `data/01_raw/` | No |
+| `02` | `audit` | ¿Está bien lo que llegó? | `data/01_raw/` | `data/02_audit/` | Sí |
+| `03` | `clean` | ¿Cómo queda usable, una fuente a la vez? | `data/02_audit/` | `data/03_clean/` | No |
+| `04` | `enrich` | ¿Qué le agregamos desde afuera? | `data/03_clean/` | `data/04_enrich/` | Sí |
+| `05` | `integrate` | ¿Cómo se unen fuentes y rondas? | `data/04_enrich/` | `data/05_integrate/` | Sí |
+| `06` | `wrangle` | ¿Qué variables e indicadores necesitamos? | la última etapa | `data/06_final/` | No |
+| `07` | `analysis` | ¿Qué resultados obtenemos? | `data/06_final/` | `outputs/07_analysis/` | Sí |
+| `08` | `products` | ¿Qué mira o recibe una persona? | `data/06_final/`, `outputs/07_analysis/` | `outputs/08_products/` | Sí |
+| `09` | `publish` | ¿Dónde tiene que estar? | `outputs/`, `data/` | Sheets, Drive, Pages | Sí |
+
+Lo que hace cada una, y sobre todo lo que **no** hace:
+
+- **`01_import`** descarga tal cual. **No** filtra ni corrige. Si la fuente responde con error, corta sin pisar el crudo anterior.
+- **`02_audit`** marca. **No** corrige ni borra: agrega columnas de alerta y clasifica cada registro. Aplica los veredictos humanos.
+- **`03_clean`** corrige, normaliza y etiqueta **una fuente a la vez**. **No** carga ninguna otra fuente.
+- **`04_enrich`** agrega información que la fuente no trae: IA, geocodificación, APIs externas. **No** vuelve a procesar lo que no cambió.
+- **`05_integrate`** une fuentes y rondas: apila, cruza, deduplica, resuelve quién es quién. **No** crea indicadores.
+- **`06_wrangle`** crea variables, indicadores y scores, y deja la base final en dos versiones: la analítica y la de entrega sin datos personales. **No** limpia.
+- **`07_analysis`** calcula resultados: modelos, índices, cruces. Guarda tablas y figuras; **nunca** quedan solo en pantalla.
+- **`08_products`** arma lo que mira una persona: tablas del dashboard, informes, diccionario, base de entrega.
+- **`09_publish`** lleva cada cosa a su destino. **No** calcula nada.
+
+**Los números no se corren.** Si un proyecto no tiene enriquecimiento, no existe `04_enrich`, y `05_integrate` sigue siendo `05`. Así, en todos los proyectos `03` es limpieza y `06` es la base final.
+
+---
+
+## 4. Dónde queda cada cosa
+
+La regla es **qué es y quién lo lee**:
+
+| Si es… | Va en | Nombre del archivo | En git |
+|---|---|---|---|
+| una base de datos que lee otro script | `data/0N_<etapa>/` | fijo, se sobrescribe en cada corrida | no, solo las carpetas |
+| un resultado, tabla, gráfico o informe | `outputs/0N_<etapa>/<nombre>/` | con fecha, se acumula | no, solo las carpetas |
+| algo que lee un sistema (Looker, la web) | su destino: Sheets, Drive, Pages | lo decide el destino | — |
+| un insumo que entra de afuera | `sources/` | lo decide el equipo | sí |
+
+**En `data/` solo van bases de datos.** Ninguna tabla de resultados, gráfico ni informe.
+
+`data/06_final/` es la **frontera**: de ahí para atrás todo es preparación; de ahí para adelante, todo usa la base final. La única excepción es el monitoreo de campo (`08_monitoring_*`), que lee de `data/02_audit/` porque mide el proceso, incluidas las encuestas inválidas.
+
+---
+
+## 5. Estructura del repositorio
+
+```
+<proyecto>/
+├── README.md
+├── <proyecto>.Rproj
+├── renv.lock                              versiones exactas de paquetes (renv::init())
+├── .gitignore
+│
+├── .claude/                               contexto para trabajar con Claude
+│   ├── CLAUDE.md                          reglas cortas: qué leer y qué actualizar
+│   ├── CONTEXTO_PROYECTO.md               ficha, estado, decisiones, pendientes, bitácora
+│   └── skills/
+│       ├── skill_project_structure.md     dónde va cada script, carpeta o archivo
+│       ├── skill_code_style.md            estilo de código R
+│       ├── skill_audit.md                 cómo se audita: dimensiones y alertas
+│       ├── skill_data_cleaning.md         cómo limpiar una fuente
+│       ├── skill_readme.md                cómo se escribe el README
+│       └── skill_readme_banner.svg        plantilla del banner
+│
+├── .github/
+│   ├── images/                            banner y diagramas de ESTE proyecto
+│   └── workflows/
+│       ├── hourly.yml                     monitoreo durante el campo
+│       ├── daily.yml                      corrida completa + respaldo
+│       └── dashboard.yml                  (opcional) publica tools/dashboard en Pages
+│
+├── .secrets/                              en git solo .gitkeep y la plantilla
+│   ├── .Renviron.example                  los nombres de las variables, sin valores
+│   ├── .Renviron                          (local) los valores
+│   └── cuenta_servicio.json               (local) la clave de Google
+│
+├── sources/                               insumos que el pipeline NO produce
+│   ├── rondas.csv                         ronda, formid, fechas, instrumento, estado
+│   ├── 01_instrumento/                    <ronda>_<version>.xlsx
+│   ├── 02_referencias/                    catálogos, metas, umbrales, prompts
+│   └── 03_correcciones/                   correcciones del analista (sin datos personales)
+│
+├── src/
+│   ├── 00_master.R                        corre todo en orden, solo para probar en local
+│   ├── 00_setup/
+│   │   ├── packages.R                     solo paquetes
+│   │   ├── functions.R                    solo funciones
+│   │   └── auth.R                         solo autenticación
+│   ├── 01_import/01_import.R
+│   ├── 02_audit/02_audit.R
+│   ├── 03_clean/03_clean.R
+│   ├── 04_enrich/04_enrich.R
+│   ├── 05_integrate/05_integrate.R
+│   ├── 06_wrangle/06_wrangle.R
+│   ├── 07_analysis/07_analysis.R
+│   ├── 08_products/
+│   │   ├── 08_monitoring.R                tablas del monitoreo de campo
+│   │   └── 08_products.R
+│   └── 09_publish/
+│       ├── 09_publish_sheets.R            el Sheet del dashboard
+│       └── 09_publish_drive.R             el respaldo diario de data/
+│
+├── data/                                  SOLO bases de datos (en git solo las carpetas)
+│   ├── 01_raw/<ronda>/
+│   ├── 02_audit/<ronda>/
+│   ├── 03_clean/<ronda>/
+│   ├── 04_enrich/<ronda>/
+│   ├── 05_integrate/
+│   └── 06_final/                          base analítica + versión de entrega
+│
+├── outputs/                               todo lo que NO es base de datos (en git solo las carpetas)
+│   ├── 07_analysis/<analisis>/            tablas/ y figuras/
+│   └── 08_products/<producto>/            <producto>_<fecha>.<ext>
+│
+└── tools/                                 (opcional) código que corre fuera del pipeline
+    ├── apps_script/disparador.gs          dispara los workflows
+    └── dashboard/                         dashboard web propio (GitHub Pages)
+```
+
+Ejemplos de lo que va en `outputs/`, tomados de nuestros proyectos:
+
+```
+outputs/
+├── 07_analysis/
+│   ├── conjoint/                  AMCE, medias marginales, curva de umbral
+│   ├── van_westendorp/            puntos de precio, rango aceptable
+│   ├── indice/                    índice trimestral, sensibilidad, bootstrap
+│   └── diseno_muestral/           marco, asignación, muestra seleccionada
+└── 08_products/
+    ├── monitoreo/                 tablas del monitoreo de campo
+    ├── tablas_dashboard/          tablas que alimentan Looker
+    ├── informe_avance/            informe_avance_<fecha>.docx
+    ├── informe_trimestral/        informe_trimestral_<trimestre>.xlsx
+    ├── inconsistencias/           casos a revisar
+    ├── validacion_supervisoras/   casos para que las supervisoras decidan
+    ├── diccionario/               diccionario de variables
+    ├── plan_datos/                listado para el SFTP del cliente
+    └── entrega_cliente/           base final .xlsx/.csv/.dta + diccionario
+```
+
+Si una corrida deja varios archivos de un mismo producto, van en una subcarpeta con la fecha de corte: `inconsistencias/inconsistencias_2026-11-02/`.
+
+---
+
+## 6. Las carpetas que no son del pipeline
+
+| Carpeta | Qué va | Qué **no** va |
+|---|---|---|
+| `sources/` | lo que entra de afuera y no cambia con cada corrida: rondas, cuestionario, catálogos, metas, prompts, correcciones del analista | nada que produzca el pipeline; ningún dato personal |
+| `outputs/` | resultados de `07` y productos de `08`, con fecha | bases que lea otro script |
+| `tools/apps_script/` | el Apps Script que dispara los workflows | lógica del pipeline |
+| `tools/dashboard/` | el código de un dashboard web propio (HTML para GitHub Pages) | el dashboard de Looker Studio: ese vive en Looker y lee un Sheet |
+| `.github/images/` | el banner y las figuras del README | gráficos de resultados (van en `outputs/`) |
+| `.github/workflows/` | un workflow por frecuencia, un paso por script | lógica: los workflows solo llaman scripts |
+| `.claude/` | el contexto y las skills para trabajar con Claude | la configuración personal (`settings.local.json`) |
+| `.secrets/` | `.Renviron` y las claves que son archivo | nada fuera de esta carpeta tiene un valor secreto |
+
+Las reglas de cómo documentar (orden del README, plantilla del banner) están en `.claude/skills/skill_readme.md` y `skill_readme_banner.svg`. El resultado de aplicarlas (el banner de este proyecto) va en `.github/images/`.
+
+---
+
+## 7. Cómo escala
+
+La estructura **no cambia**; solo se agregan archivos dentro de las mismas carpetas.
+
+**Varias fuentes:** un script por fuente en `01` a `04`, y se unen en `05`.
+
+```
+src/01_import/01_import_mec.R      ─►  data/01_raw/<ronda>/<proyecto>_mec_raw.RData
+src/01_import/01_import_coursera.R ─►  data/01_raw/<ronda>/<proyecto>_coursera_raw.RData
+src/03_clean/03_clean_mec.R        ─►  data/03_clean/<ronda>/<proyecto>_mec_clean.RData
+src/03_clean/03_clean_coursera.R   ─►  data/03_clean/<ronda>/<proyecto>_coursera_clean.RData
+src/05_integrate/05_integrate.R    ─►  data/05_integrate/<proyecto>_integrate.RData
+```
+
+**Varias rondas:** el código es **uno solo** y la ronda es un parámetro. `sources/rondas.csv` dice qué formulario e instrumento usa cada ronda y cuál está activa. Los datos de cada ronda van en una subcarpeta dentro de cada etapa, y `05_integrate` las une.
+
+```
+ronda,formid,fecha_inicio,fecha_fin,instrumento,estado
+piloto,emcesa_piloto,2026-08-20,2026-08-25,piloto_v3.xlsx,cerrada
+r1,emcesa_r1,2026-09-10,2026-10-30,r1_v15.xlsx,cerrada
+r2,emcesa_r2,2027-01-15,2027-02-15,r2_v1.xlsx,activa
+```
+
+El piloto es una ronda más. Nunca se copia el código por ronda (`src/ronda_1/`): una corrección tiene que llegar a todas.
+
+**Varios análisis y productos:** un script por cada uno, con su carpeta en `outputs/`:
+
+```
+src/07_analysis/07_conjoint.R          ─►  outputs/07_analysis/conjoint/
+src/08_products/08_informe_avance.R    ─►  outputs/08_products/informe_avance/
+src/08_products/08_entrega_cliente.R   ─►  outputs/08_products/entrega_cliente/
+```
+
+**Decisiones humanas** (validación de supervisoras, correcciones): son una fuente más.
+
+- Si vienen de un Sheet, se importan con `01_import_validacion.R`; `02_audit` aplica los veredictos y `03_clean` las correcciones.
+- Si son correcciones del analista sin datos personales, van en `sources/03_correcciones/`.
+- Nunca listas de ids, encuestadores o fechas escritas en el código.
+
+---
+
+## 8. Cómo calzan los proyectos que ya tenemos
+
+| Etapa | BID RDS Diáspora | Mann Pricing | EMCESA | Tigo Jóvenes Conectados | Paraguay Index | Licitaciones |
+|---|---|---|---|---|---|---|
+| `01_import` | encuestas, semillas, casos, validación | SurveyCTO | SurveyCTO | 6 fuentes | APIs y scraping | 4 portales |
+| `02_audit` | 10 dimensiones | alertas A–E | flags `m_`, `out_`, `ale_` | — | contratos de esquema | hash de cambios |
+| `03_clean` | etiquetas, códigos | etiquetas, códigos | correcciones | una por fuente | `processing` | `clean_<fuente>` |
+| `04_enrich` | — | — | — | — | CPI, población | `enrichAI_<fuente>` |
+| `05_integrate` | encuestas + semillas + casos | — | — | base maestra | panel trimestral | apilar fuentes |
+| `06_wrangle` | base codificada | NPS, tramos | corte | tablas de fases | insumos del índice | score |
+| `07_analysis` | conjoint | Van Westendorp | — | diseño muestral | índice | — |
+| `08_products` | monitoreo, diccionario, validación | monitoreo, entrega | monitoreo, entrega | Looker, informes | dashboard | — |
+| `09_publish` | Sheets, Drive, SurveyCTO | Sheets, Drive | Sheets, Drive | Drive, SFTP | Pages | Sheets |
+
+---
+
+## 9. Reglas que no se negocian
+
+- [ ] El número del script es el mismo que el de la carpeta que escribe.
+- [ ] Cada etapa lee **solo** la anterior que exista y escribe **solo** en su carpeta.
+- [ ] Los números no se corren: si una etapa no aplica, se borra.
+- [ ] En `data/` solo van bases de datos.
+- [ ] `07` y `08` leen **solo** de `data/06_final/` (salvo `08_monitoring_*`, que lee de `02_audit`).
+- [ ] Nada que produzca el pipeline va en `sources/`.
+- [ ] Ninguna credencial, id, UUID ni dato personal en un script: todo sale de `.secrets/.Renviron`, `sources/` o una fuente importada.
+- [ ] `.Renviron.example` tiene todas las variables que usa el proyecto.
+- [ ] El código es uno solo para todas las rondas.
+- [ ] Ningún `View()`, `setwd()` ni ruta con fecha fija en el pipeline; la exploración va en `src/borradores/`.
+- [ ] Ningún script de más de ~1.500 líneas: se divide con subíndice.
+- [ ] `00_master` es para probar en local; en producción, un paso del workflow por script.
+- [ ] El README y `CONTEXTO_PROYECTO.md` se actualizan en el mismo commit que el cambio.

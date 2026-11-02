@@ -1,0 +1,43 @@
+# (Opcional) Publica tools/dashboard en GitHub Pages.
+#
+# Solo si el proyecto tiene un dashboard web propio. Si el dashboard es de
+# Looker Studio, este archivo se borra: Looker lee el Sheet de 09_publish.
+#
+# Requiere activar Pages en Settings → Pages → Source: "GitHub Actions".
+
+name: dashboard
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/dashboard/**'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: tools/dashboard
+
+      - id: deploy
+        uses: actions/deploy-pages@v4

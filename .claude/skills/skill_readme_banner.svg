@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" width="1200" height="340" role="img" aria-label="TITULO DEL PROYECTO">
+  <defs>
+    <!-- fondo: verde oscuro a azul. Cambiar los tres colores si el proyecto tiene otra paleta -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#064E3B"/>
+      <stop offset="0.55" stop-color="#065F46"/>
+      <stop offset="1" stop-color="#1E3A8A"/>
+    </linearGradient>
+    <!-- acento: ámbar, para el ícono y lo que se quiere destacar -->
+    <linearGradient id="acento" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FBBF24"/>
+      <stop offset="1" stop-color="#F59E0B"/>
+    </linearGradient>
+    <style>
+      .t   { font-family:'Segoe UI',Ubuntu,system-ui,sans-serif; fill:#ffffff; }
+      .sub { font-family:'Segoe UI',Ubuntu,system-ui,sans-serif; fill:#D1FAE5; }
+      .lbl { font-family:'Segoe UI',Ubuntu,system-ui,sans-serif; fill:#ECFDF5; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="340" rx="28" fill="url(#bg)"/>
+
+  <!-- ÍCONO DEL TEMA (izquierda): una forma simple que diga de qué trata el proyecto.
+       En MANN fue una etiqueta de precio con "Gs". Reemplazar el contenido de este grupo -->
+  <g transform="translate(150,160) rotate(-12)">
+    <path d="M-70 -44 H62 a16 16 0 0 1 16 16 V28 a16 16 0 0 1 -16 16 H-70 L-104 0 Z" fill="url(#acento)"/>
+    <circle cx="-76" cy="0" r="8" fill="#065F46"/>
+    <text x="10" y="15" font-family="'Segoe UI',Ubuntu,system-ui,sans-serif" font-size="44" font-weight="700" fill="#78350F" text-anchor="middle">ÍCONO</text>
+  </g>
+  <text class="lbl" x="140" y="262" font-size="14" text-anchor="middle" opacity="0.8">Tema · Tema</text>
+
+  <!-- TÍTULO -->
+  <text class="t"   x="300" y="124" font-size="58" font-weight="700" letter-spacing="-1">TITULO DEL PROYECTO</text>
+  <text class="sub" x="302" y="164" font-size="19">Una línea que diga qué hace el pipeline.</text>
+  <text class="sub" x="302" y="192" font-size="19" opacity="0.72">Producto · Producto · País</text>
+
+  <!-- ETAPAS DEL PIPELINE: una píldora por etapa, separadas por › . Ancho de la píldora ≈ 9 px por letra + 20 -->
+  <g transform="translate(302,222)" font-size="14">
+    <rect x="0" width="100" height="34" rx="17" fill="#ffffff" fill-opacity="0.14"/>
+    <text class="lbl" x="50" y="22" text-anchor="middle">Fuente</text>
+    <text class="lbl" x="114" y="22" text-anchor="middle" opacity="0.7">›</text>
+
+    <rect x="128" width="100" height="34" rx="17" fill="#ffffff" fill-opacity="0.14"/>
+    <text class="lbl" x="178" y="22" text-anchor="middle">Auditoría</text>
+    <text class="lbl" x="242" y="22" text-anchor="middle" opacity="0.7">›</text>
+
+    <rect x="256" width="96" height="34" rx="17" fill="#ffffff" fill-opacity="0.14"/>
+    <text class="lbl" x="304" y="22" text-anchor="middle">Limpieza</text>
+    <text class="lbl" x="366" y="22" text-anchor="middle" opacity="0.7">›</text>
+
+    <rect x="380" width="120" height="34" rx="17" fill="#ffffff" fill-opacity="0.14"/>
+    <text class="lbl" x="440" y="22" text-anchor="middle">Destino</text>
+  </g>
+
+  <!-- FILA DE PUNTOS: los registros, con algunos en el color de acento (alertas, casos especiales) -->
+  <g transform="translate(304,290)" fill="#6EE7B7">
+    <circle cx="0"   cy="0" r="4" fill-opacity="0.9"/>
+    <circle cx="16"  cy="0" r="4" fill-opacity="0.9"/>
+    <circle cx="32"  cy="0" r="4" fill-opacity="0.9"/>
+    <circle cx="48"  cy="0" r="4" fill="#FBBF24"/>
+    <circle cx="64"  cy="0" r="4" fill-opacity="0.9"/>
+    <circle cx="80"  cy="0" r="4" fill-opacity="0.9"/>
+    <circle cx="96"  cy="0" r="4" fill-opacity="0.9"/>
+    <circle cx="112" cy="0" r="4" fill="#FBBF24"/>
+    <circle cx="128" cy="0" r="4" fill-opacity="0.9"/>
+    <circle cx="144" cy="0" r="4" fill-opacity="0.9"/>
+    <circle cx="160" cy="0" r="4" fill-opacity="0.9"/>
+    <circle cx="176" cy="0" r="4" fill-opacity="0.9"/>
+    <circle cx="192" cy="0" r="4" fill-opacity="0.9"/>
+    <circle cx="208" cy="0" r="4" fill="#FBBF24"/>
+    <circle cx="224" cy="0" r="4" fill-opacity="0.9"/>
+  </g>
+  <text class="lbl" x="546" y="295" font-size="13" opacity="0.7">registros procesados · casos especiales en amarillo</text>
+
+  <!-- TARJETA (derecha): un mini gráfico del análisis central del proyecto.
+       En MANN fueron las curvas de Van Westendorp. Reemplazar las curvas -->
+  <g transform="translate(990,62)">
+    <rect x="0" y="0" width="170" height="216" rx="20" fill="#022C22" fill-opacity="0.45" stroke="#ffffff" stroke-opacity="0.14"/>
+    <text class="lbl" x="85" y="30" font-size="13" text-anchor="middle" opacity="0.85">Análisis central</text>
+    <line x1="22" y1="176" x2="150" y2="176" stroke="#ffffff" stroke-opacity="0.3"/>
+    <line x1="22" y1="46"  x2="22"  y2="176" stroke="#ffffff" stroke-opacity="0.3"/>
+    <path d="M24 60 C 60 70, 80 150, 148 172" stroke="#6EE7B7" stroke-width="3" fill="none"/>
+    <path d="M24 172 C 80 160, 100 90, 148 60" stroke="#FBBF24" stroke-width="3" fill="none"/>
+    <circle cx="86" cy="118" r="5" fill="#ffffff"/>
+    <text class="lbl" x="85" y="200" font-size="12" text-anchor="middle" opacity="0.75">qué muestra el gráfico</text>
+  </g>
+</svg>
