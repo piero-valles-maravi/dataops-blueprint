@@ -72,26 +72,44 @@ Es corto a propósito: corre cada hora y tiene que terminar rápido. Lee la base
 
 ```mermaid
 flowchart LR
-    SRC[("Fuente<br/>API, Sheet,<br/>base, web")] --> IMP["01_import"]
-    IMP --> AUD["02_audit"]
-    AUD --> CLN["03_clean"]
-    CLN --> ENR["04_enrich"]
-    ENR --> INT["05_integrate"]
-    INT --> WRG["06_indicators<br/>▼<br/>data/06_final"]
-    WRG --> ANA["07_analysis"]
-    WRG --> PRD["08_products"]
-    ANA --> PRD
-    PRD --> PUB["09_publish"]
-    PUB --> DEST[("Sheets · Drive<br/>Pages · cliente")]
+    SRC[("Fuente<br/>API, Sheet,<br/>base, web")] --> IMP
+
+    subgraph ING ["1. Ingesta"]
+        IMP["01_import"]
+    end
+
+    subgraph PRO ["2. Procesar"]
+        AUD["02_audit"] --> CLN["03_clean"]
+        CLN --> ENR["04_enrich"]
+        ENR --> INT["05_integrate"]
+        INT --> IND["06_indicators<br/>▼<br/>data/06_final"]
+    end
+
+    subgraph PRD ["3. Producir"]
+        ANA["07_analysis"] --> PRO8["08_products"]
+    end
+
+    subgraph PUB ["4. Publicar"]
+        P09["09_publish"]
+    end
+
+    IMP --> AUD
+    IND --> ANA
+    IND --> PRO8
+    PRO8 --> P09
+    P09 --> DEST[("Sheets · Drive<br/>Pages · cliente")]
 ```
 
-Se lee en tres bloques:
+Se lee en cuatro bloques:
 
-| Bloque | Etapas | Para quién es | Escribe en |
+| Bloque | Etapas | Qué pasa | Escribe en |
 |---|---|---|---|
-| **Preparar los datos** | `01` a `06` | para el pipeline: cada script lee lo que dejó el anterior | `data/` |
-| **Analizar y producir** | `07` y `08` | para una persona: lo que se mira, se analiza o se entrega | `outputs/` |
-| **Publicar** | `09` | para un sistema: llevarlo a donde se mira | Sheets, Drive, Pages |
+| **1. Ingesta** | `01` | se traen los datos de cada fuente, tal cual llegan | `data/01_raw/` |
+| **2. Procesar** | `02` a `06` | se auditan, limpian, enriquecen e integran hasta dejar la base final; cada script lee lo que dejó el anterior | `data/02_audit/` a `data/06_final/` |
+| **3. Producir** | `07` y `08` | se analiza la base final y se arma lo que mira o recibe una persona | `outputs/` |
+| **4. Publicar** | `09` | se lleva cada cosa a su destino; no se calcula nada | Sheets, Drive, Pages |
+
+El flujo de monitoreo (sección 2.1) recorre los mismos bloques, pero corto: ingesta (`01`), procesar solo hasta `03_clean`, producir solo `08_monitoring` y publicar solo el Sheet.
 
 ---
 
