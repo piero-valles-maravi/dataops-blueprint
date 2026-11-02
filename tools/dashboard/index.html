@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Explorador del blueprint</title>
+<style>
+  :root {
+    --verde-1: #064E3B; --verde-2: #065F46; --azul: #1E3A8A; --ambar: #F59E0B; --ambar-2: #FBBF24;
+    --menta: #6EE7B7; --menta-2: #D1FAE5; --menta-3: #ECFDF5;
+    --bg: #F6FAF8; --panel: #FFFFFF; --texto: #0F1F1A; --tenue: #4B5F58; --borde: #D7E5DF; --hover: #ECFDF5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0B1512; --panel: #111F1A; --texto: #E6F2ED; --tenue: #9DB5AC; --borde: #234038; --hover: #16302A;
+    }
+  }
+  :root[data-theme="dark"] { --bg: #0B1512; --panel: #111F1A; --texto: #E6F2ED; --tenue: #9DB5AC; --borde: #234038; --hover: #16302A; }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--texto); font: 15px/1.5 'Segoe UI', Ubuntu, system-ui, sans-serif; }
+  header { background: linear-gradient(120deg, var(--verde-1), var(--verde-2) 55%, var(--azul)); color: #fff; padding: 28px 16px 22px; }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+  header h1 { margin: 0; font-size: 26px; }
+  header p { margin: 4px 0 0; color: var(--menta-2); }
+  nav { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+  nav button { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 999px; padding: 6px 16px; font: inherit; cursor: pointer; }
+  nav button[aria-selected="true"] { background: var(--ambar-2); color: var(--verde-1); border-color: var(--ambar-2); font-weight: 600; }
+  main { padding: 20px 16px 48px; }
+  .vista[hidden] { display: none; }
+
+  /* estructura */
+  .grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+  @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } }
+  .card { background: var(--panel); border: 1px solid var(--borde); border-radius: 14px; padding: 14px; }
+  .herr { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+  .herr input { flex: 1 1 200px; min-width: 0; padding: 8px 12px; border: 1px solid var(--borde); border-radius: 10px; background: var(--bg); color: var(--texto); font: inherit; }
+  .herr button { padding: 8px 12px; border: 1px solid var(--borde); border-radius: 10px; background: var(--bg); color: var(--texto); font: inherit; cursor: pointer; }
+  ul.arbol, ul.arbol ul { list-style: none; margin: 0; padding: 0; }
+  ul.arbol ul { padding-left: 18px; border-left: 1px dashed var(--borde); margin-left: 9px; }
+  .fila { display: flex; align-items: baseline; gap: 6px; padding: 3px 6px; border-radius: 8px; cursor: pointer; }
+  .fila:hover, .fila.sel { background: var(--hover); }
+  .fila.sel { outline: 2px solid var(--ambar); }
+  .flecha { display: inline-block; width: 14px; flex: none; color: var(--tenue); font-size: 12px; transition: transform .15s; }
+  li.abierto > .fila .flecha { transform: rotate(90deg); }
+  li:not(.abierto) > ul { display: none; }
+  .nom { font-family: ui-monospace, Consolas, monospace; font-weight: 600; white-space: nowrap; }
+  .corta { color: var(--tenue); font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .local { font-size: 11px; color: var(--ambar); border: 1px solid var(--ambar); border-radius: 6px; padding: 0 4px; }
+  mark { background: var(--ambar-2); color: var(--verde-1); border-radius: 3px; }
+  .det h2 { margin: 0 0 2px; font: 700 20px ui-monospace, Consolas, monospace; overflow-wrap: anywhere; }
+  .det .ruta { color: var(--tenue); font: 13px ui-monospace, Consolas, monospace; overflow-wrap: anywhere; }
+  .det .corta-det { font-weight: 600; margin: 12px 0 4px; }
+  .det a { color: var(--verde-2); }
+  :root[data-theme="dark"] .det a { color: var(--menta); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .det a { color: var(--menta); } }
+  .det .hijos { margin-top: 12px; color: var(--tenue); font-size: 13px; }
+  .det.vacio { color: var(--tenue); }
+  .pegajoso { position: sticky; top: 12px; }
+  #tip { position: fixed; z-index: 10; max-width: 340px; background: var(--verde-1); color: var(--menta-3); padding: 8px 10px; border-radius: 10px; font-size: 13px; box-shadow: 0 6px 20px rgba(0,0,0,.25); pointer-events: none; opacity: 0; transition: opacity .12s; }
+  #tip.ver { opacity: 1; }
+
+  /* flujos */
+  .flujo { margin-bottom: 22px; }
+  .flujo h3 { margin: 0 0 2px; }
+  .flujo p.d { margin: 0 0 12px; color: var(--tenue); }
+  .bloques { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+  @media (max-width: 820px) { .bloques { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .bloque { border: 1px solid var(--borde); border-radius: 12px; padding: 10px; background: var(--bg); }
+  .bloque h4 { margin: 0 0 8px; font-size: 14px; color: var(--tenue); text-transform: uppercase; letter-spacing: .04em; }
+  .etapa { display: block; width: 100%; text-align: left; margin: 0 0 6px; padding: 7px 10px; border-radius: 10px; border: 1px solid var(--borde); background: var(--panel); color: var(--texto); font: inherit; cursor: pointer; }
+  .etapa b { font-family: ui-monospace, Consolas, monospace; }
+  .etapa:hover { border-color: var(--menta); }
+  .etapa.sel { outline: 2px solid var(--ambar); }
+  .etapa.off { opacity: .35; }
+  .det-etapa dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; margin: 10px 0 0; }
+  .det-etapa dt { color: var(--tenue); }
+  .det-etapa dd { margin: 0; }
+  footer { color: var(--tenue); font-size: 13px; text-align: center; padding: 0 16px 28px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Explorador del blueprint</h1>
+    <p>La estructura del repositorio y el flujo de los datos, para explorar con el mouse.</p>
+    <nav role="tablist">
+      <button role="tab" aria-selected="true" data-vista="estructura">Estructura</button>
+      <button role="tab" aria-selected="false" data-vista="flujos">Flujos</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="vista" id="v-estructura">
+    <div class="grid">
+      <div class="card">
+        <div class="herr">
+          <input id="buscar" type="search" placeholder="Buscar carpeta, archivo o palabra (ej.: rondas, IA, Looker)" aria-label="Buscar">
+          <button id="abrir">Expandir todo</button>
+          <button id="cerrar">Colapsar</button>
+        </div>
+        <ul class="arbol" id="arbol"></ul>
+      </div>
+      <div class="card det vacio pegajoso" id="det">Pasa el mouse sobre una carpeta para ver su definición, o haz clic para ver el detalle aquí.</div>
+    </div>
+  </section>
+
+  <section class="vista" id="v-flujos" hidden>
+    <div class="grid">
+      <div class="card">
+        <div class="flujo">
+          <h3>Flujo completo</h3>
+          <p class="d">daily.yml · una vez al día · de la fuente a la entrega</p>
+          <div class="bloques" id="b-completo"></div>
+        </div>
+        <div class="flujo">
+          <h3>Flujo de monitoreo</h3>
+          <p class="d">hourly.yml · cada hora durante el campo · comparte 01 a 03 con el completo</p>
+          <div class="bloques" id="b-monitoreo"></div>
+        </div>
+      </div>
+      <div class="card det det-etapa vacio pegajoso" id="det-etapa">Haz clic en una etapa para ver qué pregunta responde, qué lee y qué escribe.</div>
+    </div>
+  </section>
+</main>
+<footer>Se genera junto con el árbol del README. Si cambia la estructura, se actualizan los dos.</footer>
+<div id="tip" role="tooltip"></div>
+
+<script>
+const ARBOL = [{"n":"README.md","r":"README.md","c":"qué es, cómo se usa y cómo está armado","l":"La puerta de entrada al proyecto: qué hace, en qué estado está, cómo fluyen los datos y cómo correrlo. Se actualiza en el mismo commit que cualquier cambio de estructura.","h":[]},{"n":"dataops-blueprint.Rproj","r":"dataops-blueprint.Rproj","c":"abre el proyecto en RStudio o Positron","l":"Archivo del proyecto de R. Al clonar se renombra como <proyecto>.Rproj. Fija la carpeta de trabajo en la raíz del repositorio, así las rutas relativas funcionan igual en local y en GitHub Actions.","h":[]},{"n":"renv.lock","r":null,"c":"versiones exactas de los paquetes","l":"Lo genera renv::snapshot() después de llenar src/00_setup/packages.R. Los workflows lo restauran con setup-renv, así nadie repite la lista de paquetes en el YAML y todos corren las mismas versiones.","h":[]},{"n":".gitignore","r":".gitignore","c":"qué NO se sube a git","l":"Ignora el contenido de data/ y outputs/ (pero conserva sus carpetas con .gitkeep), todo .secrets/ salvo la plantilla, la librería de renv, los borradores y los archivos temporales de R, Excel y el sistema.","h":[]},{"n":".claude/","r":".claude","c":"contexto y reglas para programar con Claude","l":"Todo lo que Claude necesita para trabajar en el proyecto sin preguntar lo mismo cada vez. Se versiona con el proyecto; la configuración personal (settings.local.json) no se sube.","h":[{"n":"CLAUDE.md","r":".claude/CLAUDE.md","c":"qué leer al empezar y qué actualizar al terminar","l":"Reglas cortas que Claude lee al iniciar cada sesión: dónde está el contexto, qué skill usar para cada tarea y que hay que actualizar CONTEXTO_PROYECTO.md al terminar.","h":[]},{"n":"CONTEXTO_PROYECTO.md","r":".claude/CONTEXTO_PROYECTO.md","c":"ficha, estado, decisiones, pendientes, bitácora","l":"Archivo vivo con el estado ACTUAL del proyecto: ficha del cliente, estado de cada etapa, decisiones de diseño con su porqué, pendientes y una bitácora con fecha absoluta. Si una sección queda obsoleta, se reescribe.","h":[]},{"n":"skills/","r":".claude/skills","c":"cómo se hace cada tarea","l":"Las skills del equipo, como archivos sueltos. CLAUDE.md dice cuál leer antes de cada tipo de tarea.","h":[{"n":"skill_project_structure.md","r":".claude/skills/skill_project_structure.md","c":"dónde va cada cosa","l":"Dónde va cada script, carpeta o archivo, y cómo se numeran.","h":[]},{"n":"skill_code_style.md","r":".claude/skills/skill_code_style.md","c":"estilo de código R","l":"Cabeceras, secciones, un mutate() por paso, comentarios, sufijos, construcciones prohibidas.","h":[]},{"n":"skill_audit.md","r":".claude/skills/skill_audit.md","c":"cómo se audita","l":"Las etapas de 02_audit y las 10 dimensiones de calidad, con alertas 0/1, clasificación final y veredicto humano.","h":[]},{"n":"skill_data_cleaning.md","r":".claude/skills/skill_data_cleaning.md","c":"cómo se limpia una fuente","l":"Reglas no negociables, bloques de llave, tabla de correcciones y trampas que ya costaron caro.","h":[]},{"n":"skill_readme.md","r":".claude/skills/skill_readme.md","c":"cómo se escribe el README","l":"Orden de secciones, banner, badges, tablas y diagramas Mermaid.","h":[]},{"n":"skill_readme_banner.svg","r":".claude/skills/skill_readme_banner.svg","c":"plantilla del banner","l":"La plantilla SVG del banner: se copia a .github/images/ y se cambian los textos.","h":[]}]}]},{"n":".github/","r":".github","c":"imágenes del README y automatización","l":"Lo que usa GitHub: las imágenes del README y los workflows de GitHub Actions.","h":[{"n":"images/","r":".github/images","c":"banner y figuras del README","l":"Las imágenes de ESTE proyecto que muestra el README. Los gráficos de resultados no van aquí: van en outputs/.","h":[{"n":"banner.svg","r":".github/images/banner.svg","c":"portada del README","l":"El banner del proyecto, hecho con la plantilla de skill_readme_banner.svg.","h":[]},{"n":"flujo_completo.svg","r":".github/images/flujo_completo.svg","c":"animación del flujo completo","l":"Los cuatro bloques (Ingesta, Procesar, Producir, Publicar) en orden.","h":[]},{"n":"flujos.svg","r":".github/images/flujos.svg","c":"animación de los dos flujos","l":"El flujo de monitoreo y el completo, que comparten 01 a 03 y se separan después.","h":[]}]},{"n":"workflows/","r":".github/workflows","c":"automatización: un workflow por frecuencia","l":"Cada workflow solo llama scripts, un paso por script, sin lógica propia. Comparten el grupo de concurrencia, así nunca corren dos a la vez.","h":[{"n":"hourly.yml","r":".github/workflows/hourly.yml","c":"flujo de monitoreo, cada hora","l":"01_import → 02_audit → 03_clean → 08_monitoring → 09_publish_sheets. Corre solo mientras dura el campo; lo dispara tools/apps_script.","h":[]},{"n":"daily.yml","r":".github/workflows/daily.yml","c":"flujo completo, una vez al día","l":"01_import → … → 06_indicators → 08_products → 09_publish, con el respaldo en Drive. 07_analysis se corre a mano al cierre.","h":[]},{"n":"dashboard.yml","r":".github/workflows/dashboard.yml","c":"publica tools/dashboard en Pages","l":"Opcional. Publica tools/dashboard/ en GitHub Pages cada vez que cambia. Requiere activar Pages con la fuente GitHub Actions.","h":[]}]}]},{"n":".secrets/","r":".secrets","c":"credenciales (casi nada se sube)","l":"El único lugar con valores secretos. En git solo van .gitkeep y la plantilla; en GitHub Actions las mismas variables llegan como secrets con el mismo nombre.","h":[{"n":".Renviron.example","r":".secrets/.Renviron.example","c":"los nombres de las variables, sin valores","l":"La plantilla: se copia como .Renviron y se completa. Tiene todas las variables que usa el proyecto.","h":[]},{"n":".Renviron","r":null,"c":"(local) los valores","l":"Los valores reales: IDs de Drive y Sheets, usuario y clave de la fuente. Nunca se sube.","h":[]},{"n":"cuenta_servicio.json","r":null,"c":"(local) la clave de Google","l":"La clave de la cuenta de servicio de Google. Nunca se sube; en Actions se escribe al empezar y se borra al terminar.","h":[]}]},{"n":"sources/","r":"sources","c":"insumos que el pipeline NO produce","l":"Lo que entra de afuera y no cambia con cada corrida. Se versiona en git, así que nunca lleva datos personales.","h":[{"n":"rondas.csv","r":"sources/rondas.csv","c":"una fila por ronda","l":"ronda, formid, fechas, instrumento y estado (cerrada, activa, pendiente). La ronda activa es la que procesan los workflows; el piloto es una ronda más.","h":[]},{"n":"01_instrumento/","r":"sources/01_instrumento","c":"el cuestionario de cada ronda","l":"Los XLSForm, uno por ronda y versión: <ronda>_<version>.xlsx. Definen columnas, saltos, opciones y etiquetas, y los lee leer_instrumento(ronda).","h":[{"n":"<ronda>_<version>.xlsx","r":null,"c":"XLSForm de la ronda","l":"Ej.: ronda_1_v10.xlsx. Las versiones viejas se conservan para auditar las encuestas hechas con ellas.","h":[]}]},{"n":"02_referencias/","r":"sources/02_referencias","c":"catálogos, metas, umbrales, prompts","l":"Tablas que el equipo edita sin tocar código: vocabularios controlados, metas por país, umbrales, usuarios de prueba, prompts de IA.","h":[]},{"n":"03_correcciones/","r":"sources/03_correcciones","c":"correcciones del analista","l":"Correcciones puntuales sin datos personales: ronda, id, variable, valor nuevo, motivo, autor y fecha. Las que llevan datos personales llegan por un Sheet privado.","h":[]}]},{"n":"src/","r":"src","c":"todo el código del pipeline","l":"Una carpeta por etapa, con el mismo número que la carpeta de data/ que escribe. Los archivos _encuesta, _registro, etc. son ejemplos: cada proyecto los renombra según sus fuentes.","h":[{"n":"00_master.R","r":"src/00_master.R","c":"corre los dos flujos en orden","l":"Solo para probar en local. En producción corren los workflows, un paso por script.","h":[]},{"n":"00_setup/","r":"src/00_setup","c":"lo que carga todo script","l":"Tres archivos, cada uno con una sola responsabilidad.","h":[{"n":"packages.R","r":"src/00_setup/packages.R","c":"solo paquetes","l":"Carga los paquetes; las versiones quedan en renv.lock.","h":[]},{"n":"functions.R","r":"src/00_setup/functions.R","c":"solo funciones","l":"env_requerido(), ronda_activa(), leer_instrumento(), leer_etapa(), guardar_etapa(). Cargarlo no ejecuta nada.","h":[]},{"n":"auth.R","r":"src/00_setup/auth.R","c":"solo autenticación","l":"Cuenta de servicio de Google, sin login interactivo. Solo la cargan los scripts que usan Google.","h":[]}]},{"n":"01_import/","r":"src/01_import","c":"un script por fuente: descarga tal cual","l":"Trae los datos de cada fuente sin filtrar ni corregir. Si la fuente falla, corta sin pisar el crudo anterior.","h":[{"n":"01_import_encuesta.R","r":"src/01_import/01_import_encuesta.R","c":"la encuesta","l":"SurveyCTO o Kobo; el formid sale de sources/rondas.csv.","h":[]},{"n":"01_import_registro.R","r":"src/01_import/01_import_registro.R","c":"una segunda fuente","l":"Un registro administrativo, un padrón o el Sheet del cliente.","h":[]},{"n":"01_import_validacion.R","r":"src/01_import/01_import_validacion.R","c":"las decisiones humanas","l":"La validación de las supervisoras y las correcciones con datos personales.","h":[]}]},{"n":"02_audit/","r":"src/02_audit","c":"un script por fuente: marca alertas","l":"Marca cada registro con alertas 0/1 agrupadas en 10 dimensiones, sin corregir ni borrar. Ver skill_audit.md.","h":[{"n":"02_audit_encuesta.R","r":"src/02_audit/02_audit_encuesta.R","c":"auditoría de la encuesta","l":"Aplica las correcciones humanas, calcula las dimensiones, clasifica (alerta_final) y suma el veredicto (resultado_final).","h":[]},{"n":"02_audit_registro.R","r":"src/02_audit/02_audit_registro.R","c":"auditoría del registro","l":"Solo las dimensiones que aplican a un registro: completitud, validez, consistencia, duplicados, atípicos.","h":[]}]},{"n":"03_clean/","r":"src/03_clean","c":"un script por fuente: corrige y etiqueta","l":"Corrige, normaliza y etiqueta una fuente a la vez, sin cruzarla con otras. Su salida la lee también el flujo de monitoreo.","h":[{"n":"03_clean_encuesta.R","r":"src/03_clean/03_clean_encuesta.R","c":"limpieza de la encuesta","l":"Etiquetas del instrumento, códigos especiales (-666, -999, -555) y correcciones de sources/03_correcciones.","h":[]},{"n":"03_clean_registro.R","r":"src/03_clean/03_clean_registro.R","c":"limpieza del registro","l":"Deja las mismas columnas comunes que la encuesta, para que integrar sea apilar.","h":[]}]},{"n":"04_enrich/","r":"src/04_enrich","c":"un script por fuente: información de afuera","l":"Agrega lo que la fuente no trae: IA, geocodificación, APIs. Es idempotente: no reprocesa (ni paga) lo que no cambió. Opcional.","h":[{"n":"04_enrich_encuesta.R","r":"src/04_enrich/04_enrich_encuesta.R","c":"IA sobre la encuesta","l":"Por ejemplo, clasificar respuestas abiertas.","h":[]},{"n":"04_enrich_registro.R","r":"src/04_enrich/04_enrich_registro.R","c":"datos externos del registro","l":"Por ejemplo, geocodificar direcciones.","h":[]}]},{"n":"05_integrate/","r":"src/05_integrate","c":"pasos con subíndice: une fuentes y rondas","l":"Apila, cruza, deduplica y resuelve quién es quién. No crea indicadores. Con una sola fuente y una ronda, no existe.","h":[{"n":"05_integrate_1_apilar.R","r":"src/05_integrate/05_integrate_1_apilar.R","c":"apila fuentes y rondas","l":"Junta todo en una base con _fuente y _ronda.","h":[]},{"n":"05_integrate_2_entidades.R","r":"src/05_integrate/05_integrate_2_entidades.R","c":"resuelve quién es quién","l":"Une los registros de la misma persona o entidad y deja una llave única.","h":[]}]},{"n":"06_indicators/","r":"src/06_indicators","c":"un script por tema: indicadores y base final","l":"Calcula con lo que ya está en la base integrada (04 trae de afuera; 06 calcula adentro). Deja la frontera: data/06_final.","h":[{"n":"06_indicators_variables.R","r":"src/06_indicators/06_indicators_variables.R","c":"variables, indicadores, scores","l":"La base final analítica.","h":[]},{"n":"06_indicators_entrega.R","r":"src/06_indicators/06_indicators_entrega.R","c":"versión de entrega","l":"Solo registros válidos y sin datos personales, verificado con stop().","h":[]}]},{"n":"07_analysis/","r":"src/07_analysis","c":"un script por análisis","l":"Modelos, índices y cruces. Lee solo de data/06_final y guarda todo en outputs/07_analysis. Se corre a mano.","h":[{"n":"07_analysis_descriptivos.R","r":"src/07_analysis/07_analysis_descriptivos.R","c":"descriptivos y cruces","l":"Escribe con el prefijo descriptivos_.","h":[]},{"n":"07_analysis_modelo.R","r":"src/07_analysis/07_analysis_modelo.R","c":"el modelo o índice","l":"Regresión, conjoint, Van Westendorp o un índice compuesto; prefijo modelo_.","h":[]}]},{"n":"08_products/","r":"src/08_products","c":"un script por producto","l":"Lo que mira o recibe una persona.","h":[{"n":"08_monitoring.R","r":"src/08_products/08_monitoring.R","c":"tablas del monitoreo","l":"Única excepción a la frontera: lee de data/03_clean para medir el campo mientras ocurre.","h":[]},{"n":"08_products_informe.R","r":"src/08_products/08_products_informe.R","c":"el informe","l":"Tablas y figuras de 07 más los indicadores de la base final.","h":[]},{"n":"08_products_entrega.R","r":"src/08_products/08_products_entrega.R","c":"la entrega al cliente","l":"La base de entrega en .xlsx, .csv y .dta, con su diccionario.","h":[]}]},{"n":"09_publish/","r":"src/09_publish","c":"un script por destino","l":"Lleva cada cosa a donde se mira. No calcula nada.","h":[{"n":"09_publish_sheets.R","r":"src/09_publish/09_publish_sheets.R","c":"el Sheet del dashboard","l":"Esquema de columnas fijo, para que Looker no se rompa.","h":[]},{"n":"09_publish_drive.R","r":"src/09_publish/09_publish_drive.R","c":"el respaldo en Drive","l":"Una carpeta de Drive por etapa de data/, con la fecha en el nombre.","h":[]}]}]},{"n":"data/","r":"data","c":"SOLO bases de datos .RData","l":"Lo que produce el pipeline y lee otro script. En git van solo las carpetas. Nada de tablas de resultados, gráficos ni informes.","h":[{"n":"01_raw/","r":"data/01_raw","c":"lo que llegó, tal cual","l":"Una subcarpeta por ronda.","h":[{"n":"piloto/","r":"data/01_raw/piloto","c":"datos de piloto","l":"Los datos de piloto en esta etapa. El nombre coincide con la fila de sources/rondas.csv: el código es uno solo y la ronda es un parámetro.","h":[]},{"n":"ronda_1/","r":"data/01_raw/ronda_1","c":"datos de ronda_1","l":"Los datos de ronda_1 en esta etapa. El nombre coincide con la fila de sources/rondas.csv: el código es uno solo y la ronda es un parámetro.","h":[]},{"n":"ronda_2/","r":"data/01_raw/ronda_2","c":"datos de ronda_2","l":"Los datos de ronda_2 en esta etapa. El nombre coincide con la fila de sources/rondas.csv: el código es uno solo y la ronda es un parámetro.","h":[]},{"n":"ronda_3/","r":"data/01_raw/ronda_3","c":"datos de ronda_3","l":"Los datos de ronda_3 en esta etapa. El nombre coincide con la fila de sources/rondas.csv: el código es uno solo y la ronda es un parámetro.","h":[]}]},{"n":"02_audit/","r":"data/02_audit","c":"cada fuente con sus alertas","l":"Una subcarpeta por ronda.","h":[{"n":"piloto/","r":"data/02_audit/piloto","c":"datos de piloto","l":"Los datos de piloto en esta etapa. El nombre coincide con la fila de sources/rondas.csv: el código es uno solo y la ronda es un parámetro.","h":[]},{"n":"ronda_1/","r":"data/02_audit/ronda_1","c":"datos de ronda_1","l":"Los datos de ronda_1 en esta etapa. El nombre coincide con la fila de sources/rondas.csv: el código es uno solo y la ronda es un parámetro.","h":[]},{"n":"ronda_2/","r":"data/02_audit/ronda_2","c":"datos de ronda_2","l":"Los datos de ronda_2 en esta etapa. El nombre coincide con la fila de sources/rondas.csv: el código es uno solo y la ronda es un parámetro.","h":[]},{"n":"ronda_3/","r":"data/02_audit/ronda_3","c":"datos de ronda_3","l":"Los datos de ronda_3 en esta etapa. El nombre coincide con la fila de sources/rondas.csv: el código es uno solo y la ronda es un parámetro.","h":[]}]},{"n":"03_clean/","r":"data/03_clean","c":"cada fuente limpia","l":"Una subcarpeta por ronda. Es lo que lee el flujo de monitoreo.","h":[{"n":"piloto/","r":"data/03_clean/piloto","c":"datos de piloto","l":"Los datos de piloto en esta etapa. El nombre coincide con la fila de sources/rondas.csv: el código es uno solo y la ronda es un parámetro.","h":[]},{"n":"ronda_1/","r":"data/03_clean/ronda_1","c":"datos de ronda_1","l":"Los datos de ronda_1 en esta etapa. El nombre coincide con la fila de sources/rondas.csv: el código es uno solo y la ronda es un parámetro.","h":[]},{"n":"ronda_2/","r":"data/03_clean/ronda_2","c":"datos de ronda_2","l":"Los datos de ronda_2 en esta etapa. El nombre coincide con la fila de sources/rondas.csv: el código es uno solo y la ronda es un parámetro.","h":[]},{"n":"ronda_3/","r":"data/03_clean/ronda_3","c":"datos de ronda_3","l":"Los datos de ronda_3 en esta etapa. El nombre coincide con la fila de sources/rondas.csv: el código es uno solo y la ronda es un parámetro.","h":[]}]},{"n":"04_enrich/","r":"data/04_enrich","c":"cada fuente con la información agregada","l":"Una subcarpeta por ronda, con la base y su _hist (la memoria para no reprocesar).","h":[{"n":"piloto/","r":"data/04_enrich/piloto","c":"datos de piloto","l":"Los datos de piloto en esta etapa. El nombre coincide con la fila de sources/rondas.csv: el código es uno solo y la ronda es un parámetro.","h":[]},{"n":"ronda_1/","r":"data/04_enrich/ronda_1","c":"datos de ronda_1","l":"Los datos de ronda_1 en esta etapa. El nombre coincide con la fila de sources/rondas.csv: el código es uno solo y la ronda es un parámetro.","h":[]},{"n":"ronda_2/","r":"data/04_enrich/ronda_2","c":"datos de ronda_2","l":"Los datos de ronda_2 en esta etapa. El nombre coincide con la fila de sources/rondas.csv: el código es uno solo y la ronda es un parámetro.","h":[]},{"n":"ronda_3/","r":"data/04_enrich/ronda_3","c":"datos de ronda_3","l":"Los datos de ronda_3 en esta etapa. El nombre coincide con la fila de sources/rondas.csv: el código es uno solo y la ronda es un parámetro.","h":[]}]},{"n":"05_integrate/","r":"data/05_integrate","c":"todas las fuentes y rondas juntas","l":"Ya sin subcarpetas por ronda.","h":[{"n":"<proyecto>_integrate.RData","r":null,"c":"base .RData","l":"Una sola base con llave única por persona o entidad.","h":[]}]},{"n":"06_final/","r":"data/06_final","c":"la frontera","l":"La única carpeta que leen 07_analysis y 08_products.","h":[{"n":"<proyecto>_final.RData","r":null,"c":"base .RData","l":"La base analítica, con indicadores.","h":[]},{"n":"<proyecto>_entrega.RData","r":null,"c":"base .RData","l":"La versión sin datos personales.","h":[]}]}]},{"n":"outputs/","r":"outputs","c":"todo lo que NO es base de datos","l":"Resultados de 07 y productos de 08, para una persona. En git van solo las carpetas; cada archivo lleva fecha y no se sobrescribe.","h":[{"n":"07_analysis/","r":"outputs/07_analysis","c":"resultados de todos los análisis","l":"Todos los análisis juntos; cada archivo lleva el nombre del análisis como prefijo.","h":[{"n":"tablas/","r":"outputs/07_analysis/tablas","c":"tablas de resultados","l":"Estimaciones y cruces.","h":[{"n":"descriptivos_<tabla>.csv","r":null,"c":"una tabla","l":"Ej.: descriptivos_edad_por_pais.csv.","h":[]}]},{"n":"figuras/","r":"outputs/07_analysis/figuras","c":"gráficos","l":"Guardados con ggsave(), nunca solo en pantalla.","h":[{"n":"modelo_<figura>.png","r":null,"c":"una figura","l":"Ej.: modelo_efectos_marginales.png.","h":[]}]}]},{"n":"08_products/","r":"outputs/08_products","c":"una carpeta por producto","l":"Lo que se entrega o se mira.","h":[{"n":"monitoreo/","r":"outputs/08_products/monitoreo","c":"tablas del campo","l":"Las sube 09_publish_sheets al Sheet que lee Looker.","h":[]},{"n":"informe/","r":"outputs/08_products/informe","c":"informes con fecha","l":"Ej.: informe_2026-11-02.docx.","h":[{"n":"informe_<aaaa-mm-dd>.docx","r":null,"c":"un informe","l":"Un archivo por corte; nunca se sobrescribe uno entregado.","h":[]}]},{"n":"entrega/","r":"outputs/08_products/entrega","c":"entregas al cliente","l":"Una subcarpeta por corte.","h":[{"n":"entrega_<aaaa-mm-dd>/","r":null,"c":"una entrega","l":"La base en .xlsx, .csv y .dta, con su diccionario.","h":[]}]}]}]},{"n":"tools/","r":"tools","c":"código que corre fuera del pipeline","l":"Opcional: lo que no es R ni corre en el pipeline.","h":[{"n":"apps_script/","r":"tools/apps_script","c":"el disparador de los workflows","l":"Google Apps Script que lanza los workflows a su hora, porque el cron de GitHub no es confiable.","h":[{"n":"disparador.gs","r":"tools/apps_script/disparador.gs","c":"el script","l":"El token va en las propiedades del script, nunca en el código.","h":[]}]},{"n":"dashboard/","r":"tools/dashboard","c":"página web en GitHub Pages","l":"En el blueprint trae el explorador interactivo de esta estructura; un proyecto lo reemplaza por su dashboard propio.","h":[{"n":"index.html","r":"tools/dashboard/index.html","c":"la página","l":"Se publica con .github/workflows/dashboard.yml.","h":[]}]}]}];
+
+const ETAPAS = [
+  { n: '01', s: 'import', b: 1, q: '¿Qué llegó de la fuente?', lee: 'la fuente (API, Sheet, base, web) y sources/rondas.csv', esc: 'data/01_raw/<ronda>/', no: 'No filtra ni corrige. Si la fuente falla, corta sin pisar el crudo anterior.', m: true },
+  { n: '02', s: 'audit', b: 2, q: '¿Está bien lo que llegó?', lee: 'data/01_raw/, sources/01_instrumento/ y 02_referencias/', esc: 'data/02_audit/<ronda>/', no: 'No corrige ni borra: marca alertas 0/1 en 10 dimensiones y aplica los veredictos humanos.', m: true },
+  { n: '03', s: 'clean', b: 2, q: '¿Cómo queda usable, una fuente a la vez?', lee: 'data/02_audit/ y sources/03_correcciones/', esc: 'data/03_clean/<ronda>/', no: 'No carga ninguna otra fuente.', m: true },
+  { n: '04', s: 'enrich', b: 2, q: '¿Qué le agregamos desde afuera?', lee: 'data/03_clean/', esc: 'data/04_enrich/<ronda>/', no: 'No vuelve a procesar (ni a pagar) lo que no cambió. Opcional.' },
+  { n: '05', s: 'integrate', b: 2, q: '¿Cómo se unen fuentes y rondas?', lee: 'data/04_enrich/ o data/03_clean/', esc: 'data/05_integrate/', no: 'No crea indicadores. Con una sola fuente y una ronda, no existe.' },
+  { n: '06', s: 'indicators', b: 2, q: '¿Qué variables e indicadores necesitamos?', lee: 'data/05_integrate/ (o la última etapa)', esc: 'data/06_final/', no: 'No limpia. Calcula con lo que ya está adentro, después de integrar.' },
+  { n: '07', s: 'analysis', b: 3, q: '¿Qué resultados obtenemos?', lee: 'data/06_final/', esc: 'outputs/07_analysis/tablas/ y figuras/', no: 'Nunca deja resultados solo en pantalla. Se corre a mano.' },
+  { n: '08', s: 'products', b: 3, q: '¿Qué mira o recibe una persona?', lee: 'data/06_final/ y outputs/07_analysis/ (08_monitoring: data/03_clean/)', esc: 'outputs/08_products/<producto>/', no: 'No calcula modelos.', m: true, mn: 'monitoring' },
+  { n: '09', s: 'publish', b: 4, q: '¿Dónde tiene que estar?', lee: 'outputs/ y data/', esc: 'Sheets, Drive, Pages', no: 'No calcula nada. En el monitoreo solo sube el Sheet de Looker.', m: true, mn: 'publish_sheets' }
+];
+const BLOQUES = ['', '1. Ingesta', '2. Procesar', '3. Producir', '4. Publicar'];
+
+// enlace al repositorio: <usuario>.github.io/<repo>/ -> github.com/<usuario>/<repo>
+const enGitHub = (() => {
+  const h = location.hostname, p = location.pathname.split('/').filter(Boolean);
+  if (h.endsWith('.github.io') && p.length) return 'https://github.com/' + h.split('.')[0] + '/' + p[0] + '/tree/main/';
+  return null;
+})();
+
+const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const tip = document.getElementById('tip');
+function mostrarTip(e, texto) { tip.textContent = texto; tip.classList.add('ver'); moverTip(e); }
+function moverTip(e) {
+  const x = Math.min(e.clientX + 14, innerWidth - tip.offsetWidth - 8);
+  const y = e.clientY + 16 + tip.offsetHeight > innerHeight ? e.clientY - tip.offsetHeight - 12 : e.clientY + 16;
+  tip.style.left = x + 'px'; tip.style.top = y + 'px';
+}
+function ocultarTip() { tip.classList.remove('ver'); }
+
+// ---- árbol ----
+const raiz = document.getElementById('arbol');
+const det = document.getElementById('det');
+let seleccion = null;
+
+function nodo(x, ruta) {
+  const li = document.createElement('li');
+  li._x = x; li._ruta = ruta.concat(x.n);
+  const fila = document.createElement('div');
+  fila.className = 'fila'; fila.tabIndex = 0;
+  fila.innerHTML = '<span class="flecha">' + (x.h.length ? '▶' : '') + '</span>' +
+    '<span class="nom">' + esc(x.n) + '</span>' +
+    (x.r ? '' : '<span class="local">local</span>') +
+    '<span class="corta">' + esc(x.c) + '</span>';
+  fila.addEventListener('mouseenter', e => mostrarTip(e, x.l));
+  fila.addEventListener('mousemove', moverTip);
+  fila.addEventListener('mouseleave', ocultarTip);
+  const accion = () => { if (x.h.length) li.classList.toggle('abierto'); elegir(li, fila); };
+  fila.addEventListener('click', accion);
+  fila.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); accion(); } });
+  li.appendChild(fila);
+  if (x.h.length) {
+    const ul = document.createElement('ul');
+    x.h.forEach(h => ul.appendChild(nodo(h, li._ruta)));
+    li.appendChild(ul);
+  }
+  return li;
+}
+function elegir(li, fila) {
+  if (seleccion) seleccion.classList.remove('sel');
+  seleccion = fila; fila.classList.add('sel');
+  const x = li._x;
+  det.classList.remove('vacio');
+  det.innerHTML = '<h2>' + esc(x.n) + '</h2>' +
+    '<div class="ruta">' + esc(li._ruta.join('/').replace(/\/+/g, '/')) + '</div>' +
+    '<div class="corta-det">' + esc(x.c) + '</div>' +
+    '<div>' + esc(x.l) + '</div>' +
+    (x.h.length ? '<div class="hijos">Contiene: ' + x.h.map(h => esc(h.n)).join(' · ') + '</div>' : '') +
+    (!x.r ? '<div class="hijos">No está en el repositorio: es local o lo genera el pipeline.</div>'
+          : enGitHub ? '<p><a href="' + enGitHub + x.r + '" target="_blank" rel="noopener">Ver en GitHub ↗</a></p>' : '');
+}
+ARBOL.forEach(x => raiz.appendChild(nodo(x, [])));
+
+const todos = () => [...raiz.querySelectorAll('li')];
+document.getElementById('abrir').onclick = () => todos().forEach(li => li.querySelector('ul') && li.classList.add('abierto'));
+document.getElementById('cerrar').onclick = () => todos().forEach(li => li.classList.remove('abierto'));
+
+const buscar = document.getElementById('buscar');
+buscar.addEventListener('input', () => {
+  const q = buscar.value.trim().toLowerCase();
+  todos().forEach(li => {
+    const x = li._x, nomEl = li.querySelector(':scope > .fila .nom');
+    nomEl.innerHTML = esc(x.n);
+    li.style.display = '';
+    if (!q) return;
+    const propio = (x.n + ' ' + x.c + ' ' + x.l).toLowerCase().includes(q);
+    const desc = [...li.querySelectorAll('li')].some(d => (d._x.n + ' ' + d._x.c + ' ' + d._x.l).toLowerCase().includes(q));
+    li.style.display = propio || desc ? '' : 'none';
+    if (desc) li.classList.add('abierto');
+    const i = x.n.toLowerCase().indexOf(q);
+    if (i >= 0) nomEl.innerHTML = esc(x.n.slice(0, i)) + '<mark>' + esc(x.n.slice(i, i + q.length)) + '</mark>' + esc(x.n.slice(i + q.length));
+  });
+});
+
+// ---- flujos ----
+const detE = document.getElementById('det-etapa');
+let selE = [];
+function pintarFlujo(id, monitoreo) {
+  const cont = document.getElementById(id);
+  for (let b = 1; b <= 4; b++) {
+    const caja = document.createElement('div');
+    caja.className = 'bloque';
+    caja.innerHTML = '<h4>' + BLOQUES[b] + '</h4>';
+    ETAPAS.filter(e => e.b === b).forEach(e => {
+      const btn = document.createElement('button');
+      const nombre = monitoreo && e.mn ? e.mn : e.s;
+      btn.className = 'etapa' + (monitoreo && !e.m ? ' off' : '');
+      btn.innerHTML = '<b>' + e.n + '</b> ' + esc(nombre);
+      btn.dataset.n = e.n;
+      btn.addEventListener('mouseenter', ev => mostrarTip(ev, e.q));
+      btn.addEventListener('mousemove', moverTip);
+      btn.addEventListener('mouseleave', ocultarTip);
+      btn.addEventListener("click", () => elegirEtapa(e, nombre));
+      caja.appendChild(btn);
+    });
+    cont.appendChild(caja);
+  }
+}
+function elegirEtapa(e, nombre) {
+  document.querySelectorAll('.etapa.sel').forEach(b => b.classList.remove('sel'));
+  document.querySelectorAll('.etapa[data-n="' + e.n + '"]').forEach(b => b.classList.add('sel'));
+  const enMon = e.m ? 'sí' : 'no (solo en el flujo completo)';
+  detE.classList.remove('vacio');
+  detE.innerHTML = "<h2>" + e.n + "_" + esc(nombre) + "</h2>" +
+    '<div class="ruta">' + BLOQUES[e.b] + '</div>' +
+    '<div class="corta-det">' + esc(e.q) + '</div>' +
+    '<dl><dt>Lee</dt><dd>' + esc(e.lee) + '</dd><dt>Escribe</dt><dd>' + esc(e.esc) + '</dd>' +
+    '<dt>No hace</dt><dd>' + esc(e.no) + '</dd><dt>Monitoreo</dt><dd>' + enMon + '</dd></dl>';
+}
+pintarFlujo('b-completo', false);
+pintarFlujo('b-monitoreo', true);
+
+// ---- pestañas ----
+document.querySelectorAll('nav button').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('nav button').forEach(b => b.setAttribute('aria-selected', b === btn));
+  document.querySelectorAll('.vista').forEach(v => v.hidden = v.id !== 'v-' + btn.dataset.vista);
+  ocultarTip();
+}));
+
+// la ventana de ayuda se esconde al escribir, desplazar o hacer clic fuera
+addEventListener('scroll', ocultarTip, { passive: true });
+buscar.addEventListener('input', ocultarTip);
+document.addEventListener('click', e => { if (!e.target.closest('.fila, .etapa')) ocultarTip(); });
+</script>
+</body>
+</html>

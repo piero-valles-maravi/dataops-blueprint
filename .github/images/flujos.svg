@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-label="Flujo de monitoreo y flujo completo">
+<defs>
+  <linearGradient id="fondo" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#064E3B"/><stop offset="0.55" stop-color="#065F46"/><stop offset="1" stop-color="#1E3A8A"/>
+  </linearGradient>
+</defs>
+<style>
+  .t   { font: 700 26px 'Segoe UI', Ubuntu, system-ui, sans-serif; fill: #FFFFFF; }
+  .sub { font: 400 15px 'Segoe UI', Ubuntu, system-ui, sans-serif; fill: #D1FAE5; }
+  .blk { font: 700 17px 'Segoe UI', Ubuntu, system-ui, sans-serif; fill: #FFFFFF; }
+  .num { font: 700 15px 'Segoe UI', Ubuntu, system-ui, sans-serif; fill: #064E3B; }
+  .nom { font: 400 12px 'Segoe UI', Ubuntu, system-ui, sans-serif; fill: #065F46; }
+  .lbl { font: 600 14px 'Segoe UI', Ubuntu, system-ui, sans-serif; fill: #FBBF24; }
+  .dst { font: 600 13px 'Segoe UI', Ubuntu, system-ui, sans-serif; fill: #064E3B; }
+</style>
+<rect width="1200" height="420" rx="24" fill="url(#fondo)"/>
+<text x="40" y="48" class="t">Dos flujos, un mismo comienzo</text>
+<text x="40" y="72" class="sub">Los dos pasan por 01, 02 y 03; después el monitoreo va directo al dashboard</text>
+<path d="M40 215 H470 C510 215 510 135 560 135 H1170" fill="none" stroke="#6EE7B7" stroke-opacity="0.45" stroke-width="3" stroke-dasharray="2 8" stroke-linecap="round"/>
+<path d="M40 215 H470 C510 215 510 315 560 315 H1170" fill="none" stroke="#6EE7B7" stroke-opacity="0.45" stroke-width="3" stroke-dasharray="2 8" stroke-linecap="round"/>
+<circle r="8" fill="#FBBF24"><animateMotion path="M40 215 H470 C510 215 510 135 560 135 H1170" dur="4s" begin="0.00s" repeatCount="indefinite"/></circle>
+<circle r="8" fill="#FBBF24"><animateMotion path="M40 215 H470 C510 215 510 135 560 135 H1170" dur="4s" begin="1.33s" repeatCount="indefinite"/></circle>
+<circle r="8" fill="#FBBF24"><animateMotion path="M40 215 H470 C510 215 510 135 560 135 H1170" dur="4s" begin="2.67s" repeatCount="indefinite"/></circle>
+<circle r="8" fill="#ECFDF5"><animateMotion path="M40 215 H470 C510 215 510 315 560 315 H1170" dur="9s" repeatCount="indefinite"/></circle>
+<rect x="30" y="157" width="450" height="86" rx="16" fill="#FFFFFF" fill-opacity="0.07" stroke="#D1FAE5" stroke-opacity="0.35"/>
+<text x="46" y="149" class="lbl">Común a los dos</text>
+<rect x="48" y="193" width="104" height="44" rx="10" fill="#ECFDF5"/>
+<text x="100" y="212" text-anchor="middle" class="num">01</text>
+<text x="100" y="229" text-anchor="middle" class="nom">import</text>
+<rect x="193" y="193" width="104" height="44" rx="10" fill="#ECFDF5"/>
+<text x="245" y="212" text-anchor="middle" class="num">02</text>
+<text x="245" y="229" text-anchor="middle" class="nom">audit</text>
+<rect x="338" y="193" width="104" height="44" rx="10" fill="#ECFDF5"/>
+<text x="390" y="212" text-anchor="middle" class="num">03</text>
+<text x="390" y="229" text-anchor="middle" class="nom">clean</text>
+<text x="570" y="95" class="lbl">Monitoreo · hourly.yml · cada hora durante el campo</text>
+<rect x="608" y="113" width="104" height="44" rx="10" fill="#ECFDF5"/>
+<text x="660" y="132" text-anchor="middle" class="num">08</text>
+<text x="660" y="149" text-anchor="middle" class="nom">monitoring</text>
+<rect x="758" y="113" width="104" height="44" rx="10" fill="#ECFDF5"/>
+<text x="810" y="132" text-anchor="middle" class="num">09</text>
+<text x="810" y="149" text-anchor="middle" class="nom">sheets</text>
+<rect x="915" y="119" width="150" height="32" rx="16" fill="#FBBF24"/>
+<text x="990" y="140" text-anchor="middle" class="dst">Looker Studio</text>
+<text x="570" y="367" class="lbl">Completo · daily.yml · una vez al día</text>
+<rect x="564" y="293" width="92" height="44" rx="10" fill="#ECFDF5"/>
+<text x="610" y="312" text-anchor="middle" class="num">04</text>
+<text x="610" y="329" text-anchor="middle" class="nom">enrich</text>
+<rect x="664" y="293" width="92" height="44" rx="10" fill="#ECFDF5"/>
+<text x="710" y="312" text-anchor="middle" class="num">05</text>
+<text x="710" y="329" text-anchor="middle" class="nom">integrate</text>
+<rect x="764" y="293" width="92" height="44" rx="10" fill="#ECFDF5"/>
+<text x="810" y="312" text-anchor="middle" class="num">06</text>
+<text x="810" y="329" text-anchor="middle" class="nom">indicators</text>
+<rect x="864" y="293" width="92" height="44" rx="10" fill="#ECFDF5"/>
+<text x="910" y="312" text-anchor="middle" class="num">07</text>
+<text x="910" y="329" text-anchor="middle" class="nom">analysis</text>
+<rect x="964" y="293" width="92" height="44" rx="10" fill="#ECFDF5"/>
+<text x="1010" y="312" text-anchor="middle" class="num">08</text>
+<text x="1010" y="329" text-anchor="middle" class="nom">products</text>
+<rect x="1064" y="293" width="92" height="44" rx="10" fill="#ECFDF5"/>
+<text x="1110" y="312" text-anchor="middle" class="num">09</text>
+<text x="1110" y="329" text-anchor="middle" class="nom">publish</text>
+</svg>

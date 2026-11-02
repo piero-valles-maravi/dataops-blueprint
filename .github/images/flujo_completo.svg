@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="350" viewBox="0 0 1200 350" role="img" aria-label="Flujo completo: ingesta, procesar, producir y publicar">
+<defs>
+  <linearGradient id="fondo" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#064E3B"/><stop offset="0.55" stop-color="#065F46"/><stop offset="1" stop-color="#1E3A8A"/>
+  </linearGradient>
+</defs>
+<style>
+  .t   { font: 700 26px 'Segoe UI', Ubuntu, system-ui, sans-serif; fill: #FFFFFF; }
+  .sub { font: 400 15px 'Segoe UI', Ubuntu, system-ui, sans-serif; fill: #D1FAE5; }
+  .blk { font: 700 17px 'Segoe UI', Ubuntu, system-ui, sans-serif; fill: #FFFFFF; }
+  .num { font: 700 15px 'Segoe UI', Ubuntu, system-ui, sans-serif; fill: #064E3B; }
+  .nom { font: 400 12px 'Segoe UI', Ubuntu, system-ui, sans-serif; fill: #065F46; }
+  .lbl { font: 600 14px 'Segoe UI', Ubuntu, system-ui, sans-serif; fill: #FBBF24; }
+  .dst { font: 600 13px 'Segoe UI', Ubuntu, system-ui, sans-serif; fill: #064E3B; }
+</style>
+<rect width="1200" height="350" rx="24" fill="url(#fondo)"/>
+<text x="40" y="48" class="t">Flujo completo</text>
+<text x="40" y="72" class="sub">De la fuente a la entrega, en cuatro bloques · daily.yml</text>
+<rect x="40" y="92" width="200" height="200" rx="16" fill="#FFFFFF" fill-opacity="0.07" stroke="#D1FAE5" stroke-opacity="0.35"/>
+<rect x="40" y="92" width="200" height="200" rx="16" fill="#FBBF24" fill-opacity="0.10" stroke="#FBBF24" stroke-width="3" opacity="0"><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.164;0.179;1" dur="8s" repeatCount="indefinite"/></rect>
+<text x="58" y="124" class="blk">1. Ingesta</text>
+<rect x="70" y="140" width="140" height="44" rx="10" fill="#ECFDF5"/>
+<text x="140" y="159" text-anchor="middle" class="num">01</text>
+<text x="140" y="176" text-anchor="middle" class="nom">import</text>
+<rect x="270" y="92" width="300" height="200" rx="16" fill="#FFFFFF" fill-opacity="0.07" stroke="#D1FAE5" stroke-opacity="0.35"/>
+<rect x="270" y="92" width="300" height="200" rx="16" fill="#FBBF24" fill-opacity="0.10" stroke="#FBBF24" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.190;0.205;0.458;0.473;1" dur="8s" repeatCount="indefinite"/></rect>
+<text x="288" y="124" class="blk">2. Procesar</text>
+<rect x="290" y="135" width="120" height="44" rx="10" fill="#ECFDF5"/>
+<text x="350" y="154" text-anchor="middle" class="num">02</text>
+<text x="350" y="171" text-anchor="middle" class="nom">audit</text>
+<rect x="430" y="135" width="120" height="44" rx="10" fill="#ECFDF5"/>
+<text x="490" y="154" text-anchor="middle" class="num">03</text>
+<text x="490" y="171" text-anchor="middle" class="nom">clean</text>
+<rect x="290" y="187" width="120" height="44" rx="10" fill="#ECFDF5"/>
+<text x="350" y="206" text-anchor="middle" class="num">04</text>
+<text x="350" y="223" text-anchor="middle" class="nom">enrich</text>
+<rect x="430" y="187" width="120" height="44" rx="10" fill="#ECFDF5"/>
+<text x="490" y="206" text-anchor="middle" class="num">05</text>
+<text x="490" y="223" text-anchor="middle" class="nom">integrate</text>
+<rect x="360" y="239" width="120" height="44" rx="10" fill="#ECFDF5"/>
+<text x="420" y="258" text-anchor="middle" class="num">06</text>
+<text x="420" y="275" text-anchor="middle" class="nom">indicators</text>
+<rect x="600" y="92" width="260" height="200" rx="16" fill="#FFFFFF" fill-opacity="0.07" stroke="#D1FAE5" stroke-opacity="0.35"/>
+<rect x="600" y="92" width="260" height="200" rx="16" fill="#FBBF24" fill-opacity="0.10" stroke="#FBBF24" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.485;0.500;0.717;0.732;1" dur="8s" repeatCount="indefinite"/></rect>
+<text x="618" y="124" class="blk">3. Producir</text>
+<rect x="660" y="140" width="140" height="44" rx="10" fill="#ECFDF5"/>
+<text x="730" y="159" text-anchor="middle" class="num">07</text>
+<text x="730" y="176" text-anchor="middle" class="nom">analysis</text>
+<rect x="660" y="196" width="140" height="44" rx="10" fill="#ECFDF5"/>
+<text x="730" y="215" text-anchor="middle" class="num">08</text>
+<text x="730" y="232" text-anchor="middle" class="nom">products</text>
+<rect x="890" y="92" width="270" height="200" rx="16" fill="#FFFFFF" fill-opacity="0.07" stroke="#D1FAE5" stroke-opacity="0.35"/>
+<rect x="890" y="92" width="270" height="200" rx="16" fill="#FBBF24" fill-opacity="0.10" stroke="#FBBF24" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.744;0.759;0.985;0.993;1" dur="8s" repeatCount="indefinite"/></rect>
+<text x="908" y="124" class="blk">4. Publicar</text>
+<rect x="955" y="140" width="140" height="44" rx="10" fill="#ECFDF5"/>
+<text x="1025" y="159" text-anchor="middle" class="num">09</text>
+<text x="1025" y="176" text-anchor="middle" class="nom">publish</text>
+<line x1="40" y1="322" x2="1160" y2="322" stroke="#6EE7B7" stroke-opacity="0.5" stroke-width="3" stroke-dasharray="2 8" stroke-linecap="round"/>
+<circle r="9" fill="#FBBF24"><animateMotion path="M40 322 H1160" dur="8s" repeatCount="indefinite"/></circle>
+<circle r="16" fill="#FBBF24" fill-opacity="0.25"><animateMotion path="M40 322 H1160" dur="8s" repeatCount="indefinite"/></circle>
+</svg>
