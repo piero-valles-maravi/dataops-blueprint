@@ -24,10 +24,7 @@ Se clona, se renombra y se completa. Sirve igual para una encuesta de una sola r
 3. [Las etapas](#3-las-etapas)
 4. [Dónde queda cada cosa](#4-dónde-queda-cada-cosa)
 5. [Estructura del repositorio](#5-estructura-del-repositorio)
-6. [Las carpetas que no son del pipeline](#6-las-carpetas-que-no-son-del-pipeline)
-7. [Cómo escala](#7-cómo-escala)
-8. [Cómo calzan los proyectos que ya tenemos](#8-cómo-calzan-los-proyectos-que-ya-tenemos)
-9. [Reglas que no se negocian](#9-reglas-que-no-se-negocian)
+6. [Reglas que no se negocian](#6-reglas-que-no-se-negocian)
 
 ---
 
@@ -228,93 +225,11 @@ La regla es **qué es y quién lo lee**:
     └── dashboard/                         el dashboard web propio que se publica en GitHub Pages
 ```
 
-El repositorio trae scripts de ejemplo en cada carpeta de `src/` (una encuesta y un registro como fuentes) y las subcarpetas `piloto/`, `ronda_1/`, `ronda_2/` y `ronda_3/` en `data/01_raw` a `04_enrich`: cada proyecto los renombra o borra según sus fuentes y rondas. La sección 7 muestra qué archivo escribe cada script. Si una corrida deja varios archivos de un mismo producto, van en una subcarpeta con la fecha de corte.
+El repositorio trae scripts de ejemplo en cada carpeta de `src/` (una encuesta y un registro como fuentes) y las subcarpetas `piloto/`, `ronda_1/`, `ronda_2/` y `ronda_3/` en `data/01_raw` a `04_enrich`: cada proyecto los renombra o borra según sus fuentes y rondas. Si una corrida deja varios archivos de un mismo producto, van en una subcarpeta con la fecha de corte.
 
 ---
 
-## 6. Las carpetas que no son del pipeline
-
-| Carpeta | Qué va | Qué **no** va |
-|---|---|---|
-| `sources/` | lo que entra de afuera y no cambia con cada corrida: rondas, cuestionario, catálogos, metas, prompts, correcciones del analista | nada que produzca el pipeline; ningún dato personal |
-| `outputs/` | resultados de `07` y productos de `08`, con fecha | bases que lea otro script |
-| `tools/apps_script/` | el Apps Script que dispara los workflows | lógica del pipeline |
-| `tools/dashboard/` | el código de un dashboard web propio (HTML para GitHub Pages) | el dashboard de Looker Studio: ese vive en Looker y lee un Sheet |
-| `.github/images/` | el banner y las figuras del README | gráficos de resultados (van en `outputs/`) |
-| `.github/workflows/` | un workflow por frecuencia, un paso por script | lógica: los workflows solo llaman scripts |
-| `.claude/` | el contexto y las skills para trabajar con Claude | la configuración personal (`settings.local.json`) |
-| `.secrets/` | `.Renviron` y las claves que son archivo | nada fuera de esta carpeta tiene un valor secreto |
-
-Las reglas de cómo documentar (orden del README, plantilla del banner) están en `.claude/skills/skill_readme.md` y `skill_readme_banner.svg`. El resultado de aplicarlas (el banner de este proyecto) va en `.github/images/`.
-
----
-
-## 7. Cómo escala
-
-La estructura **no cambia**; solo se agregan archivos dentro de las mismas carpetas.
-
-**Varias fuentes:** un script por fuente en `01` a `04`, y se unen en `05`.
-
-```
-src/01_import/01_import_encuesta.R         ─►  data/01_raw/<ronda>/<proyecto>_encuesta_raw.RData
-src/01_import/01_import_registro.R         ─►  data/01_raw/<ronda>/<proyecto>_registro_raw.RData
-src/03_clean/03_clean_encuesta.R           ─►  data/03_clean/<ronda>/<proyecto>_encuesta_clean.RData
-src/03_clean/03_clean_registro.R           ─►  data/03_clean/<ronda>/<proyecto>_registro_clean.RData
-src/05_integrate/05_integrate_1_apilar.R   ─►  data/05_integrate/<proyecto>_apilada.RData
-src/05_integrate/05_integrate_2_entidades.R ─► data/05_integrate/<proyecto>_integrate.RData
-```
-
-Una etapa con un solo script (`05_integrate.R`) se divide en pasos con subíndice (`05_integrate_1_`, `05_integrate_2_`) cuando crece o cuando cada paso deja su propia base.
-
-**Varias rondas:** el código es **uno solo** y la ronda es un parámetro. `sources/rondas.csv` dice qué formulario e instrumento usa cada ronda y cuál está activa. Los datos de cada ronda van en una subcarpeta dentro de cada etapa, y `05_integrate` las une.
-
-```
-ronda,formid,fecha_inicio,fecha_fin,instrumento,estado
-piloto,emcesa_piloto,2026-08-20,2026-08-25,piloto_v3.xlsx,cerrada
-ronda_1,emcesa_ronda_1,2026-09-10,2026-10-30,ronda_1_v15.xlsx,cerrada
-ronda_2,emcesa_ronda_2,2027-01-15,2027-02-15,ronda_2_v1.xlsx,activa
-ronda_3,emcesa_ronda_3,2027-05-10,2027-06-10,ronda_3_v1.xlsx,pendiente
-ronda_4,emcesa_ronda_4,2027-09-13,2027-10-13,ronda_4_v1.xlsx,pendiente
-```
-
-Las rondas se llaman siempre `ronda_<n>` (sin espacios ni abreviaturas), igual en `rondas.csv`, en las subcarpetas de `data/` y en el nombre del instrumento.
-
-El piloto es una ronda más. Nunca se copia el código por ronda (`src/ronda_1/`): una corrección tiene que llegar a todas.
-
-**Varios análisis y productos:** un script por cada uno. Los análisis escriben todos en `outputs/07_analysis/tablas/` y `figuras/`, con el nombre del análisis como prefijo; cada producto tiene su carpeta en `outputs/08_products/`:
-
-```
-src/07_analysis/07_analysis_descriptivos.R  ─►  outputs/07_analysis/tablas/descriptivos_*.csv, figuras/descriptivos_*.png
-src/07_analysis/07_analysis_modelo.R        ─►  outputs/07_analysis/tablas/modelo_*.csv, figuras/modelo_*.png
-src/08_products/08_products_informe.R       ─►  outputs/08_products/informe/
-src/08_products/08_products_entrega.R       ─►  outputs/08_products/entrega/
-```
-
-**Decisiones humanas** (validación de supervisoras, correcciones): son una fuente más.
-
-- Si vienen de un Sheet, se importan con `01_import_validacion.R`, y `02_audit` aplica las correcciones (antes de las alertas) y los veredictos (al final).
-- Si son correcciones del analista sin datos personales, van en `sources/03_correcciones/`.
-- Nunca listas de ids, encuestadores o fechas escritas en el código.
-
----
-
-## 8. Cómo calzan los proyectos que ya tenemos
-
-| Etapa | BID RDS Diáspora | Mann Pricing | EMCESA | Tigo Jóvenes Conectados | Paraguay Index | Licitaciones |
-|---|---|---|---|---|---|---|
-| `01_import` | encuestas, semillas, casos, validación | SurveyCTO | SurveyCTO | 6 fuentes | APIs y scraping | 4 portales |
-| `02_audit` | 10 dimensiones | alertas A–E | flags `m_`, `out_`, `ale_` | — | contratos de esquema | hash de cambios |
-| `03_clean` | etiquetas, códigos | etiquetas, códigos | correcciones | una por fuente | `processing` | `clean_<fuente>` |
-| `04_enrich` | — | — | — | — | CPI, población | `enrichAI_<fuente>` |
-| `05_integrate` | encuestas + semillas + casos | — | — | base maestra | panel trimestral | apilar fuentes |
-| `06_indicators` | base codificada | NPS, tramos | corte | tablas de fases | insumos del índice | score |
-| `07_analysis` | conjoint | Van Westendorp | — | diseño muestral | índice | — |
-| `08_products` | monitoreo, diccionario, validación | monitoreo, entrega | monitoreo, entrega | Looker, informes | dashboard | — |
-| `09_publish` | Sheets, Drive, SurveyCTO | Sheets, Drive | Sheets, Drive | Drive, SFTP | Pages | Sheets |
-
----
-
-## 9. Reglas que no se negocian
+## 6. Reglas que no se negocian
 
 - [ ] El número del script es el mismo que el de la carpeta que escribe.
 - [ ] Cada etapa lee **solo** la anterior que exista y escribe **solo** en su carpeta.
