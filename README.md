@@ -226,22 +226,30 @@ La regla es **qué es y quién lo lee**:
 │   │   │   ├── <proyecto>_encuesta_raw.RData
 │   │   │   ├── <proyecto>_registro_raw.RData
 │   │   │   └── <proyecto>_validaciones_raw.RData
-│   │   └── r1/                            los mismos archivos, para la ronda 1
+│   │   ├── ronda_1/                       los mismos archivos, para cada ronda
+│   │   ├── ronda_2/
+│   │   └── ronda_3/
 │   ├── 02_audit/
 │   │   ├── piloto/
 │   │   │   ├── <proyecto>_encuesta_audit.RData
 │   │   │   └── <proyecto>_registro_audit.RData
-│   │   └── r1/
+│   │   ├── ronda_1/
+│   │   ├── ronda_2/
+│   │   └── ronda_3/
 │   ├── 03_clean/
 │   │   ├── piloto/
 │   │   │   ├── <proyecto>_encuesta_clean.RData
 │   │   │   └── <proyecto>_registro_clean.RData
-│   │   └── r1/
+│   │   ├── ronda_1/
+│   │   ├── ronda_2/
+│   │   └── ronda_3/
 │   ├── 04_enrich/
 │   │   ├── piloto/
 │   │   │   ├── <proyecto>_encuesta_enrich.RData
 │   │   │   └── <proyecto>_encuesta_hist.RData     memoria para no reprocesar
-│   │   └── r1/
+│   │   ├── ronda_1/
+│   │   ├── ronda_2/
+│   │   └── ronda_3/
 │   ├── 05_integrate/                      ya sin subcarpetas: aquí se juntan las rondas
 │   │   ├── <proyecto>_apilada.RData
 │   │   └── <proyecto>_integrate.RData
@@ -269,7 +277,7 @@ La regla es **qué es y quién lo lee**:
     └── dashboard/                         dashboard web propio (GitHub Pages)
 ```
 
-Los archivos de `src/` y `data/` y las carpetas de `outputs/` son ejemplos de un proyecto con una encuesta y un registro, y con una ronda piloto y una ronda 1: cada proyecto los renombra según sus fuentes, rondas, análisis y productos. Si una corrida deja varios archivos de un mismo producto, van en una subcarpeta con la fecha de corte.
+Los archivos de `src/` y `data/` y las carpetas de `outputs/` son ejemplos de un proyecto con una encuesta y un registro, y con un piloto y tres rondas: cada proyecto los renombra según sus fuentes, rondas, análisis y productos. Si una corrida deja varios archivos de un mismo producto, van en una subcarpeta con la fecha de corte.
 
 ---
 
@@ -312,9 +320,13 @@ Una etapa con un solo script (`05_integrate.R`) se divide en pasos con subíndic
 ```
 ronda,formid,fecha_inicio,fecha_fin,instrumento,estado
 piloto,emcesa_piloto,2026-08-20,2026-08-25,piloto_v3.xlsx,cerrada
-r1,emcesa_r1,2026-09-10,2026-10-30,r1_v15.xlsx,cerrada
-r2,emcesa_r2,2027-01-15,2027-02-15,r2_v1.xlsx,activa
+ronda_1,emcesa_ronda_1,2026-09-10,2026-10-30,ronda_1_v15.xlsx,cerrada
+ronda_2,emcesa_ronda_2,2027-01-15,2027-02-15,ronda_2_v1.xlsx,activa
+ronda_3,emcesa_ronda_3,2027-05-10,2027-06-10,ronda_3_v1.xlsx,pendiente
+ronda_4,emcesa_ronda_4,2027-09-13,2027-10-13,ronda_4_v1.xlsx,pendiente
 ```
+
+Las rondas se llaman siempre `ronda_<n>` (sin espacios ni abreviaturas), igual en `rondas.csv`, en las subcarpetas de `data/` y en el nombre del instrumento.
 
 El piloto es una ronda más. Nunca se copia el código por ronda (`src/ronda_1/`): una corrección tiene que llegar a todas.
 

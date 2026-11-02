@@ -1,3 +1,5 @@
 ronda,formid,fecha_inicio,fecha_fin,instrumento,estado
 piloto,<formid_piloto>,<aaaa-mm-dd>,<aaaa-mm-dd>,piloto_v1.xlsx,cerrada
-r1,<formid_r1>,<aaaa-mm-dd>,<aaaa-mm-dd>,r1_v1.xlsx,activa
+ronda_1,<formid_ronda_1>,<aaaa-mm-dd>,<aaaa-mm-dd>,ronda_1_v1.xlsx,activa
+ronda_2,<formid_ronda_2>,<aaaa-mm-dd>,<aaaa-mm-dd>,ronda_2_v1.xlsx,pendiente
+ronda_3,<formid_ronda_3>,<aaaa-mm-dd>,<aaaa-mm-dd>,ronda_3_v1.xlsx,pendiente
