@@ -13,6 +13,6 @@
 #                                                                              #
 # CORRE DESPUES DE: 06_indicators                                              #
 # LEE: data/06_final/                                                          #
-# ESCRIBE: outputs/07_analysis/modelo/ (tablas/ y figuras/)                    #
+# ESCRIBE: outputs/07_analysis/tablas/ y figuras/, con el prefijo modelo_      #
 #-----------------------------------------------------------------------------.#
 
