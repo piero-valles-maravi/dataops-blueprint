@@ -5,15 +5,16 @@
 #   <NOMBRE APELLIDO (ROL)> - <correo>                                         #
 #                                                                              #
 # FECHA DE CREACION: <dd/mm/aaaa>                                              #
-# NOMBRE: 08_products_entrega                                                  #
-# DETALLE: arma la entrega al cliente: la base de entrega en .xlsx, .csv y     #
-#   .dta, con su diccionario de variables. No modifica los datos. EJEMPLO:     #
-#   renombrar o borrar según las fuentes del proyecto.                         #
+# NOMBRE: 09_publish_entrega                                                   #
+# DETALLE: lleva al cliente la base de entrega en .xlsx, .csv, .dta y .sav,    #
+#   con su diccionario de variables, en una carpeta con la fecha y en la       #
+#   carpeta de Drive de entregas. No modifica los datos: la base sin datos     #
+#   personales la arma 06_indicators_entrega.                                  #
 #                                                                              #
 # CORRE DESPUES DE: 06_indicators_entrega                                      #
-# LEE: data/06_final/proyecto_entrega.RData y                                  #
-#   sources/01_instrumento/                                                    #
-# ESCRIBE: outputs/08_products/entrega/entrega_<aaaa-mm-dd>/                   #
+# LEE: data/06_final/proyecto_entrega.RData                                    #
+# ESCRIBE: outputs/09_publish/entrega/entrega_<aaaa-mm-dd>/ y                  #
+#   GDRIVE_ID_ENTREGAS                                                         #
 #-----------------------------------------------------------------------------.#
 
 # Setup ------------------------------------------------------------------------
@@ -30,13 +31,16 @@ source('src/00_setup/functions.R')
 # el proyecto y la ronda: arman la carpeta y el nombre de cada archivo
 source('src/00_setup/config.R')
 
+# las credenciales: .secrets/.Renviron y la cuenta de servicio de Google
+source('src/00_setup/auth.R')
+
 
 
 # Rutas y carpetas -------------------------------------------------------------
 
 # una carpeta por fecha de entrega: las anteriores quedan como estaban
 carpeta_salida <- file.path(
-  'outputs/08_products/entrega',                   # la carpeta de entregas
+  'outputs/09_publish/entrega',                    # la carpeta de entregas
   paste0('entrega_', Sys.Date())                   # entrega_2026-11-02
 )                                                  # Output
 

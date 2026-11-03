@@ -1,0 +1,841 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Del formulario a la decisión</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geologica:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&display=swap">
+<style>
+/* ===== Línea gráfica de Equilibrium (.claude/skills/skill_linea_grafica_equilibrium.md) ===== */
+:root{
+  --navy:#030F50;--navy2:#000031;--paper:#F7FAF2;--blanco:#FFFFFF;--coral:#F7966B;--teal:#7CCCBF;
+  --amarillo:#F4B21B;--peri:#788EC7;--azul:#1A55A6;--cian:#14B1E7;--durazno:#F6C8AE;
+  --gris:#595959;--borde:#C9CBD1;--carril:#EEEEEE;
+  --mono:ui-monospace,"Cascadia Mono",Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--navy2);overflow:hidden;font-family:Geologica,system-ui,sans-serif}
+#escenario{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#deck{position:relative;width:1920px;height:1080px;flex:none;transform-origin:center}
+.slide{position:absolute;inset:0;overflow:hidden;opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s}
+.slide.activa{opacity:1;visibility:visible}
+.claro{background:var(--paper);color:var(--navy)}
+.oscuro{background:var(--navy);color:var(--paper)}
+p,h1,h2,h3{margin:0}
+.mono{font-family:var(--mono)}
+
+/* entradas: se disparan cada vez que la diapositiva se activa */
+.a{opacity:0}
+.activa .a{animation:entra .75s cubic-bezier(.2,.7,.2,1) var(--d,0s) both}
+.activa .ai{animation-name:entraIzq}
+.activa .ae{animation-name:escala}
+/* una entrada y además un ciclo que se repite: las dos animaciones juntas */
+.activa .a.cic{animation:entra .75s cubic-bezier(.2,.7,.2,1) var(--d,0s) both,ciclo var(--dur,8s) var(--c,0s) infinite}
+.activa .a.ae.cic{animation:escala .75s cubic-bezier(.2,.7,.2,1) var(--d,0s) both,ciclo var(--dur,8s) var(--c,0s) infinite}
+@keyframes entra{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+@keyframes entraIzq{from{opacity:0;transform:translateX(-36px)}to{opacity:1;transform:none}}
+@keyframes escala{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+
+/* piezas comunes */
+.kicker{font-size:24px;font-weight:700;letter-spacing:.12em;color:var(--coral)}
+.preg{font-size:88px;font-weight:700;line-height:1.05}
+.preg.m{font-size:68px}
+.insight{font-size:36px;font-weight:500;line-height:1.32}
+.insight b{color:var(--coral);font-weight:700}
+.oscuro .insight b{color:var(--coral)}
+.nota{font-size:20px;font-style:italic;color:var(--gris)}
+.regla{width:180px;height:2px;background:var(--navy)}
+.izq{position:absolute;left:120px;top:200px;width:780px;display:flex;flex-direction:column;gap:26px}
+.der{position:absolute;left:1000px;right:120px;top:200px;bottom:110px}
+.opcional{display:inline-flex;align-items:center;gap:10px;align-self:flex-start;padding:8px 16px;border:2px dashed var(--navy);font-size:20px;font-weight:700}
+.cuando{padding:20px 24px;background:var(--blanco);box-shadow:inset 0 0 0 1px var(--borde);font-size:24px;line-height:1.4;color:var(--gris)}
+.cuando b{color:var(--navy)}
+.banda{position:absolute;left:120px;right:0;bottom:0;height:150px;background:var(--navy);color:var(--paper);border-top-left-radius:64px;display:flex;align-items:center;padding:0 120px 0 80px;font-size:34px;font-weight:500}
+.banda b{color:var(--coral)}
+.pie{position:absolute;right:56px;bottom:30px;font-size:18px;color:var(--gris);z-index:5}
+.oscuro .pie{color:var(--peri)}
+
+/* mini mapa de las 9 etapas */
+.mapa{position:absolute;left:120px;right:120px;top:40px;height:96px;display:flex;align-items:flex-start}
+.mapa .e{flex:1;display:flex;align-items:flex-start}
+.mapa .n{display:flex;flex-direction:column;align-items:center;gap:8px;width:120px}
+.mapa .c{width:36px;height:36px;border:2px solid var(--navy);background:var(--blanco);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+.mapa .opc .c{border-style:dashed}
+.mapa .hecha .c{background:var(--teal)}
+.mapa .actual .c{background:var(--coral);transform:scale(1.18)}
+.mapa .t{font-size:14px;color:var(--gris)}
+.mapa .actual .t{color:var(--navy);font-weight:700}
+.mapa .l{flex:1;border-top:2px dotted var(--navy);margin-top:17px}
+.mapa + .regla2{position:absolute;left:120px;right:120px;top:150px;height:2px;background:var(--navy)}
+
+/* tablas */
+.tabla{width:100%;border-collapse:collapse;font-size:24px}
+.tabla th{text-align:left;font-size:17px;letter-spacing:.08em;padding:0 16px 14px 0;border-bottom:2px solid var(--navy)}
+.tabla td{padding:18px 16px 18px 0;border-bottom:2px dotted var(--navy);vertical-align:top;line-height:1.35}
+.tabla td.g{color:var(--gris)}
+
+/* encuestas */
+.enc-cab{position:absolute;left:0;top:0;right:0;height:115px;display:flex}
+.enc-cab .num{width:115px;height:115px;background:var(--navy);color:var(--paper);display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:800}
+.enc-cab .tit{flex:1;background:var(--coral);border-bottom-left-radius:32px;display:flex;align-items:center;padding-left:48px;font-size:24px;font-weight:700;letter-spacing:.12em}
+.enc-preg{position:absolute;left:120px;top:186px;width:1080px;font-size:60px;font-weight:700;line-height:1.12}
+.enc-ops{position:absolute;left:120px;top:400px;width:1080px;display:flex;flex-direction:column;gap:28px}
+.op .fila{display:flex;align-items:baseline;gap:16px}
+.op .letra{font-size:26px;font-weight:700;width:36px}
+.op .texto{font-size:26px;color:var(--gris);flex:1}
+.op .pct{font-size:32px;font-weight:700;min-width:90px;text-align:right}
+.op .carril{position:relative;height:36px;background:var(--carril);margin-left:52px}
+.op .barra{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--navy);transition:width .8s cubic-bezier(.2,.7,.2,1),background .3s}
+.op.lider .barra{background:var(--coral)}
+.revelada .op.correcta .texto{color:var(--navy);font-weight:700}
+.revelada .op.correcta .texto::after{content:"  ✓ correcta";color:var(--coral)}
+.revelada .op:not(.correcta){opacity:.45}
+.enc-n{position:absolute;left:172px;bottom:64px;display:flex;align-items:center;gap:12px;font-size:22px;font-style:italic;color:var(--gris)}
+.vivo{width:12px;height:12px;border-radius:50%;background:var(--coral);animation:late 1.4s ease-in-out infinite}
+@keyframes late{0%,100%{opacity:1}50%{opacity:.2}}
+.enc-qr{position:absolute;right:120px;top:186px;width:520px;height:780px;background:var(--navy);color:var(--paper);border-top-left-radius:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px;text-align:center}
+.qr{background:var(--blanco);padding:18px;display:flex}
+.qr svg{display:block;width:100%;height:100%}
+.enc-qr .qr{width:340px;height:340px}
+.enc-qr h3{font-size:40px;font-weight:700}
+.enc-qr p{font-size:24px;color:var(--durazno);margin-top:8px}
+.enc-qr .url{font-size:17px;color:var(--peri);font-family:var(--mono);padding:0 30px;word-break:break-all}
+.demo{position:absolute;left:120px;top:136px;font-size:18px;font-weight:700;color:var(--coral);letter-spacing:.08em}
+
+/* controles en pantalla */
+#nav{position:fixed;left:16px;bottom:14px;display:flex;gap:8px;opacity:0;transition:opacity .3s;z-index:10}
+body:hover #nav{opacity:1}
+#nav button{width:44px;height:44px;border:0;background:rgba(247,250,242,.12);color:#F7FAF2;font-size:20px;cursor:pointer}
+#progreso{position:fixed;left:0;bottom:0;height:4px;background:var(--coral);transition:width .4s;z-index:10}
+
+/* visuales de cada diapositiva */
+.caja{border:2px solid var(--navy);background:var(--blanco);display:flex;flex-direction:column;justify-content:center;padding:0 26px}
+.flecha{color:var(--navy);font-size:40px;font-weight:300}
+@keyframes escaneo{0%{top:0}100%{top:452px}}
+@keyframes chip{0%,8%{background:var(--carril);color:var(--gris)}14%,100%{background:var(--fondo);color:var(--navy)}}
+@keyframes ciclo{0%,22%,100%{background:var(--navy);color:var(--paper)}5%,17%{background:var(--coral);color:var(--navy)}}
+@keyframes cicloClaro{0%,22%,100%{box-shadow:inset 0 0 0 2px var(--navy)}5%,17%{box-shadow:inset 0 0 0 4px var(--coral);background:#FFF4EE}}
+@keyframes giro{to{transform:rotate(360deg)}}
+@keyframes aguja{0%{left:0}100%{left:100%}}
+@keyframes viaja{0%{left:0;opacity:0}8%{opacity:1}92%{opacity:1}100%{left:calc(100% - 18px);opacity:0}}
+@keyframes vuela{0%,20%{opacity:0;transform:translateX(-40px)}35%,100%{opacity:1;transform:none}}
+@keyframes funde{0%,30%{transform:none;background:var(--blanco)}50%,100%{background:#FFF4EE;box-shadow:inset 0 0 0 3px var(--coral)}}
+</style>
+</head>
+<body>
+<div id="escenario"><div id="deck">
+
+<!-- ================================================================ 1 -->
+<section class="slide oscuro" id="s1">
+  <div class="a ae" style="--d:.1s;position:absolute;right:0;top:0;width:440px;height:860px;background:var(--coral);border-bottom-left-radius:64px"></div>
+  <div class="a" style="--d:.5s;position:absolute;right:120px;top:120px;width:200px;height:200px;background:var(--navy)"></div>
+  <div class="a" style="--d:.6s;position:absolute;right:120px;top:340px;width:200px;height:2px;background:var(--navy)"></div>
+  <img src="assets/logo_tagline_blanco.svg" alt="Equilibrium" style="position:absolute;left:120px;top:96px;height:72px">
+  <div class="kicker a" style="--d:.2s;position:absolute;left:120px;top:290px">PIPELINE DE DATOS · EQUIPO</div>
+  <h1 class="a" style="--d:.35s;position:absolute;left:120px;top:340px;width:1240px;font-size:112px;font-weight:700;line-height:1.02">Del formulario a la decisión</h1>
+  <p class="a" style="--d:.5s;position:absolute;left:120px;top:594px;width:1200px;font-size:40px;font-weight:500;line-height:1.3;color:var(--durazno)">El pipeline de datos <b style="color:var(--coral)">end to end</b>: cómo viaja un dato desde la fuente hasta la decisión</p>
+  <div class="a" style="--d:.7s;position:absolute;left:120px;top:770px;width:1160px;height:2px;background:var(--peri)">
+    <div style="position:absolute;top:-8px;width:18px;height:18px;background:var(--coral);animation:viaja 5s linear infinite"></div>
+  </div>
+  <div style="position:absolute;left:120px;right:0;bottom:0;height:200px;background:var(--paper);border-top-left-radius:64px;display:flex;align-items:center;gap:40px;padding:0 120px 0 80px;color:var(--navy)">
+    <div class="qr" data-qr="" style="width:150px;height:150px;padding:10px;box-shadow:inset 0 0 0 2px var(--navy)"></div>
+    <div><div style="font-size:32px;font-weight:700">Escanea ahora</div><div style="font-size:24px;color:var(--gris)">Lo vas a usar para responder durante la presentación</div></div>
+    <div style="margin-left:auto;text-align:right"><div style="font-size:24px;font-weight:700">Piero A. Valles-Maravi</div><div style="font-size:22px;color:var(--gris)">Especialista en Investigación Cuantitativa · 04 de noviembre de 2026</div></div>
+  </div>
+</section>
+
+<!-- ================================================================ 2 -->
+<section class="slide claro" id="s2" data-encuesta="p1" data-numero="1"></section>
+
+<!-- ================================================================ 3 -->
+<section class="slide claro" id="s3">
+  <div class="kicker a" style="position:absolute;left:120px;top:110px">LO QUE CONOCEMOS</div>
+  <h1 class="preg m a" style="--d:.1s;position:absolute;left:120px;top:156px;width:1500px">¿Cómo llega hoy un dato al dashboard?</h1>
+  <div style="position:absolute;left:120px;right:120px;top:420px;display:flex;align-items:center;gap:22px">
+    <div class="caja a" style="--d:.4s;width:280px;height:170px"><div style="font-size:32px;font-weight:700">Importar</div><div style="font-size:20px;color:var(--gris)">bajar la encuesta</div></div>
+    <div class="flecha a" style="--d:.55s">→</div>
+    <div class="caja a" style="--d:.7s;width:280px;height:170px"><div style="font-size:32px;font-weight:700">Auditar</div><div style="font-size:20px;color:var(--gris)">buscar problemas</div></div>
+    <div class="flecha a" style="--d:.85s">→</div>
+    <div class="caja a" style="--d:1s;width:280px;height:170px"><div style="font-size:32px;font-weight:700">Limpiar</div><div style="font-size:20px;color:var(--gris)">corregir</div></div>
+    <div class="flecha a" style="--d:1.15s">→</div>
+    <div class="caja a" style="--d:1.3s;width:280px;height:170px"><div style="font-size:32px;font-weight:700">Sheets</div><div style="font-size:20px;color:var(--gris)">subir las tablas</div></div>
+    <div class="flecha a" style="--d:1.45s">→</div>
+    <div class="caja a" style="--d:1.6s;width:280px;height:170px;background:var(--navy);color:var(--paper)"><div style="font-size:32px;font-weight:700">Looker</div><div style="font-size:20px;color:var(--peri)">mirar el campo</div></div>
+  </div>
+  <div class="banda a" style="--d:2.2s">Eso es real, pero es solo <b>&nbsp;el monitoreo del campo</b>: no es el pipeline completo.</div>
+</section>
+
+<!-- ================================================================ 4 -->
+<section class="slide claro" id="s4">
+  <div class="kicker a" style="position:absolute;left:120px;top:110px">LO QUE NO SE VE</div>
+  <h1 class="preg m a" style="--d:.1s;position:absolute;left:120px;top:156px;width:1600px">¿Qué pasa con los datos cuando termina el campo?</h1>
+  <div class="a" style="--d:.3s;position:absolute;left:120px;top:356px;font-size:20px;font-weight:700;letter-spacing:.1em;color:var(--gris)">LO QUE CONOCEMOS</div>
+  <div class="a" style="--d:.35s;position:absolute;left:120px;top:396px;display:flex;gap:12px;opacity:.55">
+    <div class="caja" style="width:170px;height:76px;font-size:22px;font-weight:700">Importar</div>
+    <div class="caja" style="width:170px;height:76px;font-size:22px;font-weight:700">Auditar</div>
+    <div class="caja" style="width:170px;height:76px;font-size:22px;font-weight:700">Limpiar</div>
+    <div class="caja" style="width:170px;height:76px;font-size:22px;font-weight:700">Sheets</div>
+    <div class="caja" style="width:170px;height:76px;font-size:22px;font-weight:700">Looker</div>
+  </div>
+  <div class="a" style="--d:.9s;position:absolute;left:120px;top:540px;font-size:20px;font-weight:700;letter-spacing:.1em;color:var(--coral)">LO QUE TAMBIÉN PASA</div>
+  <div style="position:absolute;left:120px;right:120px;top:580px;display:flex;gap:22px">
+    <div class="caja a" style="--d:1.1s;flex:1;height:170px;border-style:dashed"><div style="font-size:30px;font-weight:700">Enriquecer</div><div style="font-size:20px;color:var(--gris)">sumar lo que falta saber</div></div>
+    <div class="caja a" style="--d:1.35s;flex:1;height:170px;border-style:dashed"><div style="font-size:30px;font-weight:700">Integrar</div><div style="font-size:20px;color:var(--gris)">unir fuentes y rondas</div></div>
+    <div class="caja a" style="--d:1.6s;flex:1;height:170px;border-style:dashed"><div style="font-size:30px;font-weight:700">Calcular</div><div style="font-size:20px;color:var(--gris)">indicadores e índices</div></div>
+    <div class="caja a" style="--d:1.85s;flex:1;height:170px;border-style:dashed"><div style="font-size:30px;font-weight:700">Analizar</div><div style="font-size:20px;color:var(--gris)">tablas, figuras, informes</div></div>
+    <div class="caja a" style="--d:2.1s;flex:1;height:170px;border-style:dashed"><div style="font-size:30px;font-weight:700">Entregar</div><div style="font-size:20px;color:var(--gris)">al cliente, a Drive</div></div>
+  </div>
+  <div class="banda a" style="--d:2.7s">Lo que vemos en Looker es <b>&nbsp;la última milla</b>. Antes, otras etapas convierten datos en resultados.</div>
+</section>
+
+<!-- ================================================================ 5 -->
+<section class="slide claro" id="s5">
+  <div class="kicker a" style="position:absolute;left:120px;top:110px">EL PROCESO DE UN VISTAZO</div>
+  <h1 class="preg m a" style="--d:.1s;position:absolute;left:120px;top:156px;width:1600px">Si fueran cuatro palabras, ¿cuáles serían?</h1>
+  <div style="position:absolute;left:120px;right:120px;top:380px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px">
+    <div class="a cic" style="--d:.4s;height:420px;padding:36px;display:flex;flex-direction:column;gap:18px;--dur:8s;--c:1.5s;background:var(--navy);color:var(--paper)">
+      <div style="font-size:18px;font-weight:700;letter-spacing:.12em;opacity:.8">BLOQUE 1</div><div style="font-size:56px;font-weight:700">Ingesta</div><div style="font-size:26px;line-height:1.4">Se traen los datos de cada fuente, tal cual llegan.</div></div>
+    <div class="a cic" style="--d:.6s;height:420px;padding:36px;display:flex;flex-direction:column;gap:18px;--dur:8s;--c:3.5s;background:var(--navy);color:var(--paper)">
+      <div style="font-size:18px;font-weight:700;letter-spacing:.12em;opacity:.8">BLOQUE 2</div><div style="font-size:56px;font-weight:700">Procesar</div><div style="font-size:26px;line-height:1.4">Se revisan, limpian y preparan hasta la base final.</div></div>
+    <div class="a cic" style="--d:.8s;height:420px;padding:36px;display:flex;flex-direction:column;gap:18px;--dur:8s;--c:5.5s;background:var(--navy);color:var(--paper)">
+      <div style="font-size:18px;font-weight:700;letter-spacing:.12em;opacity:.8">BLOQUE 3</div><div style="font-size:56px;font-weight:700">Producir</div><div style="font-size:26px;line-height:1.4">Se arma lo que recibe una persona y se mira el campo.</div></div>
+    <div class="a cic" style="--d:1s;height:420px;padding:36px;display:flex;flex-direction:column;gap:18px;--dur:8s;--c:7.5s;background:var(--navy);color:var(--paper);border-top-right-radius:64px">
+      <div style="font-size:18px;font-weight:700;letter-spacing:.12em;opacity:.8">BLOQUE 4</div><div style="font-size:56px;font-weight:700">Publicar</div><div style="font-size:26px;line-height:1.4">Se lleva cada cosa a su destino. No se calcula nada.</div></div>
+  </div>
+  <p class="insight a" style="--d:1.4s;position:absolute;left:120px;top:860px;width:1500px">Todo proyecto, de una encuesta o de diez fuentes, pasa por <b>estos cuatro bloques</b>.</p>
+</section>
+
+<!-- ================================================================ 6 -->
+<section class="slide claro" id="s6">
+  <div class="kicker a" style="position:absolute;left:120px;top:110px">DENTRO DE LOS CUATRO BLOQUES</div>
+  <h1 class="preg m a" style="--d:.1s;position:absolute;left:120px;top:156px">¿Por qué separar en tantas etapas?</h1>
+  <p class="insight a" style="--d:.3s;position:absolute;left:120px;top:300px;width:620px">Porque <b>cada etapa responde una pregunta</b>. Si una falla, sabemos cuál fue y la volvemos a correr sola.</p>
+  <table class="tabla" style="position:absolute;left:820px;top:160px;width:980px;font-size:26px">
+    <thead><tr class="a" style="--d:.2s"><th style="width:90px">#</th><th style="width:250px">ETAPA</th><th>LA PREGUNTA QUE RESPONDE</th><th style="width:170px">BLOQUE</th></tr></thead>
+    <tbody>
+      <tr class="a ai" style="--d:.5s"><td><b>01</b></td><td class="mono">import</td><td>¿Qué llegó?</td><td class="g">Ingesta</td></tr>
+      <tr class="a ai" style="--d:.7s"><td><b>02</b></td><td class="mono">audit</td><td>¿Es confiable?</td><td class="g">Procesar</td></tr>
+      <tr class="a ai" style="--d:.9s"><td><b>03</b></td><td class="mono">clean</td><td>¿Está bien escrito?</td><td class="g">Procesar</td></tr>
+      <tr class="a ai" style="--d:1.1s"><td><b>04</b></td><td class="mono">enrich</td><td>¿Qué le falta saber?</td><td class="g">Procesar</td></tr>
+      <tr class="a ai" style="--d:1.3s"><td><b>05</b></td><td class="mono">integrate</td><td>¿Quién es quién?</td><td class="g">Procesar</td></tr>
+      <tr class="a ai" style="--d:1.5s"><td><b>06</b></td><td class="mono">indicators</td><td>¿Qué mide?</td><td class="g">Procesar</td></tr>
+      <tr class="a ai" style="--d:1.7s"><td><b>07</b></td><td class="mono">analysis</td><td>¿Qué le entregamos a una persona?</td><td class="g">Producir</td></tr>
+      <tr class="a ai" style="--d:1.9s"><td><b>08</b></td><td class="mono">monitoring</td><td>¿Cómo va el campo?</td><td class="g">Producir</td></tr>
+      <tr class="a ai" style="--d:2.1s"><td><b>09</b></td><td class="mono">publish</td><td>¿Dónde lo encuentran?</td><td class="g">Publicar</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================================================================ 7 -->
+<section class="slide claro" id="s7">
+  <div class="mapa" data-etapa="1"></div><div class="regla2"></div>
+  <div class="izq">
+    <div class="kicker a">BLOQUE 1 · INGESTA · 01 IMPORT</div>
+    <h1 class="preg a" style="--d:.1s">¿Qué llegó?</h1>
+    <p class="insight a" style="--d:.25s">Se trae todo <b>tal cual llega</b>. Al importar no se corrige nada: lo que llega mal tiene que quedar a la vista.</p>
+    <p class="a" style="--d:2.6s;font-size:28px;color:var(--gris);margin-top:30px;line-height:1.4">…pero ¿cómo entra el script a SurveyCTO o a Drive <b style="color:var(--navy)">sin pedirle la contraseña a nadie?</b></p>
+  </div>
+  <div class="der">
+    <div style="display:flex;gap:40px;align-items:center;height:400px">
+      <div style="display:flex;flex-direction:column;gap:22px;width:330px">
+        <div class="caja a ai" style="--d:.5s;height:110px"><div style="font-size:26px;font-weight:700">La encuesta</div><div style="font-size:19px;color:var(--gris)">SurveyCTO, por la API</div></div>
+        <div class="caja a ai" style="--d:.7s;height:110px"><div style="font-size:26px;font-weight:700">Un registro</div><div style="font-size:19px;color:var(--gris)">un Sheet, una base, un archivo</div></div>
+        <div class="caja a ai" style="--d:.9s;height:110px;border-color:var(--coral)"><div style="font-size:26px;font-weight:700">Las supervisoras</div><div style="font-size:19px;color:var(--gris)">sus decisiones son una fuente más</div></div>
+      </div>
+      <div class="flecha a" style="--d:1.1s;font-size:56px">→</div>
+      <div class="a ae" style="--d:1.3s;flex:1;height:250px;background:var(--navy);color:var(--paper);border-top-left-radius:32px;padding:30px;display:flex;flex-direction:column;justify-content:center;gap:12px">
+        <div style="font-size:18px;letter-spacing:.1em;color:var(--peri);font-weight:700">LA CARPETA DE LA ETAPA</div>
+        <div class="mono" style="font-size:26px">data/01_raw/ronda_1/</div>
+      </div>
+    </div>
+    <div class="a" style="--d:1.6s;margin-top:30px;font-size:20px;font-weight:700;letter-spacing:.1em;color:var(--gris)">EL NOMBRE DEL ARCHIVO SE ARMA SOLO</div>
+    <div style="margin-top:14px;display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:28px">
+      <span class="a ae" style="--d:1.8s;padding:12px 18px;background:var(--navy);color:var(--paper)">proyecto</span><span class="a" style="--d:1.9s">_</span>
+      <span class="a ae" style="--d:2s;padding:12px 18px;background:var(--coral)">ronda_1</span><span class="a" style="--d:2.1s">_</span>
+      <span class="a ae" style="--d:2.2s;padding:12px 18px;background:var(--teal)">scto_raw</span>
+    </div>
+    <div style="margin-top:22px;display:flex;gap:12px;font-family:var(--mono);font-size:22px">
+      <span class="a" style="--d:2.4s;padding:8px 14px;box-shadow:inset 0 0 0 2px var(--navy)">.RData</span>
+      <span class="a" style="--d:2.5s;padding:8px 14px;box-shadow:inset 0 0 0 2px var(--navy)">.sav</span>
+      <span class="a" style="--d:2.6s;padding:8px 14px;box-shadow:inset 0 0 0 2px var(--navy)">.dta</span>
+      <span class="a" style="--d:2.7s;padding:8px 14px;box-shadow:inset 0 0 0 2px var(--navy)">.xlsx</span>
+      <span class="a" style="--d:2.8s;padding:8px 14px;box-shadow:inset 0 0 0 2px var(--navy)">.csv</span>
+      <span class="a" style="--d:2.9s;padding:8px 14px;background:var(--navy);color:var(--paper)">Sheet</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 8 -->
+<section class="slide claro" id="s8">
+  <div class="kicker a" style="position:absolute;left:120px;top:72px">BLOQUE 1 · INGESTA · ANTES DE EMPEZAR</div>
+  <h1 class="a" style="--d:.1s;position:absolute;left:120px;top:116px;font-size:72px;font-weight:700;line-height:1.05">¿Con qué llave abre el pipeline cada puerta?</h1>
+  <p class="a" style="--d:.25s;position:absolute;left:120px;top:214px;width:1560px;font-size:32px;font-weight:500;color:var(--gris)">Ninguna contraseña ni ID se escribe en un script. Cada llave vive en un solo lugar, con el <b style="color:var(--navy)">mismo nombre</b> en tu computadora y en GitHub.</p>
+  <table class="tabla" style="position:absolute;left:120px;top:320px;width:1680px;font-size:22px">
+    <thead><tr class="a" style="--d:.3s"><th style="width:330px">PIEZA</th><th style="width:440px">QUÉ ES</th><th style="width:380px">DÓNDE VIVE</th><th>CÓMO SE USA</th></tr></thead>
+    <tbody>
+      <tr class="a ai" style="--d:.5s"><td class="mono" style="font-weight:700">.Renviron</td><td class="g">La lista de llaves del proyecto: usuarios, contraseñas, ids de Sheets y de Drive</td><td class="mono" style="font-size:19px">.secrets/.Renviron, nunca en git</td><td class="g">Se copia de .Renviron.example y se lee con env_requerido()</td></tr>
+      <tr class="a ai" style="--d:.85s"><td class="mono" style="font-weight:700">cuenta de servicio</td><td class="g">Un usuario robot de Google que entra a Sheets y Drive sin que nadie inicie sesión</td><td class="mono" style="font-size:19px">.secrets/, su clave .json</td><td class="g"><b style="color:var(--navy)">Cada Sheet y carpeta de Drive se comparte con su correo</b></td></tr>
+      <tr class="a ai" style="--d:1.2s"><td class="mono" style="font-weight:700">secrets de GitHub</td><td class="g">Las mismas llaves, para cuando el pipeline corre solo</td><td class="mono" style="font-size:19px">Settings → Secrets del repo</td><td class="g">Con el mismo nombre que en el .Renviron</td></tr>
+      <tr class="a ai" style="--d:1.55s"><td class="mono" style="font-weight:700">config.R</td><td class="g">Lo que no es secreto: el nombre del proyecto y la ronda</td><td class="mono" style="font-size:19px">src/00_setup/config.R, sí en git</td><td class="g">Se edita al empezar el proyecto o al cambiar de ronda</td></tr>
+    </tbody>
+  </table>
+  <div class="banda" style="height:190px;font-size:19px;gap:30px;padding-left:70px">
+    <div style="font-size:20px;font-weight:700;letter-spacing:.12em;color:var(--coral);width:170px;line-height:1.3">PARA EMPEZAR BIEN</div>
+    <div class="a" style="--d:2s;display:flex;align-items:center;gap:12px;flex:1"><span style="width:30px;height:30px;flex:none;background:var(--paper);color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:800">✓</span>Copiar .Renviron.example y completarlo</div>
+    <div class="a" style="--d:2.4s;display:flex;align-items:center;gap:12px;flex:1"><span style="width:30px;height:30px;flex:none;background:var(--paper);color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:800">✓</span>Dejar la clave .json en .secrets/</div>
+    <div class="a" style="--d:2.8s;display:flex;align-items:center;gap:12px;flex:1"><span style="width:30px;height:30px;flex:none;background:var(--paper);color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:800">✓</span>Compartir Sheets y Drive con la cuenta</div>
+    <div class="a" style="--d:3.2s;display:flex;align-items:center;gap:12px;flex:1"><span style="width:30px;height:30px;flex:none;background:var(--paper);color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:800">✓</span>Cargar los secrets en GitHub</div>
+    <div class="a" style="--d:3.6s;display:flex;align-items:center;gap:12px;flex:1"><span style="width:30px;height:30px;flex:none;background:var(--paper);color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:800">✓</span>Editar config.R</div>
+  </div>
+</section>
+
+<!-- ================================================================ 9 -->
+<section class="slide claro" id="s9" data-encuesta="p2" data-numero="2"></section>
+
+<!-- ================================================================ 10 -->
+<section class="slide claro" id="s10">
+  <div class="mapa" data-etapa="2"></div><div class="regla2"></div>
+  <div class="izq">
+    <div class="kicker a">BLOQUE 2 · PROCESAR · 02 AUDIT</div>
+    <h1 class="preg a" style="--d:.1s">¿Es confiable?</h1>
+    <p class="insight a" style="--d:.25s">Auditar es <b>marcar, no corregir</b>. Cada registro sale con una variable que dice si tiene una alerta y por qué.</p>
+    <div class="a" style="--d:.5s;display:flex;flex-direction:column;gap:16px;font-size:26px;color:var(--gris);margin-top:20px">
+      <div style="padding-bottom:16px;border-bottom:2px dotted var(--navy)"><b style="color:var(--navy)">1 &nbsp;</b>Se marca: nada se borra ni se cambia acá.</div>
+      <div style="padding-bottom:16px;border-bottom:2px dotted var(--navy)"><b style="color:var(--navy)">2 &nbsp;</b>Las alertas pasan a validación humana.</div>
+      <div><b style="color:var(--navy)">3 &nbsp;</b>La decisión vuelve al pipeline como una fuente más.</div>
+    </div>
+  </div>
+  <div class="der a ae" style="--d:.4s;background:var(--blanco);box-shadow:inset 0 0 0 1px var(--borde)">
+    <div style="height:76px;background:var(--navy);color:var(--paper);display:flex;align-items:center;justify-content:space-between;padding:0 32px"><div style="font-size:24px;font-weight:700">Encuesta 1.042</div><div style="font-size:18px;color:var(--peri)">ronda_1 · encuestador 07</div></div>
+    <div style="position:relative;margin:24px 32px 0;height:452px;overflow:hidden">
+      <div class="fila-a" style="--fondo:var(--coral)"><span>Edad</span><b>150</b><i style="animation-delay:0s">Validez</i></div>
+      <div class="fila-a" style="--fondo:var(--teal)"><span>Sexo</span><b>Mujer</b><i style="animation-delay:.7s">Completitud</i></div>
+      <div class="fila-a" style="--fondo:var(--teal)"><span>Distrito</span><b>Asunción</b><i style="animation-delay:1.4s">Validez</i></div>
+      <div class="fila-a" style="--fondo:var(--teal)"><span>Duración</span><b>14 min</b><i style="animation-delay:2.1s">Protocolo</i></div>
+      <div class="fila-a" style="--fondo:var(--teal)"><span>Teléfono</span><b>0981 123 456</b><i style="animation-delay:2.8s">Consistencia</i></div>
+      <div class="fila-a" style="--fondo:var(--teal)"><span>Ingreso</span><b>NS/NR</b><i style="animation-delay:3.5s">No sustantiva</i></div>
+      <div style="position:absolute;left:0;right:0;top:0;height:3px;background:var(--cian);box-shadow:0 0 18px var(--cian);animation:escaneo 6s linear infinite"></div>
+    </div>
+    <div style="position:absolute;left:32px;right:32px;bottom:28px;height:116px;background:var(--navy);color:var(--paper);display:flex;align-items:center;gap:28px;padding:0 32px">
+      <div class="mono" style="font-size:22px;color:var(--peri)">alerta</div><div style="font-size:72px;font-weight:800;color:var(--coral)">1</div>
+      <div style="font-size:22px;line-height:1.35">la edad está fuera de rango<br><span style="color:var(--durazno)">pasa a validación</span></div>
+    </div>
+  </div>
+  <div class="nota" style="position:absolute;left:120px;bottom:44px">Ejemplo ilustrativo: cada proyecto define sus reglas.</div>
+</section>
+
+<!-- ================================================================ 11 -->
+<section class="slide claro" id="s11">
+  <div class="mapa" data-etapa="3"></div><div class="regla2"></div>
+  <div class="izq">
+    <div class="kicker a">BLOQUE 2 · PROCESAR · 03 CLEAN</div>
+    <h1 class="preg a" style="--d:.1s">¿Está bien escrito?</h1>
+    <p class="insight a" style="--d:.25s">Tres pasos, <b>siempre en el mismo orden</b>, y el valor original nunca se pierde.</p>
+  </div>
+  <div class="der">
+    <div style="display:flex;gap:16px">
+      <div class="a cic" style="--d:.4s;flex:1;padding:24px;background:var(--navy);color:var(--paper);--dur:6s;--c:1.2s"><div style="font-size:18px;font-weight:700;letter-spacing:.1em;opacity:.8">PASO 1</div><div style="font-size:28px;font-weight:700;margin-top:6px">Aplicar correcciones</div></div>
+      <div class="a cic" style="--d:.6s;flex:1;padding:24px;background:var(--navy);color:var(--paper);--dur:6s;--c:3.2s"><div style="font-size:18px;font-weight:700;letter-spacing:.1em;opacity:.8">PASO 2</div><div style="font-size:28px;font-weight:700;margin-top:6px">Levantar alertas</div></div>
+      <div class="a cic" style="--d:.8s;flex:1;padding:24px;background:var(--navy);color:var(--paper);--dur:6s;--c:5.2s"><div style="font-size:18px;font-weight:700;letter-spacing:.1em;opacity:.8">PASO 3</div><div style="font-size:28px;font-weight:700;margin-top:6px">Limpiar</div><div style="font-size:18px;opacity:.85">normalizar · recategorizar · etiquetar</div></div>
+    </div>
+    <table class="tabla" style="margin-top:44px;font-size:28px">
+      <thead><tr class="a" style="--d:1s"><th>ANTES</th><th style="width:60px"></th><th>DESPUÉS</th></tr></thead>
+      <tbody>
+        <tr class="a ai" style="--d:1.3s"><td class="mono g">"&nbsp;&nbsp;juan PÉREZ "</td><td style="color:var(--coral)">→</td><td class="mono"><b>JUAN PEREZ</b></td></tr>
+        <tr class="a ai" style="--d:1.7s"><td class="mono g">0981-123 456</td><td style="color:var(--coral)">→</td><td class="mono"><b>+595981123456</b></td></tr>
+        <tr class="a ai" style="--d:2.1s"><td class="mono g">otro: albañil</td><td style="color:var(--coral)">→</td><td class="mono"><b>Construcción</b></td></tr>
+        <tr class="a ai" style="--d:2.5s"><td class="mono g">edad = 150</td><td style="color:var(--coral)">→</td><td class="mono"><b>edad = 50</b> <span class="g" style="font-size:20px">(corregida, motivo anotado)</span></td></tr>
+      </tbody>
+    </table>
+    <div class="nota a" style="--d:2.9s;margin-top:22px">El valor original queda en una columna <span class="mono">_orig</span>: siempre se puede volver atrás.</div>
+  </div>
+</section>
+
+<!-- ================================================================ 12 -->
+<section class="slide claro" id="s12" data-encuesta="p3" data-numero="3"></section>
+
+<!-- ================================================================ 13 -->
+<section class="slide claro" id="s13">
+  <div class="mapa" data-etapa="4"></div><div class="regla2"></div>
+  <div class="izq">
+    <div class="kicker a">BLOQUE 2 · PROCESAR · 04 ENRICH</div>
+    <div class="opcional a" style="--d:.05s">◌ solo en algunos proyectos</div>
+    <h1 class="preg a" style="--d:.1s">¿Qué le falta saber?</h1>
+    <p class="insight a" style="--d:.25s">Se trae información <b>de afuera</b>, fuente por fuente, y solo para lo nuevo: lo ya procesado no se vuelve a pagar.</p>
+    <div class="cuando a" style="--d:.45s"><b>Cuándo aparece:</b> respuestas abiertas que hay que clasificar, direcciones que hay que ubicar en un mapa, datos que da una API.</div>
+  </div>
+  <div class="der">
+    <div style="display:grid;grid-template-columns:330px minmax(0,1fr);gap:40px;height:640px">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="font-size:18px;font-weight:700;letter-spacing:.1em;color:var(--gris)">RESPUESTAS ABIERTAS</div>
+        <div class="caja a ai" style="--d:.6s;padding:16px 20px;font-size:21px;font-style:italic">"no tengo señal en casa"</div>
+        <div class="caja a ai" style="--d:.8s;padding:16px 20px;font-size:21px;font-style:italic">"el curso era muy largo"</div>
+        <div class="caja a ai" style="--d:1s;padding:16px 20px;font-size:21px;font-style:italic">"me quedé sin datos"</div>
+        <div class="caja a ai" style="--d:1.2s;padding:16px 20px;font-size:21px;font-style:italic">"no entendí el tema"</div>
+        <div class="caja a ai" style="--d:1.4s;padding:16px 20px;font-size:21px;font-style:italic">"trabajo todo el día"</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <div style="font-size:18px;font-weight:700;letter-spacing:.1em;color:var(--gris)">CATEGORÍAS</div>
+        <div style="padding:20px;background:var(--navy);color:var(--paper)"><div style="font-size:26px;font-weight:700">Conectividad</div><div style="font-size:19px;color:var(--peri);margin-top:6px"><span style="animation:vuela 6s 0s infinite">"no tengo señal…" &nbsp;</span><span style="animation:vuela 6s 1s infinite">"me quedé sin datos"</span></div></div>
+        <div style="padding:20px;background:var(--navy);color:var(--paper)"><div style="font-size:26px;font-weight:700">Contenido</div><div style="font-size:19px;color:var(--peri);margin-top:6px"><span style="animation:vuela 6s .5s infinite">"muy largo…" &nbsp;</span><span style="animation:vuela 6s 1.5s infinite">"no entendí…"</span></div></div>
+        <div style="padding:20px;background:var(--navy);color:var(--paper)"><div style="font-size:26px;font-weight:700">Tiempo</div><div style="font-size:19px;color:var(--peri);margin-top:6px"><span style="animation:vuela 6s 2s infinite">"trabajo todo el día"</span></div></div>
+        <div class="a" style="--d:1.8s;margin-top:auto;padding:24px;box-shadow:inset 0 0 0 2px var(--navy);background:var(--blanco)"><div style="font-size:56px;font-weight:800;color:var(--coral)">37 <span style="font-size:26px;color:var(--navy);font-weight:500">nuevas de 1.248</span></div><div style="font-size:20px;color:var(--gris)">las demás ya estaban en el historial: no se vuelven a clasificar</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 14 -->
+<section class="slide claro" id="s14">
+  <div class="mapa" data-etapa="5"></div><div class="regla2"></div>
+  <div class="izq">
+    <div class="kicker a">BLOQUE 2 · PROCESAR · 05 INTEGRATE</div>
+    <div class="opcional a" style="--d:.05s">◌ solo en algunos proyectos</div>
+    <h1 class="preg a" style="--d:.1s">¿Quién es quién?</h1>
+    <p class="insight a" style="--d:.25s">La misma persona en dos fuentes o en dos rondas tiene que ser <b>una sola persona</b>.</p>
+    <div class="cuando a" style="--d:.45s"><b>Cuándo aparece:</b> cuando hay más de una fuente o más de una ronda.</div>
+  </div>
+  <div class="der">
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px">
+      <div class="a ai" style="--d:.5s"><div style="font-size:18px;font-weight:700;letter-spacing:.1em;color:var(--gris);margin-bottom:10px">LA ENCUESTA</div>
+        <table class="tabla" style="font-size:21px;background:var(--blanco)"><tr><th>documento</th><th>nombre</th></tr><tr><td class="mono">4.512.345</td><td>Ana Gómez</td></tr><tr style="animation:funde 5s 1.5s infinite"><td class="mono">3.987.120</td><td>Luis Báez</td></tr><tr><td class="mono">5.001.876</td><td>Rosa Vera</td></tr></table></div>
+      <div class="a ai" style="--d:.8s"><div style="font-size:18px;font-weight:700;letter-spacing:.1em;color:var(--gris);margin-bottom:10px">EL REGISTRO</div>
+        <table class="tabla" style="font-size:21px;background:var(--blanco)"><tr><th>documento</th><th>nombre</th></tr><tr style="animation:funde 5s 1.5s infinite"><td class="mono">3.987.120</td><td>LUIS BAEZ</td></tr><tr><td class="mono">2.345.678</td><td>Carlos Ruiz</td></tr></table></div>
+    </div>
+    <div class="a" style="--d:1.2s;text-align:center;font-size:48px;color:var(--coral);margin:20px 0">↓</div>
+    <div class="a ae" style="--d:1.4s"><div style="font-size:18px;font-weight:700;letter-spacing:.1em;color:var(--gris);margin-bottom:10px">LA BASE INTEGRADA</div>
+      <table class="tabla" style="font-size:21px;background:var(--blanco)"><tr><th>llave</th><th>documento</th><th>nombre</th><th>fuentes</th></tr>
+        <tr><td class="mono">P001</td><td class="mono">4.512.345</td><td>Ana Gómez</td><td class="g">encuesta</td></tr>
+        <tr style="animation:funde 5s 2s infinite"><td class="mono"><b>P002</b></td><td class="mono">3.987.120</td><td><b>Luis Báez</b></td><td><b>encuesta + registro</b></td></tr>
+        <tr><td class="mono">P003</td><td class="mono">5.001.876</td><td>Rosa Vera</td><td class="g">encuesta</td></tr>
+        <tr><td class="mono">P004</td><td class="mono">2.345.678</td><td>Carlos Ruiz</td><td class="g">registro</td></tr></table></div>
+  </div>
+</section>
+
+<!-- ================================================================ 15 -->
+<section class="slide claro" id="s15">
+  <div class="mapa" data-etapa="6"></div><div class="regla2"></div>
+  <div class="izq">
+    <div class="kicker a">BLOQUE 2 · PROCESAR · 06 INDICATORS</div>
+    <div class="opcional a" style="--d:.05s">◌ solo en algunos proyectos</div>
+    <h1 class="preg a" style="--d:.1s">¿Qué mide?</h1>
+    <p class="insight a" style="--d:.25s">Los indicadores se calculan <b>una sola vez</b>, sobre la base integrada. Ahí queda la base final.</p>
+    <div class="cuando a" style="--d:.45s"><b>Cuándo aparece:</b> cuando el proyecto construye índices o indicadores. Si no, la base limpia ya es la base final.</div>
+  </div>
+  <div class="der">
+    <div style="display:flex;flex-wrap:wrap;gap:14px;width:520px">
+      <span class="a ai mono" style="--d:.5s;padding:12px 18px;box-shadow:inset 0 0 0 2px var(--navy);font-size:22px;background:var(--blanco)">tiene_internet</span>
+      <span class="a ai mono" style="--d:.65s;padding:12px 18px;box-shadow:inset 0 0 0 2px var(--navy);font-size:22px;background:var(--blanco)">usa_celular</span>
+      <span class="a ai mono" style="--d:.8s;padding:12px 18px;box-shadow:inset 0 0 0 2px var(--navy);font-size:22px;background:var(--blanco)">cursos_completos</span>
+      <span class="a ai mono" style="--d:.95s;padding:12px 18px;box-shadow:inset 0 0 0 2px var(--navy);font-size:22px;background:var(--blanco)">horas_conexion</span>
+    </div>
+    <div class="a" style="--d:1.2s;font-size:48px;color:var(--coral);margin:18px 0 10px 220px">↓</div>
+    <div class="a ae" style="--d:1.4s;width:520px;padding:30px;background:var(--navy);color:var(--paper);border-top-left-radius:32px"><div style="font-size:18px;letter-spacing:.1em;color:var(--peri);font-weight:700">UN INDICADOR</div><div style="font-size:36px;font-weight:700;margin-top:8px">Índice de inclusión digital</div><div class="mono" style="font-size:20px;color:var(--durazno);margin-top:10px">data/06_final/proyecto_final</div></div>
+    <div class="a" style="--d:1.8s;position:absolute;left:600px;top:0;bottom:0;width:4px;background:var(--coral)"></div>
+    <div class="a" style="--d:2s;position:absolute;left:630px;top:0;width:170px;font-size:24px;font-weight:700;line-height:1.3">La frontera</div>
+    <div class="a" style="--d:2.2s;position:absolute;left:630px;top:80px;width:170px;font-size:20px;color:var(--gris);line-height:1.4">De acá en adelante, todos leen solo de <span class="mono">06_final</span>.</div>
+  </div>
+  <div class="banda a" style="--d:2.8s;font-size:30px">No todos los proyectos usan 04, 05 y 06, pero cuando aparezcan <b>&nbsp;ya sabes dónde van</b>.</div>
+</section>
+
+<!-- ================================================================ 16 -->
+<section class="slide claro" id="s16">
+  <div class="mapa" data-etapa="7"></div><div class="regla2"></div>
+  <div class="izq">
+    <div class="kicker a">BLOQUE 3 · PRODUCIR · 07 ANALYSIS</div>
+    <h1 class="preg a" style="--d:.1s">¿Dónde va lo que nos piden?</h1>
+    <p class="insight a" style="--d:.25s">Todo lo que se calcula o arma para una persona va en 07: <b>un script y una carpeta por producto</b>. Lo que solo estuvo en pantalla no existe.</p>
+    <div class="a" style="--d:.5s;display:flex;gap:12px;flex-wrap:wrap;font-size:22px">
+      <span style="padding:10px 16px;background:var(--navy);color:var(--paper)">tablas</span><span style="padding:10px 16px;background:var(--navy);color:var(--paper)">figuras</span><span style="padding:10px 16px;background:var(--navy);color:var(--paper)">informes Quarto, Word, PDF</span><span style="padding:10px 16px;background:var(--navy);color:var(--paper)">listas</span><span style="padding:10px 16px;background:var(--navy);color:var(--paper)">tablas del dashboard</span>
+    </div>
+  </div>
+  <div class="der">
+    <div class="a" style="--d:.6s;font-size:20px;font-weight:700;letter-spacing:.1em;color:var(--gris)">EL CASO TIGO: ANTES SUELTOS, AHORA ORDENADOS</div>
+    <table class="tabla" style="margin-top:16px;font-size:21px">
+      <thead><tr class="a" style="--d:.7s"><th>LO QUE NOS PEDÍAN</th><th style="width:40px"></th><th>DÓNDE VA</th></tr></thead>
+      <tbody>
+        <tr class="a ai" style="--d:.9s"><td>Las tablas del dashboard</td><td style="color:var(--coral)">→</td><td class="mono">07_analysis_dashboard.R</td></tr>
+        <tr class="a ai" style="--d:1.2s"><td>El reporte trimestral</td><td style="color:var(--coral)">→</td><td class="mono">07_analysis_reporte_trimestral.R</td></tr>
+        <tr class="a ai" style="--d:1.5s"><td>El informe de inconsistencias</td><td style="color:var(--coral)">→</td><td class="mono">07_analysis_inconsistencias.R</td></tr>
+        <tr class="a ai" style="--d:1.8s"><td>La tabla de cursos</td><td style="color:var(--coral)">→</td><td class="mono">07_analysis_cursos.R</td></tr>
+        <tr class="a ai" style="--d:2.1s"><td>La lista para revisar integridad</td><td style="color:var(--coral)">→</td><td class="mono">07_analysis_revision_integridad.R</td></tr>
+      </tbody>
+    </table>
+    <div class="a" style="--d:2.5s;margin-top:26px;padding:20px 24px;background:var(--navy);color:var(--paper);font-size:22px">Cada uno escribe en su carpeta: <span class="mono" style="color:var(--durazno)">outputs/07_analysis/&lt;producto&gt;/</span></div>
+  </div>
+</section>
+
+<!-- ================================================================ 17 -->
+<section class="slide claro" id="s17">
+  <div class="mapa" data-etapa="8"></div><div class="regla2"></div>
+  <div class="izq">
+    <div class="kicker a">BLOQUE 3 · PRODUCIR · 08 MONITORING</div>
+    <h1 class="preg a" style="--d:.1s">¿Cómo va el campo?</h1>
+    <p class="insight a" style="--d:.25s">El monitoreo no espera a la base final: <b>mira el campo mientras ocurre</b>, con un script por frecuencia.</p>
+    <div class="cuando a" style="--d:.45s">Lee la base limpia, <span class="mono">data/03_clean</span>, con todos los intentos y sus alertas: <b>es la única excepción a la frontera</b>.</div>
+  </div>
+  <div class="der" style="display:flex;flex-direction:column;gap:28px">
+    <div class="a ai" style="--d:.6s;flex:1;padding:30px;background:var(--navy);color:var(--paper);display:flex;gap:30px;align-items:center">
+      <div style="position:relative;width:120px;height:120px;flex:none;border:4px solid var(--coral);border-radius:50%"><div style="position:absolute;left:56px;top:12px;width:4px;height:48px;background:var(--coral);transform-origin:2px 48px;animation:giro 3s linear infinite"></div></div>
+      <div><div class="mono" style="font-size:24px;color:var(--durazno)">08_monitoring_hourly.R</div><div style="font-size:34px;font-weight:700;margin-top:6px">Cada hora</div><div style="font-size:22px;color:var(--peri);margin-top:6px">avance, cuotas y alertas por encuestador → Looker y el Sheet de validación</div></div>
+    </div>
+    <div class="a ai" style="--d:.9s;flex:1;padding:30px;background:var(--blanco);box-shadow:inset 0 0 0 2px var(--navy);display:flex;gap:30px;align-items:center">
+      <svg aria-hidden="true" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#030F50" stroke-width="1.6" style="flex:none"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"></path></svg>
+      <div><div class="mono" style="font-size:24px;color:var(--coral)">08_monitoring_daily.R</div><div style="font-size:34px;font-weight:700;margin-top:6px">Al cierre del día</div><div style="font-size:22px;color:var(--gris);margin-top:6px">el resumen de la jornada y las alertas abiertas → Drive</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 18 -->
+<section class="slide claro" id="s18">
+  <div class="mapa" data-etapa="9"></div><div class="regla2"></div>
+  <div class="izq" style="width:740px">
+    <div class="kicker a">BLOQUE 4 · PUBLICAR · 09 PUBLISH</div>
+    <h1 class="preg a" style="--d:.1s">¿Dónde lo encuentran?</h1>
+    <p class="insight a" style="--d:.25s">Publicar <b>no calcula nada</b>: solo lleva cada cosa a su destino.</p>
+  </div>
+  <div class="der" style="bottom:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px">
+    <div class="a ae cic" style="--d:.5s;padding:24px;background:var(--navy);color:var(--paper);--dur:8s;--c:1s"><div style="font-size:30px;font-weight:700">Sheets → Looker</div><div class="mono" style="font-size:18px;opacity:.8;margin-top:6px">09_publish_sheets.R</div></div>
+    <div class="a ae cic" style="--d:.7s;padding:24px;background:var(--navy);color:var(--paper);--dur:8s;--c:3s"><div style="font-size:30px;font-weight:700">Drive, con fecha</div><div class="mono" style="font-size:18px;opacity:.8;margin-top:6px">09_publish_drive.R</div></div>
+    <div class="a ae cic" style="--d:.9s;padding:24px;background:var(--navy);color:var(--paper);--dur:8s;--c:5s"><div style="font-size:30px;font-weight:700">El cliente</div><div class="mono" style="font-size:18px;opacity:.8;margin-top:6px">09_publish_entrega.R · SFTP</div></div>
+    <div class="a ae cic" style="--d:1.1s;padding:24px;background:var(--navy);color:var(--paper);--dur:8s;--c:7s"><div style="font-size:30px;font-weight:700">Una página web</div><div class="mono" style="font-size:18px;opacity:.8;margin-top:6px">GitHub Pages</div></div>
+  </div>
+  <div style="position:absolute;left:120px;right:120px;top:640px">
+    <div class="a" style="--d:1.4s;font-size:20px;font-weight:700;letter-spacing:.1em;color:var(--coral)">¿DÓNDE VA UN PEDIDO NUEVO?</div>
+    <div style="margin-top:16px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px">
+      <div class="a" style="--d:1.6s;padding:22px;box-shadow:inset 0 0 0 2px var(--navy);background:var(--blanco)"><div style="font-size:22px;color:var(--gris)">¿Revisa la calidad de una sola fuente?</div><div class="mono" style="font-size:30px;font-weight:700;margin-top:10px">02 audit</div></div>
+      <div class="a" style="--d:1.8s;padding:22px;box-shadow:inset 0 0 0 2px var(--navy);background:var(--blanco)"><div style="font-size:22px;color:var(--gris)">¿Calcula o arma algo para una persona?</div><div class="mono" style="font-size:30px;font-weight:700;margin-top:10px">07 analysis</div></div>
+      <div class="a" style="--d:2s;padding:22px;box-shadow:inset 0 0 0 2px var(--navy);background:var(--blanco)"><div style="font-size:22px;color:var(--gris)">¿Mira el campo mientras ocurre?</div><div class="mono" style="font-size:30px;font-weight:700;margin-top:10px">08 monitoring</div></div>
+      <div class="a" style="--d:2.2s;padding:22px;box-shadow:inset 0 0 0 2px var(--navy);background:var(--blanco)"><div style="font-size:22px;color:var(--gris)">¿Solo lleva algo ya hecho a su destino?</div><div class="mono" style="font-size:30px;font-weight:700;margin-top:10px">09 publish</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 19 -->
+<section class="slide claro" id="s19">
+  <div class="kicker a" style="position:absolute;left:120px;top:96px">BLOQUE 4 · PUBLICAR · DOS FORMAS DE MOSTRAR DATOS</div>
+  <h1 class="preg m a" style="--d:.1s;position:absolute;left:120px;top:142px">¿Looker o una página propia?</h1>
+  <p class="a" style="--d:.25s;position:absolute;left:120px;top:250px;width:1600px;font-size:32px;font-weight:500;color:var(--gris)">Looker sirve para mirar el día a día; una página propia, para contar una historia con nuestra marca. <b style="color:var(--navy)">Ninguna de las dos calcula.</b></p>
+  <table class="tabla" style="position:absolute;left:120px;top:340px;width:1680px;font-size:25px">
+    <thead><tr class="a" style="--d:.35s"><th style="width:280px"></th><th>LOOKER STUDIO</th><th>PÁGINA HTML · tools/dashboard/</th></tr></thead>
+    <tbody>
+      <tr class="a ai" style="--d:.5s"><td><b>Para qué</b></td><td class="g">el monitoreo y el avance, todos los días</td><td class="g">resultados para el cliente, informes interactivos</td></tr>
+      <tr class="a ai" style="--d:.75s"><td><b>Lee de</b></td><td class="g">un Google Sheet que escribe 09_publish_sheets</td><td class="g">los CSV que exporta el pipeline a tools/dashboard/datos/</td></tr>
+      <tr class="a ai" style="--d:1s"><td><b>Diseño</b></td><td class="g">el de Looker</td><td class="g">la línea gráfica de la marca</td></tr>
+      <tr class="a ai" style="--d:1.25s"><td><b>Se publica en</b></td><td class="g">el link de Looker</td><td class="g">GitHub Pages</td></tr>
+    </tbody>
+  </table>
+  <div class="banda" style="height:190px;gap:26px;font-size:24px">
+    <div class="a" style="--d:1.6s;font-size:20px;font-weight:700;letter-spacing:.12em;color:var(--coral);width:180px;line-height:1.3">GITHUB PAGES EN TRES PASOS</div>
+    <div class="a" style="--d:1.8s;padding:16px 22px;box-shadow:inset 0 0 0 2px var(--paper)"><span class="mono">tools/</span> una carpeta del repo</div>
+    <div class="a" style="--d:2s;font-size:34px">→</div>
+    <div class="a" style="--d:2.2s;padding:16px 22px;box-shadow:inset 0 0 0 2px var(--paper)"><span class="mono">dashboard.yml</span> la publica sola</div>
+    <div class="a" style="--d:2.4s;font-size:34px">→</div>
+    <div class="a" style="--d:2.6s;padding:16px 22px;background:var(--coral);color:var(--navy);font-weight:700">un link · esta presentación es una</div>
+  </div>
+</section>
+
+<!-- ================================================================ 20 -->
+<section class="slide claro" id="s20">
+  <div class="kicker a" style="position:absolute;left:120px;top:96px">BLOQUE 4 · PUBLICAR · AUTOMATIZACIÓN</div>
+  <h1 class="preg m a" style="--d:.1s;position:absolute;left:120px;top:142px">¿Quién aprieta el botón?</h1>
+  <p class="insight a" style="--d:.25s;position:absolute;left:120px;top:250px;width:1640px">Nadie corre scripts a mano: <b>Apps Script decide cuándo</b>, GitHub Actions corre las etapas y los secrets abren las puertas.</p>
+  <div style="position:absolute;left:120px;right:120px;top:400px;display:flex;align-items:stretch;gap:18px">
+    <div class="a ae cic" style="--d:.5s;flex:1;padding:24px;background:var(--navy);color:var(--paper);--dur:8s;--c:1s"><div style="font-size:18px;letter-spacing:.1em;font-weight:700;opacity:.8">EL RELOJ</div><div style="font-size:28px;font-weight:700;margin-top:6px">Apps Script</div><div class="mono" style="font-size:16px;opacity:.8;margin-top:6px">disparador.gs</div></div>
+    <div class="a" style="--d:.6s;align-self:center;font-size:40px;color:var(--navy)">→</div>
+    <div class="a ae cic" style="--d:.7s;flex:1;padding:24px;background:var(--navy);color:var(--paper);--dur:8s;--c:3s"><div style="font-size:18px;letter-spacing:.1em;font-weight:700;opacity:.8">EL QUE CORRE</div><div style="font-size:28px;font-weight:700;margin-top:6px">GitHub Actions</div><div style="font-size:16px;opacity:.8;margin-top:6px">una etapa por paso</div></div>
+    <div class="a" style="--d:.8s;align-self:center;font-size:40px;color:var(--navy)">→</div>
+    <div class="a ae cic" style="--d:.9s;flex:1;padding:24px;background:var(--navy);color:var(--paper);--dur:8s;--c:5s"><div style="font-size:18px;letter-spacing:.1em;font-weight:700;opacity:.8">LAS LLAVES</div><div style="font-size:28px;font-weight:700;margin-top:6px">Los secrets</div><div style="font-size:16px;opacity:.8;margin-top:6px">mismos nombres que el .Renviron</div></div>
+    <div class="a" style="--d:1s;align-self:center;font-size:40px;color:var(--navy)">→</div>
+    <div class="a ae cic" style="--d:1.1s;flex:1;padding:24px;background:var(--navy);color:var(--paper);--dur:8s;--c:7s"><div style="font-size:18px;letter-spacing:.1em;font-weight:700;opacity:.8">EL RESULTADO</div><div style="font-size:28px;font-weight:700;margin-top:6px">Sheets, Drive, Looker</div><div style="font-size:16px;opacity:.8;margin-top:6px">actualizados solos</div></div>
+  </div>
+  <div class="a" style="--d:1.4s;position:absolute;left:120px;right:120px;top:640px">
+    <div style="font-size:20px;font-weight:700;letter-spacing:.1em;color:var(--gris)">UN DÍA DE CAMPO</div>
+    <div style="position:relative;margin-top:60px;height:6px;background:var(--carril)">
+      <div style="position:absolute;left:0;width:93.75%;top:0;height:6px;background:repeating-linear-gradient(90deg,var(--navy) 0 4px,transparent 4px 6.25%)"></div>
+      <div style="position:absolute;top:-40px;width:4px;height:86px;background:var(--coral);animation:aguja 10s linear infinite"></div>
+      <div style="position:absolute;left:0;top:30px;font-size:22px;font-weight:700">05:00</div>
+      <div style="position:absolute;left:62.5%;top:30px;font-size:22px;font-weight:700;transform:translateX(-50%)">15:00</div>
+      <div style="position:absolute;left:93.75%;top:30px;font-size:22px;font-weight:700;transform:translateX(-50%)">20:00</div>
+      <div style="position:absolute;right:0;top:30px;font-size:22px;font-weight:700;color:var(--coral)">21:00</div>
+    </div>
+    <div style="margin-top:80px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;font-size:22px">
+      <div style="padding:18px 22px;box-shadow:inset 0 0 0 2px var(--navy);background:var(--blanco)"><b>05:00 a 20:00 · por hora</b><div class="g" style="color:var(--gris)">01 → 03 → 08 → 09: Looker y validación</div></div>
+      <div style="padding:18px 22px;box-shadow:inset 0 0 0 2px var(--navy);background:var(--blanco)"><b>21:00 · diario</b><div style="color:var(--gris)">01 → 03 → 08 → 09: la foto del día en Drive</div></div>
+      <div style="padding:18px 22px;background:var(--navy);color:var(--paper)"><b>Cierre del campo · completo</b><div style="color:var(--peri)">01 → 09: la base final y las entregas</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 21 -->
+<section class="slide claro" id="s21" data-encuesta="p4" data-numero="4"></section>
+
+<!-- ================================================================ 22 -->
+<section class="slide claro" id="s22">
+  <div class="kicker a" style="position:absolute;left:120px;top:110px">Y AHORA</div>
+  <h1 class="preg m a" style="--d:.1s;position:absolute;left:120px;top:156px">¿Qué cambia en mi trabajo?</h1>
+  <table class="tabla" style="position:absolute;left:120px;top:330px;width:1680px;font-size:28px">
+    <thead><tr class="a" style="--d:.3s"><th style="width:320px">ROL</th><th>ANTES</th><th>AHORA</th></tr></thead>
+    <tbody>
+      <tr class="a ai" style="--d:.6s"><td><b>Analista</b></td><td class="g">[completar]</td><td class="g">[completar]</td></tr>
+      <tr class="a ai" style="--d:.9s"><td><b>Supervisora</b></td><td class="g">[completar]</td><td class="g">[completar]</td></tr>
+      <tr class="a ai" style="--d:1.2s"><td><b>Coordinación</b></td><td class="g">[completar]</td><td class="g">[completar]</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================================================================ 23 -->
+<section class="slide claro" id="s23" data-encuesta="p5,p6" data-numero="5"></section>
+
+<!-- ================================================================ 24 -->
+<section class="slide oscuro" id="s24">
+  <img src="assets/logo_tagline_blanco.svg" alt="Equilibrium" style="position:absolute;left:120px;top:96px;height:64px">
+  <div class="kicker a" style="position:absolute;left:120px;top:250px">LO QUE NOS LLEVAMOS</div>
+  <h1 class="a" style="--d:.15s;position:absolute;left:120px;top:300px;width:1560px;font-size:84px;font-weight:700;line-height:1.1">Looker es la <span style="color:var(--coral)">última milla</span>. Antes, el dato pasa por 9 etapas y cada una responde una pregunta.</h1>
+  <div style="position:absolute;left:120px;right:120px;top:640px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:2px solid var(--peri)">
+    <div class="a cic" style="--d:.5s;padding:28px;border-right:2px dotted var(--peri);--dur:8s;--c:1s"><div style="font-size:18px;font-weight:700;letter-spacing:.12em;opacity:.8">01</div><div style="font-size:44px;font-weight:700;margin-top:10px">Ingesta</div><div style="font-size:22px;opacity:.85;margin-top:6px">¿Qué llegó?</div></div>
+    <div class="a cic" style="--d:.7s;padding:28px;border-right:2px dotted var(--peri);--dur:8s;--c:3s"><div style="font-size:18px;font-weight:700;letter-spacing:.12em;opacity:.8">02 – 06</div><div style="font-size:44px;font-weight:700;margin-top:10px">Procesar</div><div style="font-size:22px;opacity:.85;margin-top:6px">¿Es confiable y usable?</div></div>
+    <div class="a cic" style="--d:.9s;padding:28px;border-right:2px dotted var(--peri);--dur:8s;--c:5s"><div style="font-size:18px;font-weight:700;letter-spacing:.12em;opacity:.8">07 – 08</div><div style="font-size:44px;font-weight:700;margin-top:10px">Producir</div><div style="font-size:22px;opacity:.85;margin-top:6px">¿Qué se entrega y cómo va el campo?</div></div>
+    <div class="a cic" style="--d:1.1s;padding:28px;--dur:8s;--c:7s"><div style="font-size:18px;font-weight:700;letter-spacing:.12em;opacity:.8">09</div><div style="font-size:44px;font-weight:700;margin-top:10px">Publicar</div><div style="font-size:22px;opacity:.85;margin-top:6px">¿Dónde lo encuentran?</div></div>
+  </div>
+  <div style="position:absolute;left:120px;right:0;bottom:0;height:170px;background:var(--paper);border-top-left-radius:64px;display:flex;align-items:center;gap:36px;padding:0 120px 0 80px;color:var(--navy)">
+    <div class="qr" data-qr-url="https://github.com/piero-valles-maravi/dataops-blueprint" style="width:130px;height:130px;padding:8px;box-shadow:inset 0 0 0 2px var(--navy)"></div>
+    <div><div style="font-size:30px;font-weight:700">El repositorio y el explorador</div><div class="mono" style="font-size:22px;color:var(--gris)">github.com/piero-valles-maravi/dataops-blueprint</div></div>
+  </div>
+</section>
+
+</div></div>
+
+<div id="nav"><button type="button" id="ant" aria-label="Anterior">‹</button><button type="button" id="sig" aria-label="Siguiente">›</button><button type="button" id="pant" aria-label="Pantalla completa">⤢</button></div>
+<div id="progreso"></div>
+
+<style>
+  .fila-a{display:flex;align-items:center;height:75px;border-bottom:2px dotted var(--borde);font-size:22px}
+  .fila-a span{width:220px;color:var(--gris)}
+  .fila-a b{flex:1}
+  .fila-a i{font-style:normal;padding:8px 14px;font-size:16px;font-weight:700;animation:chip 6s ease-out infinite}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="config.js"></script>
+<script src="encuestas.js"></script>
+<script>
+(function () {
+  const CFG = window.CONFIG_PRESENTACION;
+  const URL_VOTOS = CFG.APPS_SCRIPT_URL;
+  const DEMO = !URL_VOTOS;
+  const slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  const deck = document.getElementById('deck');
+  let actual = 0;
+  let reloj = null;
+
+  // ---- escala: la diapositiva de 1920 × 1080 entra entera en la ventana ----
+  function escalar() {
+    const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    deck.style.transform = 'scale(' + s + ')';
+  }
+  window.addEventListener('resize', escalar);
+  escalar();
+
+  // ---- QR ----
+  function urlVoto(ids) {
+    const u = new URL('votar.html', location.href);
+    u.hash = '';
+    if (ids) u.search = '?p=' + ids; else u.search = '';
+    return u.toString();
+  }
+  function pintarQR(el, texto) {
+    if (typeof qrcode !== 'function') { el.textContent = texto; el.style.fontSize = '12px'; return; }
+    const q = qrcode(0, 'M');
+    q.addData(texto);
+    q.make();
+    el.innerHTML = q.createSvgTag({ cellSize: 4, margin: 0, scalable: true });
+  }
+  document.querySelectorAll('[data-qr]').forEach(function (el) { pintarQR(el, urlVoto(el.getAttribute('data-qr'))); });
+  document.querySelectorAll('[data-qr-url]').forEach(function (el) { pintarQR(el, el.getAttribute('data-qr-url')); });
+
+  // ---- mini mapa de las 9 etapas ----
+  const ETAPAS = ['import', 'audit', 'clean', 'enrich', 'integrate', 'indicators', 'analysis', 'monitoring', 'publish'];
+  document.querySelectorAll('.mapa').forEach(function (m) {
+    const n = Number(m.getAttribute('data-etapa'));
+    ETAPAS.forEach(function (e, i) {
+      const k = i + 1;
+      const d = document.createElement('div');
+      d.className = 'e' + (k >= 4 && k <= 6 ? ' opc' : '') + (k < n ? ' hecha' : '') + (k === n ? ' actual' : '');
+      d.innerHTML = '<div class="n"><div class="c">0' + k + '</div><div class="t">' + e + '</div></div>' + (k < 9 ? '<div class="l"></div>' : '');
+      m.appendChild(d);
+    });
+  });
+
+  // ---- diapositivas de encuesta ----
+  function bloqueEncuesta(id, ancho) {
+    const e = window.ENCUESTAS[id];
+    const cont = document.createElement('div');
+    cont.className = 'enc';
+    cont.setAttribute('data-id', id);
+    const preg = document.createElement('div');
+    preg.className = 'enc-preg a';
+    preg.textContent = e.pregunta;
+    const ops = document.createElement('div');
+    ops.className = 'enc-ops';
+    e.opciones.forEach(function (t, i) {
+      const o = document.createElement('div');
+      o.className = 'op a ai' + (e.correcta === i ? ' correcta' : '');
+      o.style.setProperty('--d', (0.3 + i * 0.12) + 's');
+      o.setAttribute('data-op', String(i));
+      o.innerHTML = '<div class="fila"><div class="letra"></div><div class="texto"></div><div class="pct">0 %</div></div><div class="carril"><div class="barra"></div></div>';
+      o.querySelector('.letra').textContent = e.opciones.length > 5 ? '' : 'ABCDE'[i];
+      o.querySelector('.texto').textContent = t;
+      ops.appendChild(o);
+    });
+    cont.appendChild(preg);
+    cont.appendChild(ops);
+    if (ancho) {
+      preg.style.width = ancho + 'px';
+      ops.style.width = ancho + 'px';
+    }
+    return cont;
+  }
+
+  slides.forEach(function (s) {
+    const ids = s.getAttribute('data-encuesta');
+    if (!ids) return;
+    const lista = ids.split(',');
+    const cab = document.createElement('div');
+    cab.className = 'enc-cab';
+    cab.innerHTML = '<div class="num">' + s.getAttribute('data-numero') + '</div><div class="tit">CONTROL DE ATENCIÓN · RESPONDE CON TU CELULAR</div>';
+    s.appendChild(cab);
+    if (lista.length === 1) {
+      s.appendChild(bloqueEncuesta(lista[0]));
+    } else {
+      // dos preguntas lado a lado
+      lista.forEach(function (id, k) {
+        const b = bloqueEncuesta(id, 520);
+        b.querySelector('.enc-preg').style.cssText = 'left:' + (120 + k * 580) + 'px;width:520px;font-size:38px;top:170px';
+        const o = b.querySelector('.enc-ops');
+        o.style.cssText = 'left:' + (120 + k * 580) + 'px;width:520px;top:' + (k === 0 ? 300 : 300) + 'px;gap:' + (k === 0 ? 34 : 10) + 'px';
+        o.querySelectorAll('.texto').forEach(function (t) { t.style.fontSize = k === 0 ? '24px' : '19px'; });
+        o.querySelectorAll('.carril').forEach(function (c) { c.style.height = k === 0 ? '30px' : '14px'; c.style.marginLeft = k === 0 ? '52px' : '0'; });
+        o.querySelectorAll('.pct').forEach(function (c) { c.style.fontSize = k === 0 ? '28px' : '20px'; });
+        s.appendChild(b);
+      });
+    }
+    const n = document.createElement('div');
+    n.className = 'enc-n';
+    n.innerHTML = '<div class="vivo"></div><span>n = 0 respuestas · en vivo</span>';
+    s.appendChild(n);
+    const qr = document.createElement('div');
+    qr.className = 'enc-qr';
+    qr.innerHTML = '<div class="qr"></div><div><h3>Escanea y vota</h3><p>Los resultados aparecen acá en vivo</p></div><div class="url"></div>';
+    pintarQR(qr.querySelector('.qr'), urlVoto(ids));
+    qr.querySelector('.url').textContent = urlVoto(ids).replace(/^https?:\/\//, '');
+    s.appendChild(qr);
+    if (DEMO) {
+      const d = document.createElement('div');
+      d.className = 'demo';
+      d.textContent = 'MODO DEMOSTRACIÓN · votos simulados (falta APPS_SCRIPT_URL en config.js)';
+      s.appendChild(d);
+    }
+  });
+
+  // pinta los conteos { p1: { '0': 3, '1': 5 } } en la diapositiva
+  function pintar(s, conteo) {
+    let totalMax = 0;
+    s.querySelectorAll('.enc').forEach(function (b) {
+      const id = b.getAttribute('data-id');
+      const c = conteo[id] || {};
+      const ops = b.querySelectorAll('.op');
+      let total = 0, max = 0;
+      ops.forEach(function (o) { const v = c[o.getAttribute('data-op')] || 0; total += v; max = Math.max(max, v); });
+      ops.forEach(function (o) {
+        const v = c[o.getAttribute('data-op')] || 0;
+        const pct = total ? Math.round(100 * v / total) : 0;
+        o.querySelector('.pct').textContent = pct + ' %';
+        o.querySelector('.barra').style.width = (total ? 100 * v / total : 0) + '%';
+        o.classList.toggle('lider', v === max && max > 0);
+      });
+      totalMax = Math.max(totalMax, total);
+    });
+    const n = s.querySelector('.enc-n span');
+    if (n) n.textContent = 'n = ' + totalMax + ' respuestas · en vivo';
+  }
+
+  // votos simulados para probar sin Apps Script
+  const simulados = {};
+  function simular(ids) {
+    ids.split(',').forEach(function (id) {
+      const e = window.ENCUESTAS[id];
+      simulados[id] = simulados[id] || {};
+      const i = Math.random() < 0.5 && e.correcta !== null ? e.correcta : Math.floor(Math.random() * e.opciones.length);
+      simulados[id][i] = (simulados[id][i] || 0) + 1;
+    });
+    return simulados;
+  }
+
+  function consultar(s, ids) {
+    if (DEMO) { pintar(s, simular(ids)); return; }
+    fetch(URL_VOTOS + '?accion=resultados&p=' + encodeURIComponent(ids))
+      .then(function (r) { return r.json(); })
+      .then(function (d) { pintar(s, d.conteo || {}); })
+      .catch(function () {});
+  }
+
+  function activar(ids) {
+    if (DEMO) return;
+    fetch(URL_VOTOS, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ accion: 'activar', p: ids }) });
+  }
+
+  // ---- navegación ----
+  function ir(i) {
+    i = Math.max(0, Math.min(slides.length - 1, i));
+    slides[actual].classList.remove('activa');
+    actual = i;
+    const s = slides[actual];
+    void s.offsetWidth;
+    s.classList.add('activa');
+    document.getElementById('progreso').style.width = (100 * (actual + 1) / slides.length) + '%';
+    if (history.replaceState) history.replaceState(null, '', '#' + (actual + 1));
+    if (reloj) { clearInterval(reloj); reloj = null; }
+    const ids = s.getAttribute('data-encuesta');
+    if (ids) {
+      activar(ids);
+      consultar(s, ids);
+      reloj = setInterval(function () { consultar(s, ids); }, DEMO ? 1100 : CFG.INTERVALO_MS);
+    }
+  }
+  slides.forEach(function (s, i) {
+    const p = document.createElement('div');
+    p.className = 'pie';
+    p.textContent = (i + 1) + ' / ' + slides.length;
+    s.appendChild(p);
+  });
+
+  document.addEventListener('keydown', function (ev) {
+    if (['ArrowRight', 'PageDown', ' ', 'Enter'].indexOf(ev.key) >= 0) { ev.preventDefault(); ir(actual + 1); }
+    else if (['ArrowLeft', 'PageUp', 'Backspace'].indexOf(ev.key) >= 0) { ev.preventDefault(); ir(actual - 1); }
+    else if (ev.key === 'Home') ir(0);
+    else if (ev.key === 'End') ir(slides.length - 1);
+    else if (ev.key === 'f' || ev.key === 'F') pantalla();
+    else if (ev.key === 'r' || ev.key === 'R') slides[actual].classList.toggle('revelada');
+  });
+  function pantalla() {
+    if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen();
+  }
+  document.getElementById('ant').addEventListener('click', function () { ir(actual - 1); });
+  document.getElementById('sig').addEventListener('click', function () { ir(actual + 1); });
+  document.getElementById('pant').addEventListener('click', pantalla);
+
+  // escribir #7 en la dirección lleva a la diapositiva 7
+  window.addEventListener('hashchange', function () {
+    const n = parseInt(location.hash.slice(1), 10);
+    if (!isNaN(n) && n - 1 !== actual) ir(n - 1);
+  });
+
+  const inicio = parseInt((location.hash || '#1').slice(1), 10);
+  slides[0].classList.add('activa');
+  ir(isNaN(inicio) ? 0 : inicio - 1);
+})();
+</script>
+</body>
+</html>

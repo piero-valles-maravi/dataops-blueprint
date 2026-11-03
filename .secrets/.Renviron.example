@@ -132,7 +132,11 @@ GDRIVE_ID_ENRICH=
 GDRIVE_ID_INTEGRATE=
 GDRIVE_ID_FINAL=
 
-# (opcional) carpeta donde se suben las entregas al cliente (08_products_entrega)
+# (opcional) carpeta donde se sube el resumen del día de 08_monitoring_daily
+# ej.: GDRIVE_ID_MONITOREO=1mNoPqRsTuVwXyZaBcDeFgHiJkL654321
+GDRIVE_ID_MONITOREO=
+
+# (opcional) carpeta donde se suben las entregas al cliente (09_publish_entrega)
 # ej.: GDRIVE_ID_ENTREGAS=1zYxWvUtSrQpOnMlKjIhGfEdCbA987654
 GDRIVE_ID_ENTREGAS=
 

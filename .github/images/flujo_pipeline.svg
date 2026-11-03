@@ -80,13 +80,13 @@
 <circle cx='860' cy='260' r='38' stroke-width='2' class='nodo' style='animation-delay:6s'/>
 <text x='860' y='269' text-anchor='middle' class='nodot' style='animation-delay:6s'>07</text>
 <text x='860' y='330' text-anchor='middle' class='etq' style='animation-delay:6s'>analysis</text>
-<text x='860' y='352' text-anchor='middle' class='peq' style='opacity:.85'>tablas y figuras</text>
+<text x='860' y='352' text-anchor='middle' class='peq' style='opacity:.85'>lo que se entrega</text>
 <text x='860' y='376' text-anchor='middle' class='ruta' style='animation-delay:6s'>outputs/07</text>
 <circle cx='990' cy='260' r='38' fill='none' stroke='#FBBF24' stroke-width='2' class='eco' style='animation-delay:7s'/>
 <circle cx='990' cy='260' r='38' stroke-width='2' class='nodo' style='animation-delay:7s'/>
 <text x='990' y='269' text-anchor='middle' class='nodot' style='animation-delay:7s'>08</text>
-<text x='990' y='330' text-anchor='middle' class='etq' style='animation-delay:7s'>products</text>
-<text x='990' y='352' text-anchor='middle' class='peq' style='opacity:.85'>informe y entrega</text>
+<text x='990' y='330' text-anchor='middle' class='etq' style='animation-delay:7s'>monitoring</text>
+<text x='990' y='352' text-anchor='middle' class='peq' style='opacity:.85'>mira el campo</text>
 <text x='990' y='376' text-anchor='middle' class='ruta' style='animation-delay:7s'>outputs/08</text>
 <circle cx='1120' cy='260' r='38' fill='none' stroke='#FBBF24' stroke-width='2' class='eco' style='animation-delay:8s'/>
 <circle cx='1120' cy='260' r='38' stroke-width='2' class='nodo' style='animation-delay:8s'/>

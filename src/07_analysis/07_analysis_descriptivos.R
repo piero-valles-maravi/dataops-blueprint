@@ -6,15 +6,14 @@
 #                                                                              #
 # FECHA DE CREACION: <dd/mm/aaaa>                                              #
 # NOMBRE: 07_analysis_descriptivos                                             #
-# DETALLE: calcula los descriptivos y cruces principales, con ponderadores si  #
-#   los hay. Lee SOLO de data/06_final. Las tablas y figuras se GUARDAN, nunca #
-#   quedan solo en pantalla. Etapa opcional. EJEMPLO: renombrar o borrar según #
-#   las fuentes del proyecto.                                                  #
+# DETALLE: calcula los descriptivos y cruces principales, con ponderadores     #
+#   si los hay. Lee SOLO de data/06_final. Las tablas y figuras se GUARDAN,    #
+#   nunca quedan solo en pantalla. Un script y una carpeta por producto.       #
+#   Etapa opcional. EJEMPLO: renombrar o borrar según el proyecto.             #
 #                                                                              #
 # CORRE DESPUES DE: 06_indicators                                              #
 # LEE: data/06_final/                                                          #
-# ESCRIBE: outputs/07_analysis/tablas/ y figuras/, con el prefijo              #
-#   descriptivos_                                                              #
+# ESCRIBE: outputs/07_analysis/descriptivos/                                   #
 #-----------------------------------------------------------------------------.#
 
 # Setup ------------------------------------------------------------------------
@@ -35,17 +34,12 @@ source('src/00_setup/config.R')
 
 # Rutas y carpetas -------------------------------------------------------------
 
-# las tablas y las figuras van en carpetas separadas
-carpeta_tablas  <- 'outputs/07_analysis/tablas'    # Output
-carpeta_figuras <- 'outputs/07_analysis/figuras'   # Output
+# una carpeta por producto: sus tablas y sus figuras van juntas
+# Output
+carpeta_salida <- 'outputs/07_analysis/descriptivos'
 
-# crea las dos carpetas de salida si no existen
-walk(
-  c(carpeta_tablas, carpeta_figuras),              # las dos carpetas
-  dir.create,                                      # las crea
-  recursive    = TRUE,                             # con las carpetas de arriba
-  showWarnings = FALSE                             # sin aviso si ya existen
-)                                                  # fin de walk()
+# crea la carpeta de salida si no existe
+dir.create(carpeta_salida, recursive = TRUE, showWarnings = FALSE)
 
 
 
@@ -82,7 +76,7 @@ figuras <- list()
 writexl::write_xlsx(
   tablas,                                          # la lista de tablas
   # el archivo
-  file.path(carpeta_tablas, paste0(proyecto, '_descriptivos_tablas.xlsx'))
+  file.path(carpeta_salida, paste0(proyecto, '_descriptivos_tablas.xlsx'))
 )                                                  # fin de write_xlsx()
 
 # cada figura en su PNG, con el nombre de la lista
@@ -90,7 +84,7 @@ iwalk(
   figuras,                                         # la lista de figuras
   ~ ggsave(                                        # guarda una figura
     file.path(                                     # el archivo
-      carpeta_figuras,                             # en la carpeta de figuras
+      carpeta_salida,                              # en la carpeta del producto
       # con el nombre de la lista
       paste0(proyecto, '_descriptivos_', .y, '.png')
     ),                                             # fin de file.path()

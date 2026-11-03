@@ -3,7 +3,7 @@ name: estructura-proyecto-datos
 description: >
   Estructura de carpetas y orden de scripts de los proyectos de datos que nacen
   de dataops-blueprint: nueve etapas numeradas en R (import, audit, clean,
-  enrich, integrate, indicators, analysis, products, publish), datos por etapa
+  enrich, integrate, indicators, analysis, monitoring, publish), datos por etapa
   y por ronda, insumos en sources/, credenciales en .secrets/, proyecto y ronda
   en config.R y automatización en GitHub Actions. Úsala SIEMPRE que haya que
   arrancar un proyecto nuevo, decidir dónde va un script, una carpeta o un
@@ -34,8 +34,8 @@ la carpeta que escribe.** `src/02_audit/` lee `data/01_raw/` y escribe
 | | `04` | `src/04_enrich/04_enrich_<fuente>.R` | `data/04_enrich/<ronda>/` |
 | | `05` | `src/05_integrate/05_integrate_<n>_<paso>.R` | `data/05_integrate/` |
 | | `06` | `src/06_indicators/06_indicators_<paso>.R` | `data/06_final/` |
-| Producir | `07` | `src/07_analysis/07_analysis_<análisis>.R` | `outputs/07_analysis/` |
-| | `08` | `src/08_products/08_products_<producto>.R` | `outputs/08_products/` |
+| Producir | `07` | `src/07_analysis/07_analysis_<producto>.R` | `outputs/07_analysis/<producto>/` |
+| | `08` | `src/08_monitoring/08_monitoring_<frecuencia>.R` | `outputs/08_monitoring/<frecuencia>/` |
 | Publicar | `09` | `src/09_publish/09_publish_<destino>.R` | Sheets, Drive |
 
 - **`data/` tiene solo bases.** Tablas, figuras, informes y entregas van en
@@ -145,8 +145,8 @@ de GitHub muestre en qué etapa falló.
 
 | Workflow | Cuándo | Pasos |
 |---|---|---|
-| `hourly.yml` | cada hora, en la jornada de campo | `01` → `02` → `03` → `08_monitoring` → `09_publish_sheets` |
-| `daily.yml` | una vez, al cierre del día | `01` → `02` → `03` → `09_publish_drive` |
+| `hourly.yml` | cada hora, en la jornada de campo | `01` → `02` → `03` → `08_monitoring_hourly` → `09_publish_sheets` |
+| `daily.yml` | una vez, al cierre del día | `01` → `02` → `03` → `08_monitoring_daily` → `09_publish_drive` |
 | `completo.yml` | a mano, al hacer un corte o cerrar el campo | `01` a `09` |
 | `dashboard.yml` | al cambiar `tools/dashboard/` | publica el explorador en Pages |
 
@@ -192,7 +192,8 @@ Lo que llevan todos:
 | No hace falta enriquecer | se borra `04_enrich`; `05` lee de `03_clean` |
 | Sin rondas | `ronda <- NULL` en `config.R` |
 | Una ronda nueva | se cambia `ronda` en `config.R` y el `formid` en `01_import_scto.R` |
-| No hay dashboard ni corrida por hora | se borran `hourly.yml` y `08_monitoring` |
+| No hay dashboard ni corrida por hora | se borran `hourly.yml` y `08_monitoring_hourly.R` |
+| Un pedido nuevo (tablas, un informe, una lista) | un `07_analysis_<producto>.R` con su carpeta en `outputs/07_analysis/`; si además hay que enviarlo, un `09_publish_<destino>.R` |
 
 ---
 

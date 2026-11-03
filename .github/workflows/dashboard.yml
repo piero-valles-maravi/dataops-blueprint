@@ -1,7 +1,10 @@
-# (Opcional) Publica tools/dashboard en GitHub Pages.
+# (Opcional) Publica en GitHub Pages las páginas web del proyecto:
+#   tools/dashboard/     → https://<usuario>.github.io/<repo>/
+#   tools/presentacion/  → https://<usuario>.github.io/<repo>/presentacion/
 #
-# Solo si el proyecto tiene un dashboard web propio. Si el dashboard es de
-# Looker Studio, este archivo se borra: Looker lee el Sheet de 09_publish.
+# Solo si el proyecto tiene un dashboard web propio o una presentación. Si el
+# dashboard es de Looker Studio y no hay presentación, este archivo se borra:
+# Looker lee el Sheet de 09_publish.
 #
 # Requiere activar Pages en Settings → Pages → Source: "GitHub Actions".
 
@@ -13,6 +16,7 @@ on:
     branches: [main]
     paths:
       - 'tools/dashboard/**'
+      - 'tools/presentacion/**'
 
 permissions:
   contents: read
@@ -35,9 +39,21 @@ jobs:
 
       - uses: actions/configure-pages@v5
 
+      # arma el sitio: el dashboard en la raíz y la presentación en su carpeta;
+      # el Apps Script de la presentación no se publica, se copia a mano
+      - name: Armar el sitio
+        run: |
+          mkdir -p _site
+          cp -r tools/dashboard/. _site/
+          if [ -d tools/presentacion ]; then
+            mkdir -p _site/presentacion
+            cp -r tools/presentacion/. _site/presentacion/
+            rm -rf _site/presentacion/apps_script
+          fi
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: tools/dashboard
+          path: _site
 
       - id: deploy
         uses: actions/deploy-pages@v4

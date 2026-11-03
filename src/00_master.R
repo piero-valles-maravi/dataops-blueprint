@@ -45,17 +45,20 @@ source('src/06_indicators/06_indicators_entrega.R')
 
 # 3. Producir ------------------------------------------------------------------
 
-# 08_monitoring es del monitoreo por hora (hourly.yml); acá se corre para probarlo
-source('src/08_products/08_monitoring.R')
-
+# los análisis, un script por producto; el informe va al final porque usa
+# las tablas y figuras de los demás
 source('src/07_analysis/07_analysis_descriptivos.R')
 source('src/07_analysis/07_analysis_modelo.R')
+source('src/07_analysis/07_analysis_informe.R')
 
-source('src/08_products/08_products_informe.R')
-source('src/08_products/08_products_entrega.R')
+# el monitoreo es de los workflows hourly.yml y daily.yml; acá se corre para
+# probarlo
+source('src/08_monitoring/08_monitoring_hourly.R')
+source('src/08_monitoring/08_monitoring_daily.R')
 
 
 # 4. Publicar ------------------------------------------------------------------
 
 source('src/09_publish/09_publish_sheets.R')
 source('src/09_publish/09_publish_drive.R')
+source('src/09_publish/09_publish_entrega.R')

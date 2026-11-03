@@ -1,7 +1,7 @@
 # =============================================================================
 # Flujo de monitoreo POR HORA: mientras dura el campo
 # =============================================================================
-# 01_import → 02_audit → 03_clean → 08_monitoring → 09_publish_sheets
+# 01_import → 02_audit → 03_clean → 08_monitoring_hourly → 09_publish_sheets
 # Actualiza el Sheet que lee Looker Studio y agrega al Sheet de validación las
 # encuestas nuevas con alerta. Las decisiones de las supervisoras vuelven en la
 # corrida siguiente, por 01_import_validacion.
@@ -78,8 +78,8 @@ jobs:
       - name: 03_clean_registro
         run: Rscript src/03_clean/03_clean_registro.R
 
-      - name: 08_monitoring
-        run: Rscript src/08_products/08_monitoring.R
+      - name: 08_monitoring_hourly
+        run: Rscript src/08_monitoring/08_monitoring_hourly.R
 
       - name: 09_publish_sheets
         run: Rscript src/09_publish/09_publish_sheets.R

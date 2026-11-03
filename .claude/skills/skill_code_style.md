@@ -602,7 +602,7 @@ cálculo nuevo:
 | una llave, necesaria para poder cruzar | `03_clean` |
 | información que viene de afuera (IA, geocodificación, una API) | `04_enrich`, fuente por fuente |
 | un indicador que **todos** los productos usan | `06_indicators`, después de integrar |
-| un indicador de **un solo** entregable | `08_products`, junto al script que lo usa |
+| un indicador de **un solo** entregable | `07_analysis`, junto al script de ese producto |
 
 Corolarios:
 

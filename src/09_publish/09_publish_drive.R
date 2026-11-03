@@ -6,12 +6,12 @@
 #                                                                              #
 # FECHA DE CREACION: <dd/mm/aaaa>                                              #
 # NOMBRE: 09_publish_drive                                                     #
-# DETALLE: respalda en Google Drive cada carpeta de data/, con la fecha en el  #
-#   nombre del archivo: la última foto del día en el monitoreo diario          #
+# DETALLE: respalda en Google Drive cada carpeta de data/, con la fecha en     #
+#   el nombre del archivo: la última foto del día en el monitoreo diario       #
 #   (daily.yml) y la del corte en el pipeline completo (completo.yml). No      #
 #   modifica nada.                                                             #
 #                                                                              #
-# CORRE DESPUES DE: 03_clean (diario) u 08_products (completo)                 #
+# CORRE DESPUES DE: 08_monitoring_daily (diario) u 07_analysis (completo)      #
 # LEE: data/01_raw a data/06_final                                             #
 # ESCRIBE: una carpeta de Drive por etapa (GDRIVE_ID_*)                        #
 #-----------------------------------------------------------------------------.#
@@ -37,14 +37,16 @@ source('src/00_setup/auth.R')
 
 # Rutas y carpetas -------------------------------------------------------------
 
-# cada carpeta de data/ va a su carpeta de Drive (GDRIVE_ID_<ETAPA>)
+# cada carpeta de data/ y el resumen del día van a su carpeta de Drive
+# (GDRIVE_ID_<ETAPA>)
 carpetas <- c(
   RAW       = 'data/01_raw',                       # los crudos
   AUDIT     = 'data/02_audit',                     # las auditadas
   CLEAN     = 'data/03_clean',                     # las limpias
   ENRICH    = 'data/04_enrich',                    # las enriquecidas
   INTEGRATE = 'data/05_integrate',                 # la integrada
-  FINAL     = 'data/06_final'                      # la final
+  FINAL     = 'data/06_final',                     # la final
+  MONITOREO = 'outputs/08_monitoring/daily'        # el resumen del día
 )                                                  # fin de las carpetas
 
 # la carpeta de Drive de cada etapa; vacía si no está en .secrets/.Renviron

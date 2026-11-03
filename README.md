@@ -57,12 +57,12 @@ Todo proyecto pasa por los mismos cuatro bloques:
 |---|---|---|---|
 | **1. Ingesta** | `01` | se traen los datos de cada fuente, tal cual llegan | `data/01_raw/` |
 | **2. Procesar** | `02` a `06` | se auditan, limpian, enriquecen e integran hasta dejar la base final | `data/02_audit/` a `data/06_final/` |
-| **3. Producir** | `07` y `08` | se analiza la base final y se arma lo que mira o recibe una persona | `outputs/` |
+| **3. Producir** | `07` y `08` | se arma lo que se le entrega a una persona y se mira el campo mientras ocurre | `outputs/` |
 | **4. Publicar** | `09` | se lleva cada cosa a su destino; no se calcula nada | Sheets, Drive, Pages |
 
 ### 2.2 El pipeline completo
 
-![El pipeline completo en nueve etapas](.github/images/flujo_pipeline.svg?v=2)
+![El pipeline completo en nueve etapas](.github/images/flujo_pipeline.svg?v=3)
 
 Las nueve etapas, en orden. Cada script lee lo que dejó el anterior y escribe solo en su carpeta; las etapas que un proyecto no usa se borran sin correr los números.
 
@@ -70,14 +70,14 @@ Corre **a mano**, cuando hay que dejar la base final, los análisis y las entreg
 
 ### 2.3 El flujo de monitoreo
 
-![El flujo de monitoreo](.github/images/flujo_monitoreo.svg?v=2)
+![El flujo de monitoreo](.github/images/flujo_monitoreo.svg?v=3)
 
 Mientras dura el campo, dos workflows siguen el levantamiento. Los dos corren las mismas tres etapas (`01` a `03`) y difieren en lo que hacen después:
 
 | Workflow | Cuándo | Etapas | Para qué |
 |---|---|---|---|
-| `hourly.yml` | cada hora, en la jornada de campo | `01` → `02` → `03` → `08_monitoring` → `09_publish_sheets` | actualiza el Sheet que lee **Looker Studio** y suma al **Sheet de validación** las encuestas nuevas con alerta |
-| `daily.yml` | una vez, al cierre del día | `01` → `02` → `03` → `09_publish_drive` | deja en **Google Drive** la última foto del día de cada carpeta de `data/`, con la fecha en el nombre |
+| `hourly.yml` | cada hora, en la jornada de campo | `01` → `02` → `03` → `08_monitoring_hourly` → `09_publish_sheets` | actualiza el Sheet que lee **Looker Studio** y suma al **Sheet de validación** las encuestas nuevas con alerta |
+| `daily.yml` | una vez, al cierre del día | `01` → `02` → `03` → `08_monitoring_daily` → `09_publish_drive` | arma el resumen del día y deja en **Google Drive** la última foto del día de cada carpeta de `data/`, con la fecha en el nombre |
 
 - **Lee la base limpia, sin filtrar.** El monitoreo mide el proceso de campo, así que necesita todos los intentos con sus alertas, incluidas las encuestas inválidas. Es la única excepción a la frontera de `data/06_final/`.
 - **La validación es un circuito.** Las supervisoras deciden en el Sheet de validación; en la corrida siguiente `01_import_validacion` trae esas decisiones y `02_audit` las aplica.
@@ -98,8 +98,8 @@ Cada etapa responde **una sola pregunta**. Si una tarea no responde la pregunta 
 | `04` | `enrich` | ¿Qué le agregamos desde afuera? | `data/03_clean/` | `data/04_enrich/` | Sí |
 | `05` | `integrate` | ¿Cómo se unen fuentes y rondas? | `data/04_enrich/` | `data/05_integrate/` | Sí |
 | `06` | `indicators` | ¿Qué variables e indicadores necesitamos? | la última etapa | `data/06_final/` | No |
-| `07` | `analysis` | ¿Qué resultados obtenemos? | `data/06_final/` | `outputs/07_analysis/` | Sí |
-| `08` | `products` | ¿Qué mira o recibe una persona? | `data/06_final/`, `outputs/07_analysis/` | `outputs/08_products/` | Sí |
+| `07` | `analysis` | ¿Qué le entregamos a una persona? | `data/06_final/` | `outputs/07_analysis/<producto>/` | Sí |
+| `08` | `monitoring` | ¿Cómo va el campo? | `data/03_clean/` | `outputs/08_monitoring/` | Sí |
 | `09` | `publish` | ¿Dónde tiene que estar? | `outputs/`, `data/` | Sheets, Drive, Pages | Sí |
 
 Lo que hace cada una, y sobre todo lo que **no** hace:
@@ -110,9 +110,11 @@ Lo que hace cada una, y sobre todo lo que **no** hace:
 - **`04_enrich`** agrega información que la fuente no trae: IA, geocodificación, APIs externas. **No** vuelve a procesar lo que no cambió.
 - **`05_integrate`** une fuentes y rondas: apila, cruza, deduplica, resuelve quién es quién. **No** crea indicadores.
 - **`06_indicators`** crea variables derivadas, indicadores y scores sobre la base integrada, y deja la base final en dos versiones: la analítica y la de entrega sin datos personales. **No** limpia.
-- **`07_analysis`** calcula resultados: modelos, índices, cruces. Guarda tablas y figuras; **nunca** quedan solo en pantalla.
-- **`08_products`** arma lo que mira una persona: tablas del dashboard, informes, diccionario, base de entrega.
-- **`09_publish`** lleva cada cosa a su destino. **No** calcula nada.
+- **`07_analysis`** calcula o arma todo lo que se le entrega a una persona o a otro sistema: tablas, figuras, modelos, informes (Quarto, Word, PDF, TeX), las tablas del dashboard, listas. Un script y una carpeta por producto (`07_analysis_<producto>.R` → `outputs/07_analysis/<producto>/`). Nada queda solo en pantalla.
+- **`08_monitoring`** mira el campo mientras ocurre, con un script por frecuencia: `08_monitoring_hourly.R` (avance, cuotas y alertas para Looker) y `08_monitoring_daily.R` (el resumen del día). **No** espera a la base final.
+- **`09_publish`** lleva cada cosa a su destino: Sheets, Drive, la entrega al cliente (`09_publish_entrega.R`), SFTP. **No** calcula nada.
+
+**¿Dónde va un pedido nuevo?** Si revisa la calidad de una sola fuente, en `02_audit`. Si calcula o arma algo para una persona o un sistema, en `07_analysis`. Si mira el campo mientras ocurre, en `08_monitoring`. Si solo lleva algo ya hecho a su destino, en `09_publish`.
 
 **`04_enrich` frente a `06_indicators`:** las dos agregan columnas, pero `04` trae información **de afuera** (IA, APIs, geocodificación), una fuente a la vez y antes de integrar; `06` calcula con lo que **ya está adentro**, después de integrar, cuando ya están todas las fuentes y rondas juntas. Las recodificaciones simples de una sola fuente (tramos de edad, grupos de NPS) se quedan en `03_clean`.
 
@@ -191,7 +193,8 @@ El árbol muestra hasta cuatro niveles. Para buscar una carpeta y leer la defini
 │   ├── 01_instrumento/                    el cuestionario de cada ronda
 │   │   └── <ronda>_<version>.xlsx         XLSForm de la ronda
 │   ├── 02_referencias/                    catálogos, metas, umbrales, prompts
-│   └── 03_correcciones/                   correcciones del analista
+│   ├── 03_correcciones/                   correcciones del analista
+│   └── 04_plantillas/                     plantillas de informes
 │
 ├── src/                                   todo el código del pipeline
 │   ├── 00_master.R                        corre todo el pipeline en local
@@ -219,16 +222,17 @@ El árbol muestra hasta cuatro niveles. Para buscar una carpeta y leer la defini
 │   ├── 06_indicators/                     un script por tema: indicadores y base final
 │   │   ├── 06_indicators_variables.R      variables, indicadores, scores
 │   │   └── 06_indicators_entrega.R        versión de entrega
-│   ├── 07_analysis/                       un script por análisis
+│   ├── 07_analysis/                       un script por producto
 │   │   ├── 07_analysis_descriptivos.R     descriptivos y cruces
-│   │   └── 07_analysis_modelo.R           el modelo o índice
-│   ├── 08_products/                       un script por producto
-│   │   ├── 08_monitoring.R                tablas del monitoreo y casos a validar
-│   │   ├── 08_products_informe.R          el informe
-│   │   └── 08_products_entrega.R          la entrega al cliente
+│   │   ├── 07_analysis_modelo.R           el modelo o índice
+│   │   └── 07_analysis_informe.R          el informe
+│   ├── 08_monitoring/                     un script por frecuencia
+│   │   ├── 08_monitoring_hourly.R         el monitoreo por hora
+│   │   └── 08_monitoring_daily.R          el resumen del día
 │   └── 09_publish/                        un script por destino
 │       ├── 09_publish_sheets.R            los Sheets: Looker, validación, dashboard
-│       └── 09_publish_drive.R             el respaldo en Drive
+│       ├── 09_publish_drive.R             el respaldo en Drive
+│       └── 09_publish_entrega.R           la entrega al cliente
 │
 ├── data/                                  SOLO bases de datos
 │   ├── 01_raw/                            lo que llegó, tal cual
@@ -258,29 +262,33 @@ El árbol muestra hasta cuatro niveles. Para buscar una carpeta y leer la defini
 │       └── <proyecto>_entrega.RData       base .RData
 │
 ├── outputs/                               todo lo que NO es base de datos
-│   ├── 07_analysis/                       resultados de todos los análisis
-│   │   ├── tablas/                        tablas de resultados
-│   │   │   └── descriptivos_<tabla>.csv   una tabla
-│   │   └── figuras/                       gráficos
-│   │       └── modelo_<figura>.png        una figura
-│   └── 08_products/                       una carpeta por producto
-│       ├── monitoreo/                     tablas del campo
-│       ├── informe/                       informes con fecha
-│       │   └── informe_<aaaa-mm-dd>.docx  un informe
+│   ├── 07_analysis/                       una carpeta por producto
+│   │   ├── descriptivos/                  tablas y figuras
+│   │   ├── modelo/                        estimaciones y figuras
+│   │   └── informe/                       informes con fecha
+│   ├── 08_monitoring/                     una carpeta por frecuencia
+│   │   ├── hourly/                        tablas del campo, por hora
+│   │   └── daily/                         el resumen del día
+│   └── 09_publish/                        copias locales de lo que se envía
 │       └── entrega/                       entregas al cliente
-│           └── entrega_<aaaa-mm-dd>/      una entrega
 │
 └── tools/                                 código que corre fuera del pipeline
     ├── apps_script/                       el disparador de los workflows
     │   └── disparador.gs                  el script
-    └── dashboard/                         página web en GitHub Pages
-        ├── index.html                     la página
-        ├── _ds/                           el sistema de diseño
-        │   ├── fonts/                     las tipografías
-        │   └── tokens/                    colores, tipografía, espaciado
-        ├── assets/                        imágenes de la página
-        │   └── logos/                     los logos
-        └── datos/                         los CSV que lee la página
+    ├── dashboard/                         página web en GitHub Pages
+    │   ├── index.html                     la página
+    │   ├── _ds/                           el sistema de diseño
+    │   │   ├── fonts/                     las tipografías
+    │   │   └── tokens/                    colores, tipografía, espaciado
+    │   ├── assets/                        imágenes de la página
+    │   │   └── logos/                     los logos
+    │   └── datos/                         los CSV que lee la página
+    └── presentacion/                      la presentación del pipeline
+        ├── index.html                     las diapositivas
+        ├── votar.html                     la página del celular
+        ├── encuestas.js                   las preguntas de control
+        ├── config.js                      la URL de los votos
+        └── apps_script/                   recibe y cuenta los votos
 ```
 
 El repositorio trae scripts de ejemplo en cada carpeta de `src/` (una encuesta y un registro como fuentes) y las subcarpetas `piloto/`, `ronda_1/`, `ronda_2/` y `ronda_3/` en `data/01_raw` a `04_enrich`: cada proyecto los renombra o borra según sus fuentes y rondas. Si una corrida deja varios archivos de un mismo producto, van en una subcarpeta con la fecha de corte.

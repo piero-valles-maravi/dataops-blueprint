@@ -1,7 +1,7 @@
 # =============================================================================
 # Flujo de monitoreo DIARIO: al cierre del día, mientras dura el campo
 # =============================================================================
-# 01_import → 02_audit → 03_clean → 09_publish_drive
+# 01_import → 02_audit → 03_clean → 08_monitoring_daily → 09_publish_drive
 # La última foto del día: respalda en Drive cada carpeta de data/ con la fecha
 # en el nombre. Corre una hora después de la última corrida por hora.
 #
@@ -47,6 +47,7 @@ jobs:
       GDRIVE_ID_ENRICH: ${{ secrets.GDRIVE_ID_ENRICH }}
       GDRIVE_ID_INTEGRATE: ${{ secrets.GDRIVE_ID_INTEGRATE }}
       GDRIVE_ID_FINAL: ${{ secrets.GDRIVE_ID_FINAL }}
+      GDRIVE_ID_MONITOREO: ${{ secrets.GDRIVE_ID_MONITOREO }}
 
     steps:
       - uses: actions/checkout@v4
@@ -81,6 +82,9 @@ jobs:
 
       - name: 03_clean_registro
         run: Rscript src/03_clean/03_clean_registro.R
+
+      - name: 08_monitoring_daily
+        run: Rscript src/08_monitoring/08_monitoring_daily.R
 
       - name: 09_publish_drive
         run: Rscript src/09_publish/09_publish_drive.R

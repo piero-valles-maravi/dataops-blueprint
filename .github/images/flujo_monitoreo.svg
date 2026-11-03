@@ -47,7 +47,7 @@
 <text x='420' y='218' text-anchor='middle' style='font:400 11px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5'>clean</text>
 <rect x='512' y='180' width='116' height='48' rx='12' stroke-width='1.5' class='chipH' style='animation-delay:3.75s'/>
 <text x='570' y='202' text-anchor='middle' style='font:700 15px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>08</text>
-<text x='570' y='218' text-anchor='middle' style='font:400 11px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5'>monitoring</text>
+<text x='570' y='218' text-anchor='middle' style='font:400 11px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5'>monitoring_hourly</text>
 <rect x='662' y='180' width='116' height='48' rx='12' stroke-width='1.5' class='chipH' style='animation-delay:5.00s'/>
 <text x='720' y='202' text-anchor='middle' style='font:700 15px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>09</text>
 <text x='720' y='218' text-anchor='middle' style='font:400 11px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5'>publish_sheets</text>
@@ -77,6 +77,9 @@
 <rect x='362' y='450' width='116' height='48' rx='12' stroke-width='1.5' class='chipD' style='animation-delay:0.00s'/>
 <text x='420' y='472' text-anchor='middle' style='font:700 15px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>03</text>
 <text x='420' y='488' text-anchor='middle' style='font:400 11px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5'>clean</text>
+<rect x='512' y='450' width='116' height='48' rx='12' stroke-width='1.5' class='chipD' style='animation-delay:0.00s'/>
+<text x='570' y='472' text-anchor='middle' style='font:700 15px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>08</text>
+<text x='570' y='488' text-anchor='middle' style='font:400 11px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5'>monitoring_daily</text>
 <rect x='662' y='450' width='116' height='48' rx='12' stroke-width='1.5' class='chipD' style='animation-delay:0.00s'/>
 <text x='720' y='472' text-anchor='middle' style='font:700 15px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>09</text>
 <text x='720' y='488' text-anchor='middle' style='font:400 11px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5'>publish_drive</text>
