@@ -61,14 +61,14 @@
 <g class='card' style='animation-delay:4s'>
 <rect x='624' y='122' width='224' height='250' rx='20' fill='#064E3B' fill-opacity='.85' stroke-width='2' class='borde' style='animation-delay:4s'/>
 <g transform='translate(646 144) scale(1.6667)'><path d='M4 20V10M10 20V4M16 20v-7M22 20H2' fill='none' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' class='icono' style='animation-delay:4s'/></g>
-<rect x='770' y='151' width='56' height='26' rx='13' class='badge' style='animation-delay:4s'/>
-<text x='798' y='169' text-anchor='middle' class='badget' style='animation-delay:4s'>07–08</text>
+<rect x='794' y='151' width='32' height='26' rx='13' class='badge' style='animation-delay:4s'/>
+<text x='810' y='169' text-anchor='middle' class='badget' style='animation-delay:4s'>07</text>
 <text x='646' y='214' style='font:700 12px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#6EE7B7;letter-spacing:.14em'>BLOQUE 3</text>
 <text x='646' y='248' style='font:700 28px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>Producir</text>
 <text x='646' y='278' class='txt'>Se analiza la base final</text>
-<text x='646' y='300' class='txt'>y se arma lo que mira</text>
-<text x='646' y='322' class='txt'>una persona.</text>
-<text x='646' y='350' class='mono'>outputs/</text>
+<text x='646' y='300' class='txt'>y se arma lo que se</text>
+<text x='646' y='322' class='txt'>entrega a una persona.</text>
+<text x='646' y='350' class='mono'>outputs/07_analysis/</text>
 </g>
 <line x1='852' y1='247' x2='908' y2='247' stroke='#6EE7B7' stroke-opacity='.6' stroke-width='2' stroke-dasharray='6 6' class='guion'/>
 <circle cx='850' cy='247' r='6' fill='#FBBF24' class='pkt' style='animation-delay:5s'/>
@@ -76,7 +76,7 @@
 <rect x='912' y='122' width='224' height='250' rx='20' fill='#064E3B' fill-opacity='.85' stroke-width='2' class='borde' style='animation-delay:6s'/>
 <g transform='translate(934 144) scale(1.6667)'><path d='M4 12l16-8-6 16-3-7-7-1z' fill='none' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' class='icono' style='animation-delay:6s'/></g>
 <rect x='1082' y='151' width='32' height='26' rx='13' class='badge' style='animation-delay:6s'/>
-<text x='1098' y='169' text-anchor='middle' class='badget' style='animation-delay:6s'>09</text>
+<text x='1098' y='169' text-anchor='middle' class='badget' style='animation-delay:6s'>08</text>
 <text x='934' y='214' style='font:700 12px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#6EE7B7;letter-spacing:.14em'>BLOQUE 4</text>
 <text x='934' y='248' style='font:700 28px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>Publicar</text>
 <text x='934' y='278' class='txt'>Se lleva cada cosa a</text>

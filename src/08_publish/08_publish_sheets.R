@@ -5,16 +5,16 @@
 #   <NOMBRE APELLIDO (ROL)> - <correo>                                         #
 #                                                                              #
 # FECHA DE CREACION: <dd/mm/aaaa>                                              #
-# NOMBRE: 09_publish_sheets                                                    #
+# NOMBRE: 08_publish_sheets                                                    #
 # DETALLE: lleva las tablas a los Google Sheets. En el monitoreo por hora      #
-#   (hourly.yml): las tablas de 08_monitoring_hourly al Sheet que lee Looker   #
+#   (hourly.yml): las tablas de monitoring_hourly al Sheet que lee Looker      #
 #   Studio, y las encuestas nuevas con alerta al Sheet de validación de las    #
 #   supervisoras. En el pipeline completo (completo.yml): las tablas de        #
 #   07_analysis al Sheet del dashboard. Esquema de columnas fijo, para que     #
 #   Looker no se rompa. No calcula nada.                                       #
 #                                                                              #
-# CORRE DESPUES DE: 08_monitoring_hourly (por hora) u 07_analysis (completo)   #
-# LEE: outputs/08_monitoring/hourly/ y outputs/07_analysis/                    #
+# CORRE DESPUES DE: monitoring_hourly (por hora) u 07_analysis (completo)      #
+# LEE: outputs/monitoring/hourly/ y outputs/07_analysis/                       #
 # ESCRIBE: GSHEET_ID_MONITOREO, GSHEET_ID_VALIDACION y GSHEET_ID_DASHBOARD     #
 #-----------------------------------------------------------------------------.#
 
@@ -39,18 +39,18 @@ source('src/00_setup/auth.R')
 
 # Rutas y carpetas -------------------------------------------------------------
 
-# las tablas del monitoreo que deja 08_monitoring
+# las tablas del monitoreo que deja monitoring
 # Input
-carpeta_monitoreo <- 'outputs/08_monitoring/hourly'
+carpeta_monitoreo <- 'outputs/monitoring/hourly'
 
 
 
 # Cargar datos -----------------------------------------------------------------
 
-# sin tablas por defecto: el pipeline completo no corre 08_monitoring_hourly
+# sin tablas por defecto: el pipeline completo no corre monitoring_hourly
 monitoreo <- list()
 
-# el archivo del monitoreo, si 08_monitoring_hourly lo dejó
+# el archivo del monitoreo, si monitoring_hourly lo dejó
 archivos_monitoreo <- list.files(
   carpeta_monitoreo,                               # dónde buscar
   pattern    = '_monitoreo_hourly\\.RData$',       # solo el del monitoreo

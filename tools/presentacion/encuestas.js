@@ -55,7 +55,7 @@ window.ENCUESTAS = {
   p6: {
     pregunta: '¿Qué etapa te genera más dudas?',
     opciones: ['01 import', '02 audit', '03 clean', '04 enrich', '05 integrate',
-               '06 indicators', '07 analysis', '08 monitoring', '09 publish'],
+               '06 indicators', '07 analysis', '08 publish', 'El monitoreo'],
     correcta: null,
     explicacion: ''
   }

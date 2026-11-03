@@ -4,7 +4,7 @@
 #
 # Solo si el proyecto tiene un dashboard web propio o una presentación. Si el
 # dashboard es de Looker Studio y no hay presentación, este archivo se borra:
-# Looker lee el Sheet de 09_publish.
+# Looker lee el Sheet de 08_publish.
 #
 # Requiere activar Pages en Settings → Pages → Source: "GitHub Actions".
 

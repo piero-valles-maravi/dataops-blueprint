@@ -54,6 +54,12 @@ celular avisa que la votación cerró, y en lugar del QR aparece la respuesta
 correcta con su explicación y cuántos acertaron. En la pregunta final aparece el
 medidor de claridad y la etapa con más dudas. **C** otra vez la reabre.
 
+**Empezar con las encuestas en cero.** En la portada está el botón *↺ Reiniciar
+encuestas*: desde ese momento solo cuentan los votos nuevos, y los anteriores
+(ensayos, presentaciones pasadas) quedan guardados en el Sheet pero no se
+muestran. Al lado dice desde qué hora están en cero. El reinicio queda guardado
+en esa computadora: hay que apretarlo en la que se va a presentar.
+
 **Ensayar sin tocar los votos reales.** Agregando `?demo=1` a la dirección
 (`…/presentacion/?demo=1`) los votos se simulan y no se escribe nada en el Sheet.
 

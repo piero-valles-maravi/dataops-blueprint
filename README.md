@@ -49,35 +49,35 @@ Este blueprint es para **proyectos con datos tabulares**. Un proyecto cualitativ
 
 ### 2.1 El proceso de un vistazo
 
-![El proceso en cuatro bloques](.github/images/flujo_macro.svg?v=2)
+![El proceso en cuatro bloques](.github/images/flujo_macro.svg?v=4)
 
-Todo proyecto pasa por los mismos cuatro bloques:
+Todo proyecto pasa por los mismos cuatro bloques. El monitoreo del campo no es una etapa: es un atajo que se toma mientras dura el campo (sección 2.3).
 
 | Bloque | Etapas | Qué pasa | Escribe en |
 |---|---|---|---|
 | **1. Ingesta** | `01` | se traen los datos de cada fuente, tal cual llegan | `data/01_raw/` |
 | **2. Procesar** | `02` a `06` | se auditan, limpian, enriquecen e integran hasta dejar la base final | `data/02_audit/` a `data/06_final/` |
-| **3. Producir** | `07` y `08` | se arma lo que se le entrega a una persona y se mira el campo mientras ocurre | `outputs/` |
-| **4. Publicar** | `09` | se lleva cada cosa a su destino; no se calcula nada | Sheets, Drive, Pages |
+| **3. Producir** | `07` | se arma lo que se le entrega a una persona: tablas, figuras, informes, listas | `outputs/` |
+| **4. Publicar** | `08` | se lleva cada cosa a su destino; no se calcula nada | Sheets, Drive, Pages |
 
 ### 2.2 El pipeline completo
 
-![El pipeline completo en nueve etapas](.github/images/flujo_pipeline.svg?v=3)
+![El pipeline completo en ocho etapas](.github/images/flujo_pipeline.svg?v=4)
 
-Las nueve etapas, en orden. Cada script lee lo que dejó el anterior y escribe solo en su carpeta; las etapas que un proyecto no usa se borran sin correr los números.
+Las ocho etapas, en orden. Cada script lee lo que dejó el anterior y escribe solo en su carpeta; las etapas que un proyecto no usa se borran sin correr los números.
 
 Corre **a mano**, cuando hay que dejar la base final, los análisis y las entregas: al hacer un corte o al cerrar el campo. Se lanza desde *Actions → completo → Run workflow* (`completo.yml`) o en local con `src/00_master.R`.
 
 ### 2.3 El flujo de monitoreo
 
-![El flujo de monitoreo](.github/images/flujo_monitoreo.svg?v=3)
+![El flujo de monitoreo](.github/images/flujo_monitoreo.svg?v=4)
 
 Mientras dura el campo, dos workflows siguen el levantamiento. Los dos corren las mismas tres etapas (`01` a `03`) y difieren en lo que hacen después:
 
 | Workflow | Cuándo | Etapas | Para qué |
 |---|---|---|---|
-| `hourly.yml` | cada hora, en la jornada de campo | `01` → `02` → `03` → `08_monitoring_hourly` → `09_publish_sheets` | actualiza el Sheet que lee **Looker Studio** y suma al **Sheet de validación** las encuestas nuevas con alerta |
-| `daily.yml` | una vez, al cierre del día | `01` → `02` → `03` → `08_monitoring_daily` → `09_publish_drive` | arma el resumen del día y deja en **Google Drive** la última foto del día de cada carpeta de `data/`, con la fecha en el nombre |
+| `hourly.yml` | cada hora, en la jornada de campo | `01` → `02` → `03` → `monitoring_hourly` → `08_publish_sheets` | actualiza el Sheet que lee **Looker Studio** y suma al **Sheet de validación** las encuestas nuevas con alerta |
+| `daily.yml` | una vez, al cierre del día | `01` → `02` → `03` → `monitoring_daily` → `08_publish_drive` | arma el resumen del día y deja en **Google Drive** la última foto del día de cada carpeta de `data/`, con la fecha en el nombre |
 
 - **Lee la base limpia, sin filtrar.** El monitoreo mide el proceso de campo, así que necesita todos los intentos con sus alertas, incluidas las encuestas inválidas. Es la única excepción a la frontera de `data/06_final/`.
 - **La validación es un circuito.** Las supervisoras deciden en el Sheet de validación; en la corrida siguiente `01_import_validacion` trae esas decisiones y `02_audit` las aplica.
@@ -95,28 +95,28 @@ Cada etapa responde **una sola pregunta**. Si una tarea no responde la pregunta 
 | `01` | `import` | ¿Qué llegó de la fuente? | la fuente | `data/01_raw/` | No |
 | `02` | `audit` | ¿Está bien lo que llegó? | `data/01_raw/` | `data/02_audit/` | Sí |
 | `03` | `clean` | ¿Cómo queda usable, una fuente a la vez? | `data/02_audit/` | `data/03_clean/` | No |
-| `04` | `enrich` | ¿Qué le agregamos desde afuera? | `data/03_clean/` | `data/04_enrich/` | Sí |
+| `04` | `enrich` | ¿Qué más sacamos de cada registro? | `data/03_clean/` | `data/04_enrich/` | Sí |
 | `05` | `integrate` | ¿Cómo se unen fuentes y rondas? | `data/04_enrich/` | `data/05_integrate/` | Sí |
 | `06` | `indicators` | ¿Qué variables e indicadores necesitamos? | la última etapa | `data/06_final/` | No |
 | `07` | `analysis` | ¿Qué le entregamos a una persona? | `data/06_final/` | `outputs/07_analysis/<producto>/` | Sí |
-| `08` | `monitoring` | ¿Cómo va el campo? | `data/03_clean/` | `outputs/08_monitoring/` | Sí |
-| `09` | `publish` | ¿Dónde tiene que estar? | `outputs/`, `data/` | Sheets, Drive, Pages | Sí |
+| `08` | `publish` | ¿Dónde tiene que estar? | `outputs/`, `data/` | Sheets, Drive, Pages | Sí |
 
 Lo que hace cada una, y sobre todo lo que **no** hace:
 
 - **`01_import`** descarga tal cual. **No** filtra ni corrige. Si la fuente responde con error, corta sin pisar el crudo anterior.
 - **`02_audit`** marca. **No** corrige ni borra: agrega columnas de alerta y clasifica cada registro. Aplica los veredictos humanos.
 - **`03_clean`** corrige, normaliza y etiqueta **una fuente a la vez**. **No** carga ninguna otra fuente.
-- **`04_enrich`** agrega información que la fuente no trae: IA, geocodificación, APIs externas. **No** vuelve a procesar lo que no cambió.
+- **`04_enrich`** agrega columnas nuevas procesando lo que cada registro ya trae, una fuente a la vez: la IA que lee los TDR de una licitación, la clasificación de respuestas abiertas, variables derivadas de esa misma fuente. **No** vuelve a procesar lo que ya se enriqueció.
 - **`05_integrate`** une fuentes y rondas: apila, cruza, deduplica, resuelve quién es quién. **No** crea indicadores.
 - **`06_indicators`** crea variables derivadas, indicadores y scores sobre la base integrada, y deja la base final en dos versiones: la analítica y la de entrega sin datos personales. **No** limpia.
 - **`07_analysis`** calcula o arma todo lo que se le entrega a una persona o a otro sistema: tablas, figuras, modelos, informes (Quarto, Word, PDF, TeX), las tablas del dashboard, listas. Un script y una carpeta por producto (`07_analysis_<producto>.R` → `outputs/07_analysis/<producto>/`). Nada queda solo en pantalla.
-- **`08_monitoring`** mira el campo mientras ocurre, con un script por frecuencia: `08_monitoring_hourly.R` (avance, cuotas y alertas para Looker) y `08_monitoring_daily.R` (el resumen del día). **No** espera a la base final.
-- **`09_publish`** lleva cada cosa a su destino: Sheets, Drive, la entrega al cliente (`09_publish_entrega.R`), SFTP. **No** calcula nada.
+- **`08_publish`** lleva cada cosa a su destino: Sheets, Drive, la entrega al cliente (`08_publish_entrega.R`), SFTP. **No** calcula nada.
 
-**¿Dónde va un pedido nuevo?** Si revisa la calidad de una sola fuente, en `02_audit`. Si calcula o arma algo para una persona o un sistema, en `07_analysis`. Si mira el campo mientras ocurre, en `08_monitoring`. Si solo lleva algo ya hecho a su destino, en `09_publish`.
+**¿Dónde va un pedido nuevo?** Si revisa la calidad de una sola fuente, en `02_audit`. Si calcula o arma algo para una persona o un sistema, en `07_analysis`. Si mira el campo mientras ocurre, en `monitoring`. Si solo lleva algo ya hecho a su destino, en `08_publish`.
 
-**`04_enrich` frente a `06_indicators`:** las dos agregan columnas, pero `04` trae información **de afuera** (IA, APIs, geocodificación), una fuente a la vez y antes de integrar; `06` calcula con lo que **ya está adentro**, después de integrar, cuando ya están todas las fuentes y rondas juntas. Las recodificaciones simples de una sola fuente (tramos de edad, grupos de NPS) se quedan en `03_clean`.
+**El monitoreo no es una etapa.** `src/monitoring/` tiene un script por frecuencia: `monitoring_hourly.R` (avance, cuotas y alertas para Looker) y `monitoring_daily.R` (el resumen del día). Mientras dura el campo, el dato toma un atajo: `01` → `02` → `03` → monitoreo → `08_publish`, sin esperar a la base final (sección 2.3).
+
+**`04_enrich` frente a `06_indicators`:** las dos agregan columnas. La diferencia es qué datos necesita la columna nueva: si sale de **una sola fuente**, registro por registro, va en `04`, antes de integrar; si necesita **cruzar fuentes o rondas** (un score que combina datos tradicionales y no tradicionales), va en `06`, después de integrar. Las recodificaciones simples de una sola fuente (tramos de edad, grupos de NPS) se quedan en `03_clean`.
 
 **Los números no se corren.** Si un proyecto no tiene enriquecimiento, no existe `04_enrich`, y `05_integrate` sigue siendo `05`. Así, en todos los proyectos `03` es limpieza y `06` es la base final.
 
@@ -143,7 +143,7 @@ La regla es **qué es y quién lo lee**:
 | `ronda <- 'ronda_1'` | `data/03_clean/ronda_1/tigo_ronda_1_encuesta_clean.RData` | `data/06_final/tigo_final.RData` |
 | `ronda <- NULL` | `data/03_clean/tigo_encuesta_clean.RData` | `data/06_final/tigo_final.RData` |
 
-`data/06_final/` es la **frontera**: de ahí para atrás todo es preparación; de ahí para adelante, todo usa la base final. La única excepción es el flujo de monitoreo (`08_monitoring_*`), que lee de `data/03_clean/` porque mide el proceso de campo mientras ocurre (sección 2.3).
+`data/06_final/` es la **frontera**: de ahí para atrás todo es preparación; de ahí para adelante, todo usa la base final. La única excepción es el flujo de monitoreo (`monitoring_*`), que lee de `data/03_clean/` porque mide el proceso de campo mientras ocurre (sección 2.3).
 
 ---
 
@@ -213,9 +213,9 @@ El árbol muestra hasta cuatro niveles. Para buscar una carpeta y leer la defini
 │   ├── 03_clean/                          un script por fuente: corrige y etiqueta
 │   │   ├── 03_clean_encuesta.R            limpieza de la encuesta
 │   │   └── 03_clean_registro.R            limpieza del registro
-│   ├── 04_enrich/                         un script por fuente: información de afuera
+│   ├── 04_enrich/                         un script por fuente: columnas nuevas
 │   │   ├── 04_enrich_encuesta.R           IA sobre la encuesta
-│   │   └── 04_enrich_registro.R           datos externos del registro
+│   │   └── 04_enrich_registro.R           columnas nuevas del registro
 │   ├── 05_integrate/                      pasos con subíndice: une fuentes y rondas
 │   │   ├── 05_integrate_1_apilar.R        apila fuentes y rondas
 │   │   └── 05_integrate_2_entidades.R     resuelve quién es quién
@@ -226,13 +226,13 @@ El árbol muestra hasta cuatro niveles. Para buscar una carpeta y leer la defini
 │   │   ├── 07_analysis_descriptivos.R     descriptivos y cruces
 │   │   ├── 07_analysis_modelo.R           el modelo o índice
 │   │   └── 07_analysis_informe.R          el informe
-│   ├── 08_monitoring/                     un script por frecuencia
-│   │   ├── 08_monitoring_hourly.R         el monitoreo por hora
-│   │   └── 08_monitoring_daily.R          el resumen del día
-│   └── 09_publish/                        un script por destino
-│       ├── 09_publish_sheets.R            los Sheets: Looker, validación, dashboard
-│       ├── 09_publish_drive.R             el respaldo en Drive
-│       └── 09_publish_entrega.R           la entrega al cliente
+│   ├── 08_publish/                        un script por destino
+│   │   ├── 08_publish_sheets.R            los Sheets: Looker, validación, dashboard
+│   │   ├── 08_publish_drive.R             el respaldo en Drive
+│   │   └── 08_publish_entrega.R           la entrega al cliente
+│   └── monitoring/                        el monitoreo: no es una etapa
+│       ├── monitoring_hourly.R            el monitoreo por hora
+│       └── monitoring_daily.R             el resumen del día
 │
 ├── data/                                  SOLO bases de datos
 │   ├── 01_raw/                            lo que llegó, tal cual
@@ -250,7 +250,7 @@ El árbol muestra hasta cuatro niveles. Para buscar una carpeta y leer la defini
 │   │   ├── ronda_1/                       datos de ronda_1
 │   │   ├── ronda_2/                       datos de ronda_2
 │   │   └── ronda_3/                       datos de ronda_3
-│   ├── 04_enrich/                         cada fuente con la información agregada
+│   ├── 04_enrich/                         cada fuente con sus columnas nuevas
 │   │   ├── piloto/                        datos de piloto
 │   │   ├── ronda_1/                       datos de ronda_1
 │   │   ├── ronda_2/                       datos de ronda_2
@@ -266,10 +266,10 @@ El árbol muestra hasta cuatro niveles. Para buscar una carpeta y leer la defini
 │   │   ├── descriptivos/                  tablas y figuras
 │   │   ├── modelo/                        estimaciones y figuras
 │   │   └── informe/                       informes con fecha
-│   ├── 08_monitoring/                     una carpeta por frecuencia
+│   ├── monitoring/                        una carpeta por frecuencia
 │   │   ├── hourly/                        tablas del campo, por hora
 │   │   └── daily/                         el resumen del día
-│   └── 09_publish/                        copias locales de lo que se envía
+│   └── 08_publish/                        copias locales de lo que se envía
 │       └── entrega/                       entregas al cliente
 │
 └── tools/                                 código que corre fuera del pipeline

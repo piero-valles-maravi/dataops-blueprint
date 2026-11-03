@@ -5,15 +5,15 @@
 #   <NOMBRE APELLIDO (ROL)> - <correo>                                         #
 #                                                                              #
 # FECHA DE CREACION: <dd/mm/aaaa>                                              #
-# NOMBRE: 08_monitoring_daily                                                  #
-# DETALLE: el resumen del día (daily.yml): encuestas del día por encuestador   #
-#   y por zona, y las alertas que quedaron abiertas, para el cierre de la      #
-#   jornada. Como el monitoreo por hora, lee de data/03_clean porque mide el   #
-#   campo mientras ocurre.                                                     #
+# NOMBRE: monitoring_hourly                                                    #
+# DETALLE: las tablas del monitoreo por hora (hourly.yml): avance, cuotas y    #
+#   alertas por encuestador para Looker, y la lista de encuestas con alerta    #
+#   para la validación de las supervisoras. Es la ÚNICA excepción a la         #
+#   frontera: lee de data/03_clean porque mide el campo mientras ocurre.       #
 #                                                                              #
 # CORRE DESPUES DE: 03_clean                                                   #
 # LEE: data/03_clean/ronda_1/                                                  #
-# ESCRIBE: outputs/08_monitoring/daily/                                        #
+# ESCRIBE: outputs/monitoring/hourly/                                          #
 #-----------------------------------------------------------------------------.#
 
 # Setup ------------------------------------------------------------------------
@@ -35,7 +35,7 @@ source('src/00_setup/config.R')
 # Rutas y carpetas -------------------------------------------------------------
 
 # dónde escribe
-carpeta_salida <- 'outputs/08_monitoring/daily'    # Output
+carpeta_salida <- 'outputs/monitoring/hourly'   # Output
 
 # crea la carpeta de salida si no existe
 dir.create(carpeta_salida, recursive = TRUE, showWarnings = FALSE)
@@ -44,7 +44,8 @@ dir.create(carpeta_salida, recursive = TRUE, showWarnings = FALSE)
 
 # Cargar datos -----------------------------------------------------------------
 
-# como el monitoreo por hora, lee la base limpia sin filtrar: mide el campo
+# la ÚNICA excepción a la frontera: lee la base limpia sin filtrar, con todos
+# los intentos y sus alertas, porque mide el campo mientras ocurre
 load(ruta_base(
   '03_clean',                                      # la etapa: carpeta en data/
   'encuesta_clean'                                 # la base que se carga
@@ -52,17 +53,25 @@ load(ruta_base(
 
 
 
-# Encuestas del día ------------------------------------------------------------
+# Avance y cuotas --------------------------------------------------------------
 
-# cuántas encuestas se hicieron hoy, por encuestador y por zona
+# encuestas completas por día, por zona y contra la meta de cada cuota
 
 
 
-# Alertas abiertas -------------------------------------------------------------
+# Alertas por encuestador ------------------------------------------------------
 
-# las alertas que quedaron sin veredicto al cierre de la jornada
+# cuántas alertas tiene cada encuestador, por dimensión
 
-# lista nombrada: el resumen del día, una tabla por elemento
+
+
+# Encuestas para validar -------------------------------------------------------
+
+# las encuestas con alerta que todavía no tienen veredicto: van al Sheet de
+# validación de las supervisoras
+
+# lista nombrada: el nombre de cada tabla es el de su pestaña en el Sheet que
+# lee Looker, así que no se cambia sin cambiar el Looker
 monitoreo <- list()
 
 
@@ -71,13 +80,13 @@ monitoreo <- list()
 
 # el nombre con proyecto y ronda, igual que la base limpia que lee
 archivo_monitoreo <- paste0(
-  nombre_base('03_clean', 'monitoreo_daily'),      # proyecto, ronda y nombre
+  nombre_base('03_clean', 'monitoreo_hourly'),     # proyecto, ronda y nombre
   '.RData'                                         # la extensión
 )                                                  # fin de paste0()
 
-# la lista de tablas en un solo archivo: la sube 09_publish_drive
+# la lista de tablas en un solo archivo: la lee 08_publish_sheets
 save(
-  monitoreo,                                       # el resumen del día
+  monitoreo,                                       # las tablas del monitoreo
   # el archivo
   file = file.path(carpeta_salida, archivo_monitoreo)
 )                                                  # fin de save()

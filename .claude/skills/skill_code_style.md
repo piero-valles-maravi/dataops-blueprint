@@ -600,7 +600,7 @@ cálculo nuevo:
 | La columna es… | Va en |
 |---|---|
 | una llave, necesaria para poder cruzar | `03_clean` |
-| información que viene de afuera (IA, geocodificación, una API) | `04_enrich`, fuente por fuente |
+| una columna nueva que sale de una sola fuente (IA, una variable derivada) | `04_enrich`, fuente por fuente |
 | un indicador que **todos** los productos usan | `06_indicators`, después de integrar |
 | un indicador de **un solo** entregable | `07_analysis`, junto al script de ese producto |
 

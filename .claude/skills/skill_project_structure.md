@@ -2,8 +2,8 @@
 name: estructura-proyecto-datos
 description: >
   Estructura de carpetas y orden de scripts de los proyectos de datos que nacen
-  de dataops-blueprint: nueve etapas numeradas en R (import, audit, clean,
-  enrich, integrate, indicators, analysis, monitoring, publish), datos por etapa
+  de dataops-blueprint: ocho etapas numeradas en R (import, audit, clean,
+  enrich, integrate, indicators, analysis, publish), el monitoreo aparte, datos por etapa
   y por ronda, insumos en sources/, credenciales en .secrets/, proyecto y ronda
   en config.R y automatización en GitHub Actions. Úsala SIEMPRE que haya que
   arrancar un proyecto nuevo, decidir dónde va un script, una carpeta o un
@@ -24,7 +24,7 @@ la carpeta que escribe.** `src/02_audit/` lee `data/01_raw/` y escribe
 
 ---
 
-## 1. Las nueve etapas
+## 1. Las ocho etapas
 
 | Bloque | Etapa | Script | Escribe en |
 |---|---|---|---|
@@ -35,16 +35,21 @@ la carpeta que escribe.** `src/02_audit/` lee `data/01_raw/` y escribe
 | | `05` | `src/05_integrate/05_integrate_<n>_<paso>.R` | `data/05_integrate/` |
 | | `06` | `src/06_indicators/06_indicators_<paso>.R` | `data/06_final/` |
 | Producir | `07` | `src/07_analysis/07_analysis_<producto>.R` | `outputs/07_analysis/<producto>/` |
-| | `08` | `src/08_monitoring/08_monitoring_<frecuencia>.R` | `outputs/08_monitoring/<frecuencia>/` |
-| Publicar | `09` | `src/09_publish/09_publish_<destino>.R` | Sheets, Drive |
+| Publicar | `08` | `src/08_publish/08_publish_<destino>.R` | Sheets, Drive |
 
 - **`data/` tiene solo bases.** Tablas, figuras, informes y entregas van en
   `outputs/`.
 - **`data/06_final/` es la frontera**: de ahí en adelante nadie lee otra carpeta
-  de `data/`. La única excepción es `08_monitoring`, que lee `data/03_clean/`
+  de `data/`. La única excepción es `monitoring`, que lee `data/03_clean/`
   porque mide el campo mientras ocurre.
-- **04 contra 06.** `04_enrich` trae información de afuera, fuente por fuente,
-  antes de integrar. `06_indicators` calcula sobre la base integrada.
+- **El monitoreo no es una etapa.** Va en `src/monitoring/`, sin número, con un
+  script por frecuencia (`monitoring_hourly.R`, `monitoring_daily.R`) que escribe
+  en `outputs/monitoring/<frecuencia>/`. Es el atajo del campo:
+  `01` → `02` → `03` → monitoreo → `08_publish`.
+- **04 contra 06.** Las dos agregan columnas. Si la columna nueva sale de una
+  sola fuente, registro por registro (la IA que lee un TDR, una variable
+  derivada), va en `04_enrich`, antes de integrar. Si necesita cruzar fuentes o
+  rondas, va en `06_indicators`, después de integrar.
 
 ---
 
@@ -106,7 +111,7 @@ la carpeta que escribe.** `src/02_audit/` lee `data/01_raw/` y escribe
 | `auth.R` | carga `.secrets/.Renviron` y autentica Google | nada más |
 
 `auth.R` se separa porque **golpea la red**: solo lo cargan los scripts que lo
-necesitan (`01_import` y `09_publish`). Las funciones que usan dos scripts van
+necesitan (`01_import` y `08_publish`). Las funciones que usan dos scripts van
 en `functions.R`, nunca copiadas.
 
 ### 2.5 `sources/` es lo que entra de afuera
@@ -145,9 +150,9 @@ de GitHub muestre en qué etapa falló.
 
 | Workflow | Cuándo | Pasos |
 |---|---|---|
-| `hourly.yml` | cada hora, en la jornada de campo | `01` → `02` → `03` → `08_monitoring_hourly` → `09_publish_sheets` |
-| `daily.yml` | una vez, al cierre del día | `01` → `02` → `03` → `08_monitoring_daily` → `09_publish_drive` |
-| `completo.yml` | a mano, al hacer un corte o cerrar el campo | `01` a `09` |
+| `hourly.yml` | cada hora, en la jornada de campo | `01` → `02` → `03` → `monitoring_hourly` → `08_publish_sheets` |
+| `daily.yml` | una vez, al cierre del día | `01` → `02` → `03` → `monitoring_daily` → `08_publish_drive` |
+| `completo.yml` | a mano, al hacer un corte o cerrar el campo | `01` a `08` |
 | `dashboard.yml` | al cambiar `tools/dashboard/` | publica el explorador en Pages |
 
 Lo que llevan todos:
@@ -192,8 +197,8 @@ Lo que llevan todos:
 | No hace falta enriquecer | se borra `04_enrich`; `05` lee de `03_clean` |
 | Sin rondas | `ronda <- NULL` en `config.R` |
 | Una ronda nueva | se cambia `ronda` en `config.R` y el `formid` en `01_import_scto.R` |
-| No hay dashboard ni corrida por hora | se borran `hourly.yml` y `08_monitoring_hourly.R` |
-| Un pedido nuevo (tablas, un informe, una lista) | un `07_analysis_<producto>.R` con su carpeta en `outputs/07_analysis/`; si además hay que enviarlo, un `09_publish_<destino>.R` |
+| No hay dashboard ni corrida por hora | se borran `hourly.yml` y `monitoring_hourly.R` |
+| Un pedido nuevo (tablas, un informe, una lista) | un `07_analysis_<producto>.R` con su carpeta en `outputs/07_analysis/`; si además hay que enviarlo, un `08_publish_<destino>.R` |
 
 ---
 

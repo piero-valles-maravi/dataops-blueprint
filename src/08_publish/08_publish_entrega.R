@@ -5,7 +5,7 @@
 #   <NOMBRE APELLIDO (ROL)> - <correo>                                         #
 #                                                                              #
 # FECHA DE CREACION: <dd/mm/aaaa>                                              #
-# NOMBRE: 09_publish_entrega                                                   #
+# NOMBRE: 08_publish_entrega                                                   #
 # DETALLE: lleva al cliente la base de entrega en .xlsx, .csv, .dta y .sav,    #
 #   con su diccionario de variables, en una carpeta con la fecha y en la       #
 #   carpeta de Drive de entregas. No modifica los datos: la base sin datos     #
@@ -13,7 +13,7 @@
 #                                                                              #
 # CORRE DESPUES DE: 06_indicators_entrega                                      #
 # LEE: data/06_final/proyecto_entrega.RData                                    #
-# ESCRIBE: outputs/09_publish/entrega/entrega_<aaaa-mm-dd>/ y                  #
+# ESCRIBE: outputs/08_publish/entrega/entrega_<aaaa-mm-dd>/ y                  #
 #   GDRIVE_ID_ENTREGAS                                                         #
 #-----------------------------------------------------------------------------.#
 
@@ -40,7 +40,7 @@ source('src/00_setup/auth.R')
 
 # una carpeta por fecha de entrega: las anteriores quedan como estaban
 carpeta_salida <- file.path(
-  'outputs/09_publish/entrega',                    # la carpeta de entregas
+  'outputs/08_publish/entrega',                    # la carpeta de entregas
   paste0('entrega_', Sys.Date())                   # entrega_2026-11-02
 )                                                  # Output
 

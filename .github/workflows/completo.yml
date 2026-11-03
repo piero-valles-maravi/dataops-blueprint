@@ -1,10 +1,10 @@
 # =============================================================================
 # Pipeline COMPLETO: a mano, al hacer un corte o al cerrar el campo
 # =============================================================================
-# 01_import → … → 06_indicators → 07_analysis → 09_publish
+# 01_import → … → 06_indicators → 07_analysis → 08_publish
 # Deja la base final, los análisis y las entregas. No tiene disparador: se lanza
 # desde la pestaña Actions → completo → Run workflow, o en local con
-# src/00_master.R. 08_monitoring no corre acá: es del flujo de monitoreo.
+# src/00_master.R. monitoring no corre acá: es del flujo de monitoreo.
 #
 # Regla: el workflow no tiene lógica. Un paso por script, en el orden del flujo.
 # Las etapas que el proyecto no usa se borran de esta lista.
@@ -108,14 +108,14 @@ jobs:
       - name: 07_analysis_informe
         run: Rscript src/07_analysis/07_analysis_informe.R
 
-      - name: 09_publish_sheets
-        run: Rscript src/09_publish/09_publish_sheets.R
+      - name: 08_publish_sheets
+        run: Rscript src/08_publish/08_publish_sheets.R
 
-      - name: 09_publish_drive
-        run: Rscript src/09_publish/09_publish_drive.R
+      - name: 08_publish_drive
+        run: Rscript src/08_publish/08_publish_drive.R
 
-      - name: 09_publish_entrega
-        run: Rscript src/09_publish/09_publish_entrega.R
+      - name: 08_publish_entrega
+        run: Rscript src/08_publish/08_publish_entrega.R
 
       - name: Borrar la clave
         if: always()

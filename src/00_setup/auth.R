@@ -9,7 +9,7 @@
 # DETALLE: carga las credenciales y autentica Drive y Sheets con la cuenta de  #
 #   servicio. Sin navegador, sin ventana y sin token cacheado de una persona:  #
 #   el mismo camino en local y en GitHub Actions. Lo cargan solo los scripts   #
-#   que usan credenciales (01_import, 09_publish y los que llaman a una API).  #
+#   que usan credenciales (01_import, 08_publish y los que llaman a una API).  #
 #                                                                              #
 # CORRE DESPUES DE: functions (usa env_requerido)                              #
 # LEE: .secrets/.Renviron y la clave .json de .secrets/                        #

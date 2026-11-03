@@ -6,8 +6,8 @@
 #                                                                              #
 # FECHA DE CREACION: <dd/mm/aaaa>                                              #
 # NOMBRE: 04_enrich_registro                                                   #
-# DETALLE: agrega al registro información externa: geocodificación de          #
-#   direcciones o datos de una API. Idempotente. Etapa opcional. EJEMPLO:      #
+# DETALLE: agrega al registro columnas nuevas a partir de lo que ya trae: una  #
+#   variable derivada o lo que la IA lee de un documento. Idempotente. EJEMPLO:#
 #   renombrar o borrar según las fuentes del proyecto.                         #
 #                                                                              #
 # CORRE DESPUES DE: 03_clean_registro                                          #

@@ -53,12 +53,12 @@ source('src/07_analysis/07_analysis_informe.R')
 
 # el monitoreo es de los workflows hourly.yml y daily.yml; acá se corre para
 # probarlo
-source('src/08_monitoring/08_monitoring_hourly.R')
-source('src/08_monitoring/08_monitoring_daily.R')
+source('src/monitoring/monitoring_hourly.R')
+source('src/monitoring/monitoring_daily.R')
 
 
 # 4. Publicar ------------------------------------------------------------------
 
-source('src/09_publish/09_publish_sheets.R')
-source('src/09_publish/09_publish_drive.R')
-source('src/09_publish/09_publish_entrega.R')
+source('src/08_publish/08_publish_sheets.R')
+source('src/08_publish/08_publish_drive.R')
+source('src/08_publish/08_publish_entrega.R')

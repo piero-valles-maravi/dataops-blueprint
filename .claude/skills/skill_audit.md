@@ -27,7 +27,7 @@ Lo que sale de esta etapa lo leen tres consumidores distintos:
 | Consumidor | Qué lee |
 |---|---|
 | `03_clean` | las alertas, para decidir qué corregir y qué registros entran a la base final |
-| `08_monitoring` | a través de `03_clean`: los agregados por dimensión, por encuestador y por día, para el dashboard de campo (flujo de monitoreo) |
+| `monitoring` | a través de `03_clean`: los agregados por dimensión, por encuestador y por día, para el dashboard de campo (flujo de monitoreo) |
 | las supervisoras | los registros con `alerta_final = 2`, para validarlos a mano |
 
 ---

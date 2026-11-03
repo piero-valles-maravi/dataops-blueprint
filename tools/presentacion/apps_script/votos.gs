@@ -46,7 +46,7 @@ function json_(datos) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-// GET ?accion=resultados&p=p1,p2  → conteo por opción de cada encuesta
+// GET ?accion=resultados&p=p1,p2&desde=<ms>  → conteo por opción de cada encuesta
 // GET ?accion=activa              → la encuesta activa
 function doGet(e) {
   const accion = (e.parameter.accion || 'resultados');
@@ -56,7 +56,11 @@ function doGet(e) {
   }
 
   const pedidas = (e.parameter.p || '').split(',').filter(String);
-  const filas = hojaVotos_().getDataRange().getValues().slice(1);
+  // desde: la hora del último reinicio de la presentación (en milisegundos);
+  // los votos anteriores quedan en el Sheet pero no se cuentan
+  const desde = Number(e.parameter.desde || 0);
+  const filas = hojaVotos_().getDataRange().getValues().slice(1)
+    .filter(function (f) { return new Date(f[0]).getTime() >= desde; });
 
   // el último voto de cada votante en cada encuesta
   const ultimo = {};

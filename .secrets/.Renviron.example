@@ -95,7 +95,7 @@ DB_PASSWORD=
 # Decisiones humanas (01_import_validacion) -----------------------------------
 
 # (opcional) Sheet donde las supervisoras validan las encuestas con alerta y
-# anotan correcciones. 09_publish_sheets agrega ahí las encuestas nuevas con
+# anotan correcciones. 08_publish_sheets agrega ahí las encuestas nuevas con
 # alerta y 01_import_validacion trae las decisiones en la corrida siguiente.
 # Si está vacía, el pipeline corre sin validación
 # ej.: GSHEET_ID_VALIDACION=1QwErTyUiOpAsDfGhJkLzXcVbNm0123456789qwert
@@ -109,7 +109,7 @@ GSHEET_ID_VALIDACION=
 IA_API_KEY=
 
 
-# Destinos de 09_publish: Sheets ----------------------------------------------
+# Destinos de 08_publish: Sheets ----------------------------------------------
 
 # Sheet que lee el dashboard de monitoreo en Looker Studio (flujo por hora)
 # ej.: GSHEET_ID_MONITOREO=1MnBvCxZaSdFgHjKlPoIuYtReWq0123456789mnbvc
@@ -120,8 +120,8 @@ GSHEET_ID_MONITOREO=
 GSHEET_ID_DASHBOARD=
 
 
-# Destinos de 09_publish: Drive -----------------------------------------------
-# Una carpeta por etapa de data/, para el respaldo diario (09_publish_drive).
+# Destinos de 08_publish: Drive -----------------------------------------------
+# Una carpeta por etapa de data/, para el respaldo diario (08_publish_drive).
 # Las etapas que el proyecto no usa se dejan vacías
 
 # ej.: GDRIVE_ID_RAW=1aBcDeFgHiJkLmNoPqRsTuVwXyZ012345
@@ -132,16 +132,16 @@ GDRIVE_ID_ENRICH=
 GDRIVE_ID_INTEGRATE=
 GDRIVE_ID_FINAL=
 
-# (opcional) carpeta donde se sube el resumen del día de 08_monitoring_daily
+# (opcional) carpeta donde se sube el resumen del día de monitoring_daily
 # ej.: GDRIVE_ID_MONITOREO=1mNoPqRsTuVwXyZaBcDeFgHiJkL654321
 GDRIVE_ID_MONITOREO=
 
-# (opcional) carpeta donde se suben las entregas al cliente (09_publish_entrega)
+# (opcional) carpeta donde se suben las entregas al cliente (08_publish_entrega)
 # ej.: GDRIVE_ID_ENTREGAS=1zYxWvUtSrQpOnMlKjIhGfEdCbA987654
 GDRIVE_ID_ENTREGAS=
 
 
-# Destinos de 09_publish: SFTP del cliente ------------------------------------
+# Destinos de 08_publish: SFTP del cliente ------------------------------------
 
 # (opcional) servidor y credencial del SFTP. SFTP_USERPWD es usuario:contraseña,
 # o sea un SECRETO

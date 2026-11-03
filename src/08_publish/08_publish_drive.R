@@ -5,13 +5,13 @@
 #   <NOMBRE APELLIDO (ROL)> - <correo>                                         #
 #                                                                              #
 # FECHA DE CREACION: <dd/mm/aaaa>                                              #
-# NOMBRE: 09_publish_drive                                                     #
+# NOMBRE: 08_publish_drive                                                     #
 # DETALLE: respalda en Google Drive cada carpeta de data/, con la fecha en     #
 #   el nombre del archivo: la última foto del día en el monitoreo diario       #
 #   (daily.yml) y la del corte en el pipeline completo (completo.yml). No      #
 #   modifica nada.                                                             #
 #                                                                              #
-# CORRE DESPUES DE: 08_monitoring_daily (diario) u 07_analysis (completo)      #
+# CORRE DESPUES DE: monitoring_daily (diario) u 07_analysis (completo)         #
 # LEE: data/01_raw a data/06_final                                             #
 # ESCRIBE: una carpeta de Drive por etapa (GDRIVE_ID_*)                        #
 #-----------------------------------------------------------------------------.#
@@ -46,7 +46,7 @@ carpetas <- c(
   ENRICH    = 'data/04_enrich',                    # las enriquecidas
   INTEGRATE = 'data/05_integrate',                 # la integrada
   FINAL     = 'data/06_final',                     # la final
-  MONITOREO = 'outputs/08_monitoring/daily'        # el resumen del día
+  MONITOREO = 'outputs/monitoring/daily'        # el resumen del día
 )                                                  # fin de las carpetas
 
 # la carpeta de Drive de cada etapa; vacía si no está en .secrets/.Renviron
