@@ -54,6 +54,23 @@ p,h1,h2,h3{margin:0}
 .estrella{position:relative;height:500px}
 /* analysis: la tabla de tres columnas, script y resultado */
 .t16{font-size:18px}
+/* primer día: el repo y lo que se decide al inicio */
+.repo-cab{display:flex;flex-direction:column;gap:4px;padding:16px 22px;background:var(--navy);color:var(--paper);border-top-left-radius:24px}
+.repo-cab .mono{font-size:24px;font-weight:700}
+.repo-cab span:last-child{font-size:16px;color:var(--peri)}
+.repo{padding:6px 22px;background:var(--blanco);box-shadow:inset 0 0 0 2px var(--navy)}
+.repo div{height:52px;display:flex;align-items:center;gap:18px;border-bottom:1px dotted var(--borde)}
+.repo div:last-child{border-bottom:0}
+.repo .mono{width:130px;flex:none;font-size:19px;font-weight:700}
+.repo i{font-style:normal;font-size:18px;color:var(--gris)}
+.repo .fuerte .mono{color:var(--coral)}
+.inicio{list-style:none;margin:14px 0 0;padding:0;counter-reset:paso;display:flex;flex-direction:column;gap:16px}
+.inicio li{counter-increment:paso;position:relative;padding-left:64px;min-height:62px;display:flex;flex-direction:column;justify-content:center;gap:4px}
+.inicio li::before{content:counter(paso);position:absolute;left:0;top:50%;transform:translateY(-50%);width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:var(--coral);color:var(--navy);font-weight:700;font-size:22px}
+.inicio b{font-size:24px}
+.inicio i{font-style:normal;font-size:18px;color:var(--gris)}
+.skills{display:flex;flex-wrap:wrap;gap:10px}
+.skills span{padding:8px 14px;box-shadow:inset 0 0 0 2px var(--paper);font-family:var(--mono);font-size:18px}
 /* automatización: tres escalones, y el costo del tercero */
 .escalera{position:absolute;left:120px;right:120px;top:340px;display:grid;grid-template-columns:minmax(0,1fr) 84px minmax(0,1fr) 84px minmax(0,1fr);align-items:stretch}
 .op-a{padding:24px;background:var(--blanco);box-shadow:inset 0 0 0 2px var(--navy);display:flex;flex-direction:column;gap:10px}
@@ -736,13 +753,14 @@ body:hover #nav{opacity:1}
   <div class="kicker a" style="position:absolute;left:120px;top:96px">BLOQUE 4 · PUBLICAR · DOS FORMAS DE MOSTRAR DATOS</div>
   <h1 class="preg m a" style="--d:.1s;position:absolute;left:120px;top:142px">¿Looker o una página propia?</h1>
   <p class="a" style="--d:.25s;position:absolute;left:120px;top:250px;width:1600px;font-size:32px;font-weight:500;color:var(--gris)">Looker sirve para mirar el día a día; una página propia, para contar una historia con nuestra marca. <b style="color:var(--navy)">Ninguna de las dos calcula.</b></p>
-  <table class="tabla" style="position:absolute;left:120px;top:330px;width:1680px;font-size:22px">
+  <table class="tabla" style="position:absolute;left:120px;top:370px;width:1680px;font-size:22px">
     <thead><tr class="a" style="--d:.35s"><th style="width:280px"></th><th>LOOKER STUDIO</th><th>PÁGINA HTML · tools/dashboard/</th></tr></thead>
     <tbody>
       <tr class="a ai" style="--d:.5s"><td><b>Para qué</b></td><td class="g">el monitoreo y el avance, todos los días</td><td class="g">resultados para el cliente, informes interactivos</td></tr>
       <tr class="a ai" style="--d:.75s"><td><b>Lee de</b></td><td class="g">un Google Sheet que escribe 08_publish_sheets</td><td class="g">los CSV que exporta el pipeline a tools/dashboard/datos/</td></tr>
       <tr class="a ai" style="--d:1s"><td><b>Diseño</b></td><td class="g">el de Looker</td><td class="g">la línea gráfica de la marca</td></tr>
       <tr class="a ai" style="--d:1.25s"><td><b>Se publica en</b></td><td class="g">el link de Looker</td><td class="g">GitHub Pages</td></tr>
+      <tr class="a ai" style="--d:1.5s"><td><b>Ejemplo</b></td><td class="g">el avance diario de un levantamiento: encuestas por día, cuotas y alertas por encuestador</td><td class="g"><b style="color:var(--navy)">US-PY Engagement Index</b> · <a href="https://lvisalotequi.github.io/Paraguay_Index/" target="_blank" rel="noopener" class="mono" style="color:var(--coral)">lvisalotequi.github.io/Paraguay_Index</a></td></tr>
     </tbody>
   </table>
   <div class="banda" style="height:190px;gap:26px;font-size:24px">
@@ -859,16 +877,44 @@ body:hover #nav{opacity:1}
 
 <!-- ================================================================ 22 -->
 <section class="slide claro" id="s22">
-  <div class="kicker a" style="position:absolute;left:120px;top:110px">Y AHORA</div>
-  <h1 class="preg m a" style="--d:.1s;position:absolute;left:120px;top:156px">¿Qué cambia en mi trabajo?</h1>
-  <table class="tabla" style="position:absolute;left:120px;top:330px;width:1680px;font-size:28px">
-    <thead><tr class="a" style="--d:.3s"><th style="width:320px">ROL</th><th>ANTES</th><th>AHORA</th></tr></thead>
-    <tbody>
-      <tr class="a ai" style="--d:.6s"><td><b>Analista</b></td><td class="g">[completar]</td><td class="g">[completar]</td></tr>
-      <tr class="a ai" style="--d:.9s"><td><b>Supervisora</b></td><td class="g">[completar]</td><td class="g">[completar]</td></tr>
-      <tr class="a ai" style="--d:1.2s"><td><b>Coordinación</b></td><td class="g">[completar]</td><td class="g">[completar]</td></tr>
-    </tbody>
-  </table>
+  <div class="kicker a" style="position:absolute;left:120px;top:64px">ANTES DE EMPEZAR</div>
+  <h1 class="preg m a" style="--d:.1s;position:absolute;left:120px;top:104px">¿Qué hago el primer día de un proyecto?</h1>
+  <p class="insight a" style="--d:.25s;position:absolute;left:120px;top:200px;width:1680px;font-size:28px">Ningún proyecto empieza de cero: <b>se clona el blueprint</b>, se poda y se configura antes de escribir código.</p>
+  <div class="a" style="--d:.4s;position:absolute;left:120px;top:345px;width:800px">
+    <div class="repo-cab"><span class="mono">dataops-blueprint/</span><span>github.com/piero-valles-maravi/dataops-blueprint</span></div>
+    <div class="repo">
+      <div class="a ai" style="--d:.6s"><span class="mono">.claude/</span><i>el contexto del proyecto y las skills</i></div>
+      <div class="a ai" style="--d:.7s"><span class="mono">sources/</span><i>instrumento, referencias, correcciones, plantillas</i></div>
+      <div class="a ai fuerte" style="--d:.8s"><span class="mono">src/</span><i>00_setup y un script por etapa, de 01 a 08</i></div>
+      <div class="a ai" style="--d:.9s"><span class="mono">data/</span><i>lo que escribe cada etapa, de 01_raw a 06_final</i></div>
+      <div class="a ai" style="--d:1s"><span class="mono">outputs/</span><i>lo que se entrega: analysis, publish, monitoreo</i></div>
+      <div class="a ai" style="--d:1.1s"><span class="mono">tools/</span><i>dashboard, Apps Script, esta presentación</i></div>
+      <div class="a ai" style="--d:1.2s"><span class="mono">.github/</span><i>los workflows: por hora, diario, completo</i></div>
+      <div class="a ai" style="--d:1.3s"><span class="mono">.secrets/</span><i>las claves: nunca se suben a git</i></div>
+    </div>
+  </div>
+  <div class="a" style="--d:1.4s;position:absolute;left:1000px;right:120px;top:345px">
+    <div style="font-size:17px;font-weight:700;letter-spacing:.1em;color:var(--gris)">LO QUE SE DECIDE AL INICIO</div>
+    <ol class="inicio">
+      <li class="a ai" style="--d:1.6s"><b>Clonar con <span class="mono">Use this template</span></b><i>el repo se llama pipeline_&lt;proyecto&gt;</i></li>
+      <li class="a ai" style="--d:1.8s"><b>Configurar <span class="mono">config.R</span></b><i>el nombre del proyecto y la ronda; es lo único que cambia entre rondas</i></li>
+      <li class="a ai" style="--d:2s"><b>Borrar las etapas que no se usan</b><i>las demás conservan su número</i></li>
+      <li class="a ai" style="--d:2.2s"><b>Dejar las credenciales</b><i>.Renviron en local y los mismos secrets en GitHub</i></li>
+      <li class="a ai" style="--d:2.4s"><b>Completar <span class="mono">CONTEXTO_PROYECTO.md</span></b><i>para que Claude conozca el proyecto</i></li>
+    </ol>
+  </div>
+  <div class="banda" style="height:170px;gap:22px;font-size:20px">
+    <div class="a" style="--d:2.7s;font-size:18px;font-weight:700;letter-spacing:.12em;color:var(--coral);width:200px;line-height:1.3;flex:none">LAS SKILLS: CÓMO SE HACE CADA TAREA</div>
+    <div class="skills">
+      <span class="a" style="--d:2.9s">project_structure</span>
+      <span class="a" style="--d:3s">code_style</span>
+      <span class="a" style="--d:3.1s">audit</span>
+      <span class="a" style="--d:3.2s">data_cleaning</span>
+      <span class="a" style="--d:3.3s">readme</span>
+      <span class="a" style="--d:3.4s">linea_grafica_equilibrium</span>
+      <span class="a" style="--d:3.5s">linea_grafica_global_americans</span>
+    </div>
+  </div>
 </section>
 
 <!-- ================================================================ 23 -->
