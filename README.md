@@ -10,6 +10,7 @@ Se clona, se renombra y se completa. Sirve igual para una encuesta de una sola r
 ![R](https://img.shields.io/badge/R-4.5-065F46)
 ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-automatizaci%C3%B3n-1E3A8A)
 [![explorador](https://img.shields.io/badge/explorador-interactivo-FBBF24)](https://piero-valles-maravi.github.io/dataops-blueprint/)
+[![licencia](https://img.shields.io/badge/licencia-MIT-0F766E)](LICENSE)
 
 </div>
 
@@ -25,6 +26,7 @@ Se clona, se renombra y se completa. Sirve igual para una encuesta de una sola r
 3. [Las etapas](#3-las-etapas)
 4. [Dónde queda cada cosa](#4-dónde-queda-cada-cosa)
 5. [Estructura del repositorio](#5-estructura-del-repositorio)
+6. [Licencia](#licencia)
 
 ---
 
@@ -150,6 +152,7 @@ El árbol muestra hasta cuatro niveles. Para buscar una carpeta y leer la defini
 ```
 <proyecto>/
 ├── README.md                              qué es, cómo se usa y cómo está armado
+├── LICENSE                                licencia MIT
 ├── dataops-blueprint.Rproj                abre el proyecto en RStudio o Positron
 ├── renv.lock                              versiones exactas de los paquetes
 ├── .gitignore                             qué NO se sube a git
@@ -163,8 +166,8 @@ El árbol muestra hasta cuatro niveles. Para buscar una carpeta y leer la defini
 │       ├── skill_audit.md                 cómo se audita
 │       ├── skill_data_cleaning.md         cómo se limpia una fuente
 │       ├── skill_readme.md                cómo se escribe el README
-│       ├── skill_dashboard_equilibrium.md  dashboard: línea Equilibrium
-│       ├── skill_dashboard_global_americans.md  dashboard: línea Global Americans
+│       ├── skill_linea_grafica_equilibrium.md  línea gráfica Equilibrium
+│       ├── skill_linea_grafica_global_americans.md  línea gráfica Global Americans
 │       └── skill_readme_banner.svg        plantilla del banner
 │
 ├── .github/                               imágenes del README y automatización
@@ -281,3 +284,9 @@ El árbol muestra hasta cuatro niveles. Para buscar una carpeta y leer la defini
 ```
 
 El repositorio trae scripts de ejemplo en cada carpeta de `src/` (una encuesta y un registro como fuentes) y las subcarpetas `piloto/`, `ronda_1/`, `ronda_2/` y `ronda_3/` en `data/01_raw` a `04_enrich`: cada proyecto los renombra o borra según sus fuentes y rondas. Si una corrida deja varios archivos de un mismo producto, van en una subcarpeta con la fecha de corte.
+
+---
+
+## Licencia
+
+[MIT](LICENSE): se puede usar, copiar y adaptar libremente, conservando el aviso de copyright.
