@@ -7,12 +7,12 @@ window.ENCUESTAS = {
     pregunta: 'Para ti, un pipeline end to end es…',
     opciones: [
       'Descargar la encuesta y limpiarla',
-      'Descargar, auditar, limpiar y subir a Looker',
+      'Descargar, auditar, limpiar y subir al dashboard',
       'Todo lo que pasa desde la fuente hasta una decisión',
       'No estoy seguro'
     ],
     correcta: 2,
-    explicacion: 'Un pipeline end to end va desde la fuente hasta la decisión. Lo que vemos en Looker es solo la última milla: hoy vamos a recorrer todo el camino.'
+    explicacion: 'Un pipeline end to end va desde la fuente hasta la decisión. Lo que vemos en el dashboard es solo la última milla: hoy vamos a recorrer todo el camino.'
   },
   p2: {
     pregunta: 'Llega un DNI con una letra en medio. ¿Lo corregimos al importar?',
@@ -29,22 +29,22 @@ window.ENCUESTAS = {
     opciones: [
       'Audit lo marca y clean lo corrige',
       'Se borra al importar',
-      'Se filtra en Looker',
+      'Se filtra en el dashboard',
       'Se deja así'
     ],
     correcta: 0,
-    explicacion: '02 audit enciende su alerta y la supervisora la revisa; 03 clean la corrige con su motivo y guarda el valor original. Nadie borra el registro ni lo esconde en Looker.'
+    explicacion: '02 audit enciende su alerta y la supervisora la revisa; 03 clean la corrige con su motivo y guarda el valor original. Nadie borra el registro ni lo esconde en el dashboard.'
   },
   p4: {
     pregunta: 'Son las 15:00 de un día de campo. ¿Qué está pasando?',
     opciones: [
-      'Corre el flujo por hora y se actualiza Looker',
+      'Corre el flujo por hora y se actualiza el dashboard',
       'Se arma la base final',
       'Se respalda en Drive',
       'No corre nada hasta la noche'
     ],
     correcta: 0,
-    explicacion: 'De 05:00 a 20:00 corre el flujo por hora: importa, audita, limpia y actualiza Looker y el Sheet de validación. La base final se arma recién al cierre del campo.'
+    explicacion: 'De 05:00 a 20:00 corre el flujo por hora: importa, audita, limpia y actualiza el dashboard y el Sheet de validación. La base final se arma recién al cierre del campo.'
   },
   p5: {
     pregunta: '¿Qué tan claro te quedó el proceso?',

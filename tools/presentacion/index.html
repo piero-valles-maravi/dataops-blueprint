@@ -290,8 +290,6 @@ body:hover #nav{opacity:1}
 <!-- ================================================================ 1 -->
 <section class="slide oscuro" id="s1">
   <div class="orbita" style="position:absolute;right:0;top:-20px;width:440px;height:880px;background:var(--coral);border-bottom-left-radius:64px;transform-origin:top right"></div>
-  <div class="a" style="--d:.5s;position:absolute;right:120px;top:120px;width:200px;height:200px;background:var(--navy)"></div>
-  <div class="a" style="--d:.6s;position:absolute;right:120px;top:340px;width:200px;height:2px;background:var(--navy)"></div>
   <img src="assets/logo_tagline_blanco.svg" alt="Equilibrium" style="position:absolute;left:120px;top:96px;height:72px">
   <div class="reinicio"><button type="button" id="reiniciar">↺ Reiniciar encuestas</button><span id="reinicio-info"></span></div>
   <div class="kicker a" style="--d:.2s;position:absolute;left:120px;top:290px">PIPELINE DE DATOS · EQUIPO</div>
@@ -323,7 +321,7 @@ body:hover #nav{opacity:1}
     <div class="flecha a" style="--d:1.15s">→</div>
     <div class="caja a" style="--d:1.3s;width:280px;height:170px"><div style="font-size:32px;font-weight:700">Sheets</div><div style="font-size:20px;color:var(--gris)">subir las tablas</div></div>
     <div class="flecha a" style="--d:1.45s">→</div>
-    <div class="caja a" style="--d:1.6s;width:280px;height:170px;background:var(--navy);color:var(--paper)"><div style="font-size:32px;font-weight:700">Looker</div><div style="font-size:20px;color:var(--peri)">mirar el campo</div></div>
+    <div class="caja a" style="--d:1.6s;width:280px;height:170px;background:var(--navy);color:var(--paper)"><div style="font-size:32px;font-weight:700">Dashboard</div><div style="font-size:20px;color:var(--peri)">mirar el campo</div></div>
   </div>
   <div class="banda idea a" style="--d:2.2s">Eso es real, pero es solo <b>&nbsp;el monitoreo del campo</b>: no es el pipeline completo.</div>
 </section>
@@ -338,7 +336,7 @@ body:hover #nav{opacity:1}
     <div class="caja" style="width:170px;height:76px;font-size:22px;font-weight:700">Auditar</div>
     <div class="caja" style="width:170px;height:76px;font-size:22px;font-weight:700">Limpiar</div>
     <div class="caja" style="width:170px;height:76px;font-size:22px;font-weight:700">Sheets</div>
-    <div class="caja" style="width:170px;height:76px;font-size:22px;font-weight:700">Looker</div>
+    <div class="caja" style="width:170px;height:76px;font-size:22px;font-weight:700">Dashboard</div>
   </div>
   <div class="a" style="--d:.9s;position:absolute;left:120px;top:540px;font-size:20px;font-weight:700;letter-spacing:.1em;color:var(--coral)">LO QUE TAMBIÉN PASA</div>
   <div style="position:absolute;left:120px;right:120px;top:580px;display:flex;gap:22px">
@@ -348,7 +346,7 @@ body:hover #nav{opacity:1}
     <div class="caja a" style="--d:1.85s;flex:1;height:170px;border-style:dashed"><div style="font-size:30px;font-weight:700">Analizar</div><div style="font-size:20px;color:var(--gris)">tablas, figuras, informes</div></div>
     <div class="caja a" style="--d:2.1s;flex:1;height:170px;border-style:dashed"><div style="font-size:30px;font-weight:700">Entregar</div><div style="font-size:20px;color:var(--gris)">al cliente, a Drive</div></div>
   </div>
-  <div class="banda idea a" style="--d:2.7s">Lo que vemos en Looker es <b>&nbsp;la última milla</b>. Antes, otras etapas convierten datos en resultados.</div>
+  <div class="banda idea a" style="--d:2.7s">Lo que vemos en el dashboard es <b>&nbsp;la última milla</b>. Antes, otras etapas convierten datos en resultados.</div>
 </section>
 
 <!-- ================================================================ 5 -->
@@ -715,7 +713,7 @@ body:hover #nav{opacity:1}
   <div class="der" style="display:flex;flex-direction:column;gap:30px">
     <div class="a" style="--d:.4s;font-size:20px;font-weight:700;letter-spacing:.1em;color:var(--gris)">LOS DESTINOS</div>
     <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:-16px">
-    <div class="a ae cic" style="--d:.5s;padding:20px 22px;background:var(--navy);color:var(--paper);--dur:8s;--c:1s"><div style="font-size:26px;font-weight:700">Sheets → Looker</div><div class="mono" style="font-size:18px;opacity:.8;margin-top:6px">08_publish_sheets.R</div></div>
+    <div class="a ae cic" style="--d:.5s;padding:20px 22px;background:var(--navy);color:var(--paper);--dur:8s;--c:1s"><div style="font-size:26px;font-weight:700">Sheets → dashboard</div><div class="mono" style="font-size:18px;opacity:.8;margin-top:6px">08_publish_sheets.R</div></div>
     <div class="a ae cic" style="--d:.7s;padding:20px 22px;background:var(--navy);color:var(--paper);--dur:8s;--c:3s"><div style="font-size:26px;font-weight:700">Drive, con fecha</div><div class="mono" style="font-size:18px;opacity:.8;margin-top:6px">08_publish_drive.R</div></div>
     <div class="a ae cic" style="--d:.9s;padding:20px 22px;background:var(--navy);color:var(--paper);--dur:8s;--c:5s"><div style="font-size:26px;font-weight:700">El cliente</div><div class="mono" style="font-size:18px;opacity:.8;margin-top:6px">08_publish_entrega.R · SFTP</div></div>
     <div class="a ae cic" style="--d:1.1s;padding:20px 22px;background:var(--navy);color:var(--paper);--dur:8s;--c:7s"><div style="font-size:26px;font-weight:700">Una página web</div><div class="mono" style="font-size:18px;opacity:.8;margin-top:6px">GitHub Pages</div></div>
@@ -763,7 +761,7 @@ body:hover #nav{opacity:1}
   <div class="izq">
     <div class="kicker a">MIENTRAS DURA EL CAMPO · EL ATAJO DEL MONITOREO</div>
     <h1 class="preg a" style="--d:.1s">¿Cómo va el campo?</h1>
-    <p class="def a" style="--d:.18s"><b>Qué es:</b> medir el levantamiento mientras ocurre. Después de limpiar, el dato toma un atajo: va directo al monitoreo y a Looker.</p>
+    <p class="def a" style="--d:.18s"><b>Qué es:</b> medir el levantamiento mientras ocurre. Después de limpiar, el dato toma un atajo: va directo al monitoreo y al dashboard.</p>
     <p class="insight a" style="--d:.25s">El monitoreo <b>no es una etapa</b>: es el atajo del campo. No pasa por 04 a 07, que se hacen al cierre.</p>
   </div>
   <div class="der" style="display:flex;flex-direction:column;gap:26px">
@@ -774,7 +772,7 @@ body:hover #nav{opacity:1}
       <div class="paso a ai" style="--d:.8s">03<span>clean</span></div>
       <div class="paso m a ae" style="--d:1.1s">◷<span>monitoreo</span></div>
       <div class="paso a ai" style="--d:1.3s">08<span>publish</span></div>
-      <div class="paso f a ai" style="--d:1.5s">Looker<span>o dashboard HTML</span></div>
+      <div class="paso f a ai" style="--d:1.5s">Dashboard<span>Looker o HTML</span></div>
       <div class="viaje" style="--d:1.8s"></div>
     </div>
     <div class="a" style="--d:1.7s;display:flex;align-items:center;gap:14px;margin-left:260px">
@@ -785,7 +783,7 @@ body:hover #nav{opacity:1}
       <div class="a ai" style="--d:2s;padding:22px;background:var(--navy);color:var(--paper);display:flex;flex-direction:column;gap:12px">
         <div style="display:flex;gap:18px;align-items:center"><div style="position:relative;width:56px;height:56px;flex:none;border:3px solid var(--coral);border-radius:50%"><div style="position:absolute;left:25px;top:6px;width:3px;height:22px;background:var(--coral);transform-origin:1.5px 22px;animation:giro 3s linear infinite"></div></div>
         <div><div class="mono" style="font-size:16px;color:var(--durazno)">monitoring_hourly.R</div><div style="font-size:26px;font-weight:700">Cada hora</div></div></div>
-        <div style="font-size:19px;line-height:1.45;color:var(--paper)">Las tablas del campo salen de <b style="color:var(--coral)">data/03_clean</b> y alimentan <b>Looker</b> (por un Sheet) o un <b>dashboard HTML</b> (por CSV).</div>
+        <div style="font-size:19px;line-height:1.45;color:var(--paper)">Las tablas del campo salen de <b style="color:var(--coral)">data/03_clean</b> y alimentan el <b>dashboard</b>: en Looker (por un Sheet) o en HTML (por CSV).</div>
       </div>
       <div class="a ai" style="--d:2.2s;padding:22px;background:var(--blanco);box-shadow:inset 0 0 0 2px var(--navy);display:flex;flex-direction:column;gap:12px">
         <div style="display:flex;gap:18px;align-items:center"><svg aria-hidden="true" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#030F50" stroke-width="1.6" style="flex:none"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"></path></svg>
@@ -849,7 +847,7 @@ body:hover #nav{opacity:1}
       <div style="position:absolute;right:0;top:22px;font-size:18px;font-weight:700;color:var(--coral)">21:00</div>
     </div>
     <div style="margin-top:62px;display:flex;flex-direction:column;gap:10px;font-size:18px">
-      <div><b>05:00 a 20:00 · por hora:</b> <span style="color:var(--gris)">01 → 03 → monitoreo → 08, Looker</span></div>
+      <div><b>05:00 a 20:00 · por hora:</b> <span style="color:var(--gris)">01 → 03 → monitoreo → 08, dashboard</span></div>
       <div><b>21:00 · diario:</b> <span style="color:var(--gris)">01 → 03 → monitoreo → 08, Drive</span></div>
       <div><b>Cierre del campo · completo:</b> <span style="color:var(--gris)">01 → 08, a mano</span></div>
     </div>
@@ -880,7 +878,7 @@ body:hover #nav{opacity:1}
 <section class="slide oscuro" id="s24">
   <img src="assets/logo_tagline_blanco.svg" alt="Equilibrium" style="position:absolute;left:120px;top:96px;height:64px">
   <div class="kicker a" style="position:absolute;left:120px;top:250px">LO QUE NOS LLEVAMOS</div>
-  <h1 class="a" style="--d:.15s;position:absolute;left:120px;top:300px;width:1560px;font-size:84px;font-weight:700;line-height:1.1">Looker es la <span style="color:var(--coral)">última milla</span>. Antes, el dato pasa por 8 etapas y cada una responde una pregunta.</h1>
+  <h1 class="a" style="--d:.15s;position:absolute;left:120px;top:300px;width:1560px;font-size:84px;font-weight:700;line-height:1.1">El dashboard es la <span style="color:var(--coral)">última milla</span>. Antes, el dato pasa por 8 etapas y cada una responde una pregunta.</h1>
   <div style="position:absolute;left:120px;right:120px;top:640px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:2px solid var(--peri)">
     <div class="a cic" style="--d:.5s;padding:28px;border-right:2px dotted var(--peri);--dur:8s;--c:1s"><div style="font-size:18px;font-weight:700;letter-spacing:.12em;opacity:.8">01</div><div style="font-size:44px;font-weight:700;margin-top:10px">Ingesta</div><div style="font-size:22px;opacity:.85;margin-top:6px">¿Qué llegó?</div></div>
     <div class="a cic" style="--d:.7s;padding:28px;border-right:2px dotted var(--peri);--dur:8s;--c:3s"><div style="font-size:18px;font-weight:700;letter-spacing:.12em;opacity:.8">02 – 06</div><div style="font-size:44px;font-weight:700;margin-top:10px">Procesar</div><div style="font-size:22px;opacity:.85;margin-top:6px">¿Es confiable y usable?</div></div>
