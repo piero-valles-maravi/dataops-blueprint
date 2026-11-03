@@ -1,6 +1,6 @@
 <div align="center">
 
-![banner](.github/images/banner.svg)
+![banner](.github/images/banner.svg?v=2)
 
 **La estructura y el flujo de datos que siguen nuestros proyectos de datos.**
 
@@ -49,7 +49,7 @@ Este blueprint es para **proyectos con datos tabulares**. Un proyecto cualitativ
 
 ### 2.1 El proceso de un vistazo
 
-![El proceso en cuatro bloques](.github/images/flujo_macro.svg)
+![El proceso en cuatro bloques](.github/images/flujo_macro.svg?v=2)
 
 Todo proyecto pasa por los mismos cuatro bloques:
 
@@ -62,7 +62,7 @@ Todo proyecto pasa por los mismos cuatro bloques:
 
 ### 2.2 El pipeline completo
 
-![El pipeline completo en nueve etapas](.github/images/flujo_pipeline.svg)
+![El pipeline completo en nueve etapas](.github/images/flujo_pipeline.svg?v=2)
 
 Las nueve etapas, en orden. Cada script lee lo que dejó el anterior y escribe solo en su carpeta; las etapas que un proyecto no usa se borran sin correr los números.
 
@@ -70,7 +70,7 @@ Corre **a mano**, cuando hay que dejar la base final, los análisis y las entreg
 
 ### 2.3 El flujo de monitoreo
 
-![El flujo de monitoreo](.github/images/flujo_monitoreo.svg)
+![El flujo de monitoreo](.github/images/flujo_monitoreo.svg?v=2)
 
 Mientras dura el campo, dos workflows siguen el levantamiento. Los dos corren las mismas tres etapas (`01` a `03`) y difieren en lo que hacen después:
 
