@@ -1,0 +1,123 @@
+# =============================================================================
+# Pipeline COMPLETO: a mano, al hacer un corte o al cerrar el campo
+# =============================================================================
+# 01_import → … → 06_indicators → 07_analysis → 08_products → 09_publish
+# Deja la base final, los análisis y las entregas. No tiene disparador: se lanza
+# desde la pestaña Actions → completo → Run workflow, o en local con
+# src/00_master.R. 08_monitoring no corre acá: es del flujo de monitoreo.
+#
+# Regla: el workflow no tiene lógica. Un paso por script, en el orden del flujo.
+# Las etapas que el proyecto no usa se borran de esta lista.
+
+name: completo
+
+on:
+  workflow_dispatch:
+
+# una sola corrida a la vez entre todos los workflows del proyecto: dos
+# descargas completas seguidas hacen que la API (SurveyCTO) rechace la segunda
+concurrency:
+  group: pipeline
+  cancel-in-progress: false
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      # la misma zona horaria que TZ en .secrets/.Renviron: fecha los archivos
+      # y la hora de actualización del dashboard
+      TZ: America/Lima
+      # la ruta donde el paso "Escribir la clave" guarda el JSON del secret
+      GOOGLE_SERVICE_ACCOUNT_KEY: .secrets/cuenta_servicio.json
+      # los mismos nombres que en .secrets/.Renviron
+      NOMBRE_PROYECTO: ${{ secrets.NOMBRE_PROYECTO }}
+      SURVEYCTO_SERVER: ${{ secrets.SURVEYCTO_SERVER }}
+      SURVEYCTO_USERNAME: ${{ secrets.SURVEYCTO_USERNAME }}
+      SURVEYCTO_PASSWORD: ${{ secrets.SURVEYCTO_PASSWORD }}
+      GSHEET_ID_CASOS: ${{ secrets.GSHEET_ID_CASOS }}
+      GSHEET_ID_REGISTRO: ${{ secrets.GSHEET_ID_REGISTRO }}
+      GSHEET_ID_VALIDACION: ${{ secrets.GSHEET_ID_VALIDACION }}
+      IA_API_KEY: ${{ secrets.IA_API_KEY }}
+      GSHEET_ID_DASHBOARD: ${{ secrets.GSHEET_ID_DASHBOARD }}
+      GDRIVE_ID_RAW: ${{ secrets.GDRIVE_ID_RAW }}
+      GDRIVE_ID_AUDIT: ${{ secrets.GDRIVE_ID_AUDIT }}
+      GDRIVE_ID_CLEAN: ${{ secrets.GDRIVE_ID_CLEAN }}
+      GDRIVE_ID_ENRICH: ${{ secrets.GDRIVE_ID_ENRICH }}
+      GDRIVE_ID_INTEGRATE: ${{ secrets.GDRIVE_ID_INTEGRATE }}
+      GDRIVE_ID_FINAL: ${{ secrets.GDRIVE_ID_FINAL }}
+      GDRIVE_ID_ENTREGAS: ${{ secrets.GDRIVE_ID_ENTREGAS }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      # instala exactamente lo que dice renv.lock (sin repetir la lista acá)
+      - uses: r-lib/actions/setup-renv@v2
+
+      - name: Escribir la clave de la cuenta de servicio
+        run: echo '${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}' > "$GOOGLE_SERVICE_ACCOUNT_KEY"
+
+      - name: 01_import_encuesta
+        run: Rscript src/01_import/01_import_encuesta.R
+
+      - name: 01_import_registro
+        run: Rscript src/01_import/01_import_registro.R
+
+      - name: 01_import_validacion
+        run: Rscript src/01_import/01_import_validacion.R
+
+      - name: 02_audit_encuesta
+        run: Rscript src/02_audit/02_audit_encuesta.R
+
+      - name: 02_audit_registro
+        run: Rscript src/02_audit/02_audit_registro.R
+
+      - name: 03_clean_encuesta
+        run: Rscript src/03_clean/03_clean_encuesta.R
+
+      - name: 03_clean_registro
+        run: Rscript src/03_clean/03_clean_registro.R
+
+      - name: 04_enrich_encuesta
+        run: Rscript src/04_enrich/04_enrich_encuesta.R
+
+      - name: 04_enrich_registro
+        run: Rscript src/04_enrich/04_enrich_registro.R
+
+      - name: 05_integrate_1_apilar
+        run: Rscript src/05_integrate/05_integrate_1_apilar.R
+
+      - name: 05_integrate_2_entidades
+        run: Rscript src/05_integrate/05_integrate_2_entidades.R
+
+      - name: 06_indicators_variables
+        run: Rscript src/06_indicators/06_indicators_variables.R
+
+      - name: 06_indicators_entrega
+        run: Rscript src/06_indicators/06_indicators_entrega.R
+
+      - name: 07_analysis_descriptivos
+        run: Rscript src/07_analysis/07_analysis_descriptivos.R
+
+      - name: 07_analysis_modelo
+        run: Rscript src/07_analysis/07_analysis_modelo.R
+
+      - name: 08_products_informe
+        run: Rscript src/08_products/08_products_informe.R
+
+      - name: 08_products_entrega
+        run: Rscript src/08_products/08_products_entrega.R
+
+      - name: 09_publish_sheets
+        run: Rscript src/09_publish/09_publish_sheets.R
+
+      - name: 09_publish_drive
+        run: Rscript src/09_publish/09_publish_drive.R
+
+      - name: Borrar la clave
+        if: always()
+        run: rm -f "$GOOGLE_SERVICE_ACCOUNT_KEY"

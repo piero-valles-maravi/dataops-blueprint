@@ -6,10 +6,11 @@
 #                                                                              #
 # FECHA DE CREACION: <dd/mm/aaaa>                                              #
 # NOMBRE: 08_monitoring                                                        #
-# DETALLE: tablas del flujo de monitoreo (avance, cuotas, alertas por          #
-#   encuestador), que corre cada hora con hourly.yml. Es la ÚNICA excepción a  #
-#   la frontera: lee de data/03_clean porque mide el proceso de campo mientras #
-#   ocurre, con todos los intentos y sus alertas. Con varias tablas:           #
+# DETALLE: tablas del flujo de monitoreo por hora (hourly.yml): avance, cuotas #
+#   y alertas por encuestador para Looker, y la lista de encuestas con alerta  #
+#   para la validación de las supervisoras. Es la ÚNICA excepción a la         #
+#   frontera: lee de data/03_clean porque mide el campo mientras ocurre, con   #
+#   todos los intentos y sus alertas. Con varias tablas:                       #
 #   08_monitoring_<tabla>.R                                                    #
 #                                                                              #
 # CORRE DESPUES DE: 03_clean                                                   #

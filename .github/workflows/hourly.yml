@@ -1,34 +1,48 @@
-# Flujo de monitoreo: corre cada hora mientras dura el levantamiento.
-# 01_import → 02_audit → 03_clean → 08_monitoring → 09_publish_sheets.
-# Las etapas 04 a 07 no participan: son del flujo completo (daily.yml).
+# =============================================================================
+# Flujo de monitoreo POR HORA: mientras dura el campo
+# =============================================================================
+# 01_import → 02_audit → 03_clean → 08_monitoring → 09_publish_sheets
+# Actualiza el Sheet que lee Looker Studio y agrega al Sheet de validación las
+# encuestas nuevas con alerta. Las decisiones de las supervisoras vuelven en la
+# corrida siguiente, por 01_import_validacion.
 #
-# No usa "schedule": el cron de GitHub no es confiable para repos con poca
-# actividad. Lo dispara tools/apps_script/disparador.gs con workflow_dispatch.
-# Al cerrar el campo, se desactiva el disparador (no este archivo).
+# No usa "schedule": el cron de GitHub no es confiable en repos con poca
+# actividad. Lo lanza tools/apps_script/disparador.gs con workflow_dispatch (lo
+# mismo que el botón "Run workflow"). Si se agregara un schedule, correría dos
+# veces y la API rechazaría la segunda descarga completa.
 #
-# Regla: el workflow no tiene lógica. Un paso por script, en el orden del flujo.
+# Regla: el workflow no tiene lógica. Un paso por script, en el orden del flujo,
+# para que el registro de GitHub muestre en qué etapa falló.
 
 name: hourly
 
 on:
   workflow_dispatch:
 
-# Una sola corrida a la vez entre todos los workflows del proyecto
+# una sola corrida a la vez entre todos los workflows del proyecto: dos
+# descargas completas seguidas hacen que la API (SurveyCTO) rechace la segunda
 concurrency:
   group: pipeline
   cancel-in-progress: false
 
 jobs:
-  monitoreo:
+  pipeline:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
+      # la misma zona horaria que TZ en .secrets/.Renviron: fecha los archivos
+      # y la hora de actualización del dashboard
       TZ: America/Lima
-      NOMBRE_PROYECTO: ${{ secrets.NOMBRE_PROYECTO }}
+      # la ruta donde el paso "Escribir la clave" guarda el JSON del secret
       GOOGLE_SERVICE_ACCOUNT_KEY: .secrets/cuenta_servicio.json
+      # los mismos nombres que en .secrets/.Renviron
+      NOMBRE_PROYECTO: ${{ secrets.NOMBRE_PROYECTO }}
       SURVEYCTO_SERVER: ${{ secrets.SURVEYCTO_SERVER }}
       SURVEYCTO_USERNAME: ${{ secrets.SURVEYCTO_USERNAME }}
       SURVEYCTO_PASSWORD: ${{ secrets.SURVEYCTO_PASSWORD }}
+      GSHEET_ID_CASOS: ${{ secrets.GSHEET_ID_CASOS }}
+      GSHEET_ID_REGISTRO: ${{ secrets.GSHEET_ID_REGISTRO }}
+      GSHEET_ID_VALIDACION: ${{ secrets.GSHEET_ID_VALIDACION }}
       GSHEET_ID_MONITOREO: ${{ secrets.GSHEET_ID_MONITOREO }}
 
     steps:
@@ -38,11 +52,11 @@ jobs:
         with:
           use-public-rspm: true
 
-      # Instala exactamente lo que dice renv.lock (sin repetir la lista acá)
+      # instala exactamente lo que dice renv.lock (sin repetir la lista acá)
       - uses: r-lib/actions/setup-renv@v2
 
       - name: Escribir la clave de la cuenta de servicio
-        run: echo '${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}' > .secrets/cuenta_servicio.json
+        run: echo '${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}' > "$GOOGLE_SERVICE_ACCOUNT_KEY"
 
       - name: 01_import_encuesta
         run: Rscript src/01_import/01_import_encuesta.R
@@ -73,4 +87,4 @@ jobs:
 
       - name: Borrar la clave
         if: always()
-        run: rm -f .secrets/cuenta_servicio.json
+        run: rm -f "$GOOGLE_SERVICE_ACCOUNT_KEY"

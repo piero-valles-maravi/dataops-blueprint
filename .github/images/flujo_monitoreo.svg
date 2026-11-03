@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="430" viewBox="0 0 1200 430" role="img" aria-label="Flujo de monitoreo: por hora y diario">
+<defs><linearGradient id="fondo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#064E3B"/><stop offset="0.55" stop-color="#065F46"/><stop offset="1" stop-color="#1E3A8A"/></linearGradient>
+<marker id="punta" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#6EE7B7"/></marker></defs>
+<style>
+.t{font:700 26px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#FFFFFF}.sub{font:400 15px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#D1FAE5}
+.big{font:800 34px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#FBBF24}.blk{font:700 21px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#FFFFFF}.txt{font:400 14px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#D1FAE5}
+.et{font:600 13px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#FBBF24}.num{font:700 15px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#064E3B}.nom{font:400 12px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#065F46}
+.lbl{font:600 14px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#FBBF24}.dst{font:600 13px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#064E3B}.dat{font:400 12px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#A7F3D0}
+.flujo{stroke-dasharray:6 8;animation:corre 1.2s linear infinite}@keyframes corre{to{stroke-dashoffset:-28}}
+</style>
+<rect width="1200" height="430" rx="24" fill="url(#fondo)"/>
+<text x="40" y="48" class="t">El flujo de monitoreo</text>
+<text x="40" y="72" class="sub">Mientras dura el campo: las mismas tres etapas, y dos salidas con frecuencias distintas</text>
+<path d="M40 250 H470 C515 250 515 165 570 165 H1180" fill="none" stroke="#6EE7B7" stroke-opacity="0.5" stroke-width="3" class="flujo"/>
+<path d="M40 250 H470 C515 250 515 345 570 345 H1180" fill="none" stroke="#6EE7B7" stroke-opacity="0.5" stroke-width="3" class="flujo"/>
+<path d="M1095 149 C1095 112 1060 108 1010 108 H170 C120 108 100 140 100 227" fill="none" stroke="#FBBF24" stroke-opacity="0.6" stroke-width="2" class="flujo" marker-end="url(#punta)"/>
+<text x="600" y="100" text-anchor="middle" class="et">las decisiones de las supervisoras vuelven en la siguiente corrida (01_import_validacion)</text>
+<circle r="14" fill="#FBBF24" fill-opacity="0.25"><animateMotion path="M40 250 H470 C515 250 515 165 570 165 H1180" dur="4.0s" begin="0.00s" repeatCount="indefinite"/></circle>
+<circle r="7" fill="#FBBF24"><animateMotion path="M40 250 H470 C515 250 515 165 570 165 H1180" dur="4.0s" begin="0.00s" repeatCount="indefinite"/></circle>
+<circle r="14" fill="#FBBF24" fill-opacity="0.25"><animateMotion path="M40 250 H470 C515 250 515 165 570 165 H1180" dur="4.0s" begin="1.33s" repeatCount="indefinite"/></circle>
+<circle r="7" fill="#FBBF24"><animateMotion path="M40 250 H470 C515 250 515 165 570 165 H1180" dur="4.0s" begin="1.33s" repeatCount="indefinite"/></circle>
+<circle r="14" fill="#FBBF24" fill-opacity="0.25"><animateMotion path="M40 250 H470 C515 250 515 165 570 165 H1180" dur="4.0s" begin="2.67s" repeatCount="indefinite"/></circle>
+<circle r="7" fill="#FBBF24"><animateMotion path="M40 250 H470 C515 250 515 165 570 165 H1180" dur="4.0s" begin="2.67s" repeatCount="indefinite"/></circle>
+<circle r="14" fill="#ECFDF5" fill-opacity="0.25"><animateMotion path="M40 250 H470 C515 250 515 345 570 345 H1180" dur="10.0s" begin="0.00s" repeatCount="indefinite"/></circle>
+<circle r="7" fill="#ECFDF5"><animateMotion path="M40 250 H470 C515 250 515 345 570 345 H1180" dur="10.0s" begin="0.00s" repeatCount="indefinite"/></circle>
+<circle r="12" fill="#FBBF24" fill-opacity="0.25"><animateMotion path="M1095 149 C1095 112 1060 108 1010 108 H170 C120 108 100 140 100 227" dur="6.0s" begin="1.00s" repeatCount="indefinite"/></circle>
+<circle r="5" fill="#FBBF24"><animateMotion path="M1095 149 C1095 112 1060 108 1010 108 H170 C120 108 100 140 100 227" dur="6.0s" begin="1.00s" repeatCount="indefinite"/></circle>
+<rect x="30" y="207" width="450" height="86" rx="16" fill="#FFFFFF" fill-opacity="0.07" stroke="#D1FAE5" stroke-opacity="0.35"/>
+<text x="46" y="314" class="lbl">En las dos corridas</text>
+<rect x="48" y="228" width="104" height="44" rx="10" fill="#ECFDF5"/>
+<text x="100" y="247" text-anchor="middle" class="num">01</text>
+<text x="100" y="264" text-anchor="middle" class="nom">import</text>
+<rect x="193" y="228" width="104" height="44" rx="10" fill="#ECFDF5"/>
+<text x="245" y="247" text-anchor="middle" class="num">02</text>
+<text x="245" y="264" text-anchor="middle" class="nom">audit</text>
+<rect x="338" y="228" width="104" height="44" rx="10" fill="#ECFDF5"/>
+<text x="390" y="247" text-anchor="middle" class="num">03</text>
+<text x="390" y="264" text-anchor="middle" class="nom">clean</text>
+<text x="580" y="131" class="lbl">Cada hora · hourly.yml</text>
+<rect x="603" y="143" width="104" height="44" rx="10" fill="#ECFDF5"/>
+<text x="655" y="162" text-anchor="middle" class="num">08</text>
+<text x="655" y="179" text-anchor="middle" class="nom">monitoring</text>
+<rect x="745" y="143" width="120" height="44" rx="10" fill="#ECFDF5"/>
+<text x="805" y="162" text-anchor="middle" class="num">09</text>
+<text x="805" y="179" text-anchor="middle" class="nom">publish_sheets</text>
+<rect x="880" y="149" width="130" height="32" rx="16" fill="#FBBF24"/>
+<text x="945" y="170" text-anchor="middle" class="dst">Looker Studio</text>
+<rect x="1020" y="149" width="150" height="32" rx="16" fill="#FBBF24"/>
+<text x="1095" y="170" text-anchor="middle" class="dst">Sheet de validación</text>
+<text x="580" y="393" class="lbl">Una vez al día, al cierre · daily.yml</text>
+<rect x="595" y="323" width="120" height="44" rx="10" fill="#ECFDF5"/>
+<text x="655" y="342" text-anchor="middle" class="num">09</text>
+<text x="655" y="359" text-anchor="middle" class="nom">publish_drive</text>
+<rect x="765" y="329" width="250" height="32" rx="16" fill="#FBBF24"/>
+<text x="890" y="350" text-anchor="middle" class="dst">Google Drive · respaldo con fecha</text>
+</svg>

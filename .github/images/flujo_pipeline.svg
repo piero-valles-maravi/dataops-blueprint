@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-label="El pipeline completo en nueve etapas">
+<defs><linearGradient id="fondo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#064E3B"/><stop offset="0.55" stop-color="#065F46"/><stop offset="1" stop-color="#1E3A8A"/></linearGradient>
+<marker id="punta" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#6EE7B7"/></marker></defs>
+<style>
+.t{font:700 26px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#FFFFFF}.sub{font:400 15px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#D1FAE5}
+.big{font:800 34px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#FBBF24}.blk{font:700 21px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#FFFFFF}.txt{font:400 14px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#D1FAE5}
+.et{font:600 13px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#FBBF24}.num{font:700 15px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#064E3B}.nom{font:400 12px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#065F46}
+.lbl{font:600 14px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#FBBF24}.dst{font:600 13px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#064E3B}.dat{font:400 12px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#A7F3D0}
+.flujo{stroke-dasharray:6 8;animation:corre 1.2s linear infinite}@keyframes corre{to{stroke-dashoffset:-28}}
+</style>
+<rect width="1200" height="360" rx="24" fill="url(#fondo)"/>
+<text x="40" y="48" class="t">El pipeline completo</text>
+<text x="40" y="72" class="sub">Nueve etapas: cada una lee lo que dejó la anterior y escribe en su propia carpeta</text>
+<rect x="34" y="104" width="124" height="178" rx="14" fill="#FFFFFF" fill-opacity="0.06" stroke="#D1FAE5" stroke-opacity="0.30"/>
+<text x="96" y="128" text-anchor="middle" class="lbl">Ingesta</text>
+<rect x="160" y="104" width="628" height="178" rx="14" fill="#FFFFFF" fill-opacity="0.06" stroke="#D1FAE5" stroke-opacity="0.30"/>
+<text x="474" y="128" text-anchor="middle" class="lbl">Procesar</text>
+<rect x="790" y="104" width="250" height="178" rx="14" fill="#FFFFFF" fill-opacity="0.06" stroke="#D1FAE5" stroke-opacity="0.30"/>
+<text x="915" y="128" text-anchor="middle" class="lbl">Producir</text>
+<rect x="1042" y="104" width="124" height="178" rx="14" fill="#FFFFFF" fill-opacity="0.06" stroke="#D1FAE5" stroke-opacity="0.30"/>
+<text x="1104" y="128" text-anchor="middle" class="lbl">Publicar</text>
+<line x1="40" y1="318" x2="1160" y2="318" stroke="#6EE7B7" stroke-opacity="0.55" stroke-width="3" class="flujo"/>
+<rect x="40" y="153" width="112" height="44" rx="10" fill="#ECFDF5"/>
+<text x="96" y="172" text-anchor="middle" class="num">01</text>
+<text x="96" y="189" text-anchor="middle" class="nom">import</text>
+<rect x="36" y="149" width="120" height="52" rx="12" fill="#FBBF24" fill-opacity="0.12" stroke="#FBBF24" stroke-width="3" opacity="0"><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.088;0.100;1" dur="9s" repeatCount="indefinite"/></rect>
+<text x="96" y="235" text-anchor="middle" class="dat">data/01_raw</text>
+<line x1="153" y1="175" x2="164" y2="175" stroke="#6EE7B7" stroke-width="2" marker-end="url(#punta)"/>
+<rect x="166" y="153" width="112" height="44" rx="10" fill="#ECFDF5"/>
+<text x="222" y="172" text-anchor="middle" class="num">02</text>
+<text x="222" y="189" text-anchor="middle" class="nom">audit</text>
+<rect x="162" y="149" width="120" height="52" rx="12" fill="#FBBF24" fill-opacity="0.12" stroke="#FBBF24" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.101;0.112;0.200;0.212;1" dur="9s" repeatCount="indefinite"/></rect>
+<text x="222" y="235" text-anchor="middle" class="dat">data/02_audit</text>
+<line x1="279" y1="175" x2="290" y2="175" stroke="#6EE7B7" stroke-width="2" marker-end="url(#punta)"/>
+<rect x="292" y="153" width="112" height="44" rx="10" fill="#ECFDF5"/>
+<text x="348" y="172" text-anchor="middle" class="num">03</text>
+<text x="348" y="189" text-anchor="middle" class="nom">clean</text>
+<rect x="288" y="149" width="120" height="52" rx="12" fill="#FBBF24" fill-opacity="0.12" stroke="#FBBF24" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.213;0.225;0.313;0.325;1" dur="9s" repeatCount="indefinite"/></rect>
+<text x="348" y="235" text-anchor="middle" class="dat">data/03_clean</text>
+<line x1="405" y1="175" x2="416" y2="175" stroke="#6EE7B7" stroke-width="2" marker-end="url(#punta)"/>
+<rect x="418" y="153" width="112" height="44" rx="10" fill="#ECFDF5"/>
+<text x="474" y="172" text-anchor="middle" class="num">04</text>
+<text x="474" y="189" text-anchor="middle" class="nom">enrich</text>
+<rect x="414" y="149" width="120" height="52" rx="12" fill="#FBBF24" fill-opacity="0.12" stroke="#FBBF24" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.326;0.338;0.425;0.438;1" dur="9s" repeatCount="indefinite"/></rect>
+<text x="474" y="235" text-anchor="middle" class="dat">data/04_enrich</text>
+<line x1="531" y1="175" x2="542" y2="175" stroke="#6EE7B7" stroke-width="2" marker-end="url(#punta)"/>
+<rect x="544" y="153" width="112" height="44" rx="10" fill="#ECFDF5"/>
+<text x="600" y="172" text-anchor="middle" class="num">05</text>
+<text x="600" y="189" text-anchor="middle" class="nom">integrate</text>
+<rect x="540" y="149" width="120" height="52" rx="12" fill="#FBBF24" fill-opacity="0.12" stroke="#FBBF24" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.438;0.450;0.538;0.550;1" dur="9s" repeatCount="indefinite"/></rect>
+<text x="600" y="235" text-anchor="middle" class="dat">data/05_integrate</text>
+<line x1="657" y1="175" x2="668" y2="175" stroke="#6EE7B7" stroke-width="2" marker-end="url(#punta)"/>
+<rect x="670" y="153" width="112" height="44" rx="10" fill="#ECFDF5"/>
+<text x="726" y="172" text-anchor="middle" class="num">06</text>
+<text x="726" y="189" text-anchor="middle" class="nom">indicators</text>
+<rect x="666" y="149" width="120" height="52" rx="12" fill="#FBBF24" fill-opacity="0.12" stroke="#FBBF24" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.550;0.562;0.650;0.662;1" dur="9s" repeatCount="indefinite"/></rect>
+<text x="726" y="235" text-anchor="middle" class="dat">data/06_final</text>
+<line x1="783" y1="175" x2="794" y2="175" stroke="#6EE7B7" stroke-width="2" marker-end="url(#punta)"/>
+<rect x="796" y="153" width="112" height="44" rx="10" fill="#ECFDF5"/>
+<text x="852" y="172" text-anchor="middle" class="num">07</text>
+<text x="852" y="189" text-anchor="middle" class="nom">analysis</text>
+<rect x="792" y="149" width="120" height="52" rx="12" fill="#FBBF24" fill-opacity="0.12" stroke="#FBBF24" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.663;0.675;0.763;0.775;1" dur="9s" repeatCount="indefinite"/></rect>
+<text x="852" y="235" text-anchor="middle" class="dat">outputs/07_analysis</text>
+<line x1="909" y1="175" x2="920" y2="175" stroke="#6EE7B7" stroke-width="2" marker-end="url(#punta)"/>
+<rect x="922" y="153" width="112" height="44" rx="10" fill="#ECFDF5"/>
+<text x="978" y="172" text-anchor="middle" class="num">08</text>
+<text x="978" y="189" text-anchor="middle" class="nom">products</text>
+<rect x="918" y="149" width="120" height="52" rx="12" fill="#FBBF24" fill-opacity="0.12" stroke="#FBBF24" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.775;0.787;0.875;0.887;1" dur="9s" repeatCount="indefinite"/></rect>
+<text x="978" y="235" text-anchor="middle" class="dat">outputs/08_products</text>
+<line x1="1035" y1="175" x2="1046" y2="175" stroke="#6EE7B7" stroke-width="2" marker-end="url(#punta)"/>
+<rect x="1048" y="153" width="112" height="44" rx="10" fill="#ECFDF5"/>
+<text x="1104" y="172" text-anchor="middle" class="num">09</text>
+<text x="1104" y="189" text-anchor="middle" class="nom">publish</text>
+<rect x="1044" y="149" width="120" height="52" rx="12" fill="#FBBF24" fill-opacity="0.12" stroke="#FBBF24" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.888;0.900;0.988;0.994;1" dur="9s" repeatCount="indefinite"/></rect>
+<text x="1104" y="235" text-anchor="middle" class="dat">Sheets · Drive</text>
+<circle r="15" fill="#FBBF24" fill-opacity="0.25"><animateMotion path="M40 318 H1160" dur="9.0s" begin="0.00s" repeatCount="indefinite"/></circle>
+<circle r="8" fill="#FBBF24"><animateMotion path="M40 318 H1160" dur="9.0s" begin="0.00s" repeatCount="indefinite"/></circle>
+</svg>

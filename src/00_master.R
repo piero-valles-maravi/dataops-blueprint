@@ -16,27 +16,23 @@
 # ESCRIBE: nada                                                                #
 #-----------------------------------------------------------------------------.#
 
-# Flujo de monitoreo (el mismo que corre hourly.yml) ---------------------------
+# 1. Ingesta -------------------------------------------------------------------
 
-# las tres primeras etapas son comunes a los dos flujos
 source('src/01_import/01_import_encuesta.R')
 source('src/01_import/01_import_registro.R')
 source('src/01_import/01_import_validacion.R')
 
+
+# 2. Procesar ------------------------------------------------------------------
+
+# hasta 03_clean es lo mismo que corren hourly.yml y daily.yml
 source('src/02_audit/02_audit_encuesta.R')
 source('src/02_audit/02_audit_registro.R')
 
 source('src/03_clean/03_clean_encuesta.R')
 source('src/03_clean/03_clean_registro.R')
 
-# tablas del campo, al Sheet que lee Looker
-source('src/08_products/08_monitoring.R')
-source('src/09_publish/09_publish_sheets.R')
-
-
-# Flujo completo (el mismo que corre daily.yml, más el análisis) ---------------
-
-# sigue desde 03_clean
+# desde acá, solo el pipeline completo (completo.yml)
 source('src/04_enrich/04_enrich_encuesta.R')
 source('src/04_enrich/04_enrich_registro.R')
 
@@ -46,13 +42,20 @@ source('src/05_integrate/05_integrate_2_entidades.R')
 source('src/06_indicators/06_indicators_variables.R')
 source('src/06_indicators/06_indicators_entrega.R')
 
-# analizar y producir
+
+# 3. Producir ------------------------------------------------------------------
+
+# 08_monitoring es del monitoreo por hora (hourly.yml); acá se corre para probarlo
+source('src/08_products/08_monitoring.R')
+
 source('src/07_analysis/07_analysis_descriptivos.R')
 source('src/07_analysis/07_analysis_modelo.R')
 
 source('src/08_products/08_products_informe.R')
 source('src/08_products/08_products_entrega.R')
 
-# publicar y respaldar
+
+# 4. Publicar ------------------------------------------------------------------
+
 source('src/09_publish/09_publish_sheets.R')
 source('src/09_publish/09_publish_drive.R')
