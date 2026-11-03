@@ -9,5 +9,7 @@
   - [skill_audit.md](skills/skill_audit.md): antes de escribir o editar `02_audit` o una alerta.
   - [skill_data_cleaning.md](skills/skill_data_cleaning.md): antes de limpiar o normalizar una fuente.
   - [skill_readme.md](skills/skill_readme.md): antes de escribir o actualizar el README o el banner (plantilla en `skill_readme_banner.svg`).
+  - [skill_dashboard_equilibrium.md](skills/skill_dashboard_equilibrium.md): antes de armar un dashboard en `tools/dashboard/` con la línea gráfica de Equilibrium.
+  - [skill_dashboard_global_americans.md](skills/skill_dashboard_global_americans.md): antes de armar un dashboard con la línea gráfica de Global Americans, o de pasar uno de Equilibrium a esa línea.
 - `CONTEXTO_PROYECTO.md` describe el estado **actual**: si una sección queda obsoleta, se reescribe, no se acumula.
 - Equipo: <nombre (rol)>, <nombre (rol)>.

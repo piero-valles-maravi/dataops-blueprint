@@ -163,6 +163,8 @@ El árbol muestra hasta cuatro niveles. Para buscar una carpeta y leer la defini
 │       ├── skill_audit.md                 cómo se audita
 │       ├── skill_data_cleaning.md         cómo se limpia una fuente
 │       ├── skill_readme.md                cómo se escribe el README
+│       ├── skill_dashboard_equilibrium.md  dashboard: línea Equilibrium
+│       ├── skill_dashboard_global_americans.md  dashboard: línea Global Americans
 │       └── skill_readme_banner.svg        plantilla del banner
 │
 ├── .github/                               imágenes del README y automatización
