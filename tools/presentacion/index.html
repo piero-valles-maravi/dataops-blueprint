@@ -43,6 +43,24 @@ p,h1,h2,h3{margin:0}
 .preg.m{font-size:68px}
 .insight{font-size:36px;font-weight:500;line-height:1.32}
 .insight b{color:var(--coral);font-weight:700}
+/* la idea central: el mismo recuadro en todas las diapositivas */
+.claro .insight{background:var(--navy);color:var(--paper);padding:20px 28px 24px}
+.insight::before{content:"IDEA CENTRAL";display:block;font-size:16px;font-weight:700;letter-spacing:.12em;color:var(--coral);margin-bottom:8px}
+.banda.idea::before{content:"IDEA CENTRAL";font-size:16px;font-weight:700;letter-spacing:.12em;color:var(--coral);margin-right:28px;flex:none}
+/* qué es la etapa, en una línea, debajo de la pregunta */
+.def{font-size:27px;line-height:1.4;color:var(--gris)}
+.def b{color:var(--navy)}
+/* modelo estrella de la diapositiva de integración */
+.estrella{position:relative;height:500px}
+.estrella .dim{position:absolute;width:250px;min-height:150px;padding:16px 18px;background:var(--blanco);box-shadow:inset 0 0 0 2px var(--navy);font-size:17px;line-height:1.4}
+.estrella .dim.trad{box-shadow:inset 0 0 0 3px var(--teal)}
+.estrella .dim.notrad{box-shadow:inset 0 0 0 3px var(--coral)}
+.estrella .dt{font-size:15px;font-weight:700;letter-spacing:.1em;color:var(--gris);margin-bottom:6px}
+.estrella .mono{font-size:17px;font-weight:700}
+.estrella .g{color:var(--gris)}
+.estrella .lin{position:absolute;height:3px;background:var(--navy);transform-origin:center}
+.estrella .hecho{position:absolute;left:50%;top:50%;width:260px;margin:-95px 0 0 -130px;padding:18px 20px;background:var(--navy);color:var(--paper);border-top-left-radius:24px}
+.estrella .hecho .dt{color:var(--coral)}
 .oscuro .insight b{color:var(--coral)}
 .nota{font-size:20px;font-style:italic;color:var(--gris)}
 .regla{width:180px;height:2px;background:var(--navy)}
@@ -57,17 +75,28 @@ p,h1,h2,h3{margin:0}
 .oscuro .pie{color:var(--peri)}
 
 /* mini mapa de las 9 etapas */
-.mapa{position:absolute;left:120px;right:120px;top:40px;height:96px;display:flex;align-items:flex-start}
+.mapa{position:absolute;left:280px;right:120px;top:34px;height:110px;display:flex;align-items:flex-start}
+/* el sello de la etapa: se ve de un golpe en qué etapa estamos */
+.sello{position:absolute;left:0;top:0;width:220px;height:150px;background:var(--navy);color:var(--paper);border-bottom-right-radius:40px;display:flex;flex-direction:column;justify-content:center;padding-left:40px;z-index:4}
+.sello b{font-size:76px;font-weight:800;line-height:.95;color:var(--coral)}
+.sello span{font-size:20px;font-weight:700;letter-spacing:.1em;margin-top:6px}
+.activa .sello{animation:selloEntra .7s cubic-bezier(.2,.7,.2,1) both}
+.activa .sello b{animation:selloNum .9s .15s cubic-bezier(.2,.7,.2,1) both}
+@keyframes selloEntra{from{transform:translateX(-100%)}to{transform:none}}
+@keyframes selloNum{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
 .mapa .e{flex:1;display:flex;align-items:flex-start}
 .mapa .n{display:flex;flex-direction:column;align-items:center;gap:8px;width:120px}
 .mapa .c{width:36px;height:36px;border:2px solid var(--navy);background:var(--blanco);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
 .mapa .opc .c{border-style:dashed}
 .mapa .hecha .c{background:var(--teal)}
-.mapa .actual .c{background:var(--coral);transform:scale(1.18)}
+.mapa .actual .c{width:56px;height:56px;margin-top:-10px;background:var(--coral);font-size:20px;font-weight:800;animation:pulso 2s ease-out infinite}
+@keyframes pulso{0%{box-shadow:0 0 0 0 rgba(247,150,107,.6)}70%{box-shadow:0 0 0 20px rgba(247,150,107,0)}100%{box-shadow:0 0 0 0 rgba(247,150,107,0)}}
 .mapa .t{font-size:14px;color:var(--gris)}
-.mapa .actual .t{color:var(--navy);font-weight:700}
+.mapa .actual .t{font-size:19px;color:var(--navy);font-weight:800}
+.mapa .hecha .t{color:var(--navy)}
 .mapa .l{flex:1;border-top:2px dotted var(--navy);margin-top:17px}
-.mapa + .regla2{position:absolute;left:120px;right:120px;top:150px;height:2px;background:var(--navy)}
+.mapa .hecha .l{border-top:4px solid var(--teal);margin-top:16px}
+.mapa + .regla2{position:absolute;left:280px;right:120px;top:150px;height:2px;background:var(--navy)}
 
 /* tablas */
 .tabla{width:100%;border-collapse:collapse;font-size:24px}
@@ -103,6 +132,10 @@ p,h1,h2,h3{margin:0}
 .enc-qr .url{font-size:17px;color:var(--peri);font-family:var(--mono);padding:0 30px;word-break:break-all}
 .demo{position:absolute;left:120px;top:136px;font-size:18px;font-weight:700;color:var(--coral);letter-spacing:.08em}
 .t6 td{padding-top:11px;padding-bottom:11px}
+.col-n{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:11px 0;border-bottom:2px dotted var(--peri);font-size:19px;opacity:0}
+.col-n .mono{color:var(--durazno)}
+.col-n b{font-size:22px}
+.activa .col-n{animation:entraIzq .6s cubic-bezier(.2,.7,.2,1) var(--d,0s) both}
 
 /* ===== Votación: abierta, cerrada y con la respuesta a la vista ===== */
 .ctrl{position:absolute;right:660px;top:136px;display:flex;gap:10px;z-index:6}
@@ -209,7 +242,7 @@ body:hover #nav{opacity:1}
     <div class="flecha a" style="--d:1.45s">→</div>
     <div class="caja a" style="--d:1.6s;width:280px;height:170px;background:var(--navy);color:var(--paper)"><div style="font-size:32px;font-weight:700">Looker</div><div style="font-size:20px;color:var(--peri)">mirar el campo</div></div>
   </div>
-  <div class="banda a" style="--d:2.2s">Eso es real, pero es solo <b>&nbsp;el monitoreo del campo</b>: no es el pipeline completo.</div>
+  <div class="banda idea a" style="--d:2.2s">Eso es real, pero es solo <b>&nbsp;el monitoreo del campo</b>: no es el pipeline completo.</div>
 </section>
 
 <!-- ================================================================ 4 -->
@@ -232,7 +265,7 @@ body:hover #nav{opacity:1}
     <div class="caja a" style="--d:1.85s;flex:1;height:170px;border-style:dashed"><div style="font-size:30px;font-weight:700">Analizar</div><div style="font-size:20px;color:var(--gris)">tablas, figuras, informes</div></div>
     <div class="caja a" style="--d:2.1s;flex:1;height:170px;border-style:dashed"><div style="font-size:30px;font-weight:700">Entregar</div><div style="font-size:20px;color:var(--gris)">al cliente, a Drive</div></div>
   </div>
-  <div class="banda a" style="--d:2.7s">Lo que vemos en Looker es <b>&nbsp;la última milla</b>. Antes, otras etapas convierten datos en resultados.</div>
+  <div class="banda idea a" style="--d:2.7s">Lo que vemos en Looker es <b>&nbsp;la última milla</b>. Antes, otras etapas convierten datos en resultados.</div>
 </section>
 
 <!-- ================================================================ 5 -->
@@ -279,7 +312,8 @@ body:hover #nav{opacity:1}
   <div class="izq">
     <div class="kicker a">BLOQUE 1 · INGESTA · 01 IMPORT</div>
     <h1 class="preg a" style="--d:.1s">¿Qué llegó?</h1>
-    <p class="insight a" style="--d:.25s">Se trae todo <b>tal cual llega</b>. Al importar no se corrige nada: lo que llega mal tiene que quedar a la vista.</p>
+    <p class="def a" style="--d:.18s"><b>Qué es:</b> traer los datos de cada fuente a <span class="mono">data/01_raw</span>, un script por fuente.</p>
+    <p class="insight a" style="--d:.25s">Al importar <b>no se corrige nada</b>: lo que llega mal tiene que quedar a la vista.</p>
     <p class="a" style="--d:2.6s;font-size:28px;color:var(--gris);margin-top:30px;line-height:1.4">…pero ¿cómo entra el script a SurveyCTO o a Drive <b style="color:var(--navy)">sin pedirle la contraseña a nadie?</b></p>
   </div>
   <div class="der">
@@ -345,7 +379,8 @@ body:hover #nav{opacity:1}
   <div class="izq">
     <div class="kicker a">BLOQUE 2 · PROCESAR · 02 AUDIT</div>
     <h1 class="preg a" style="--d:.1s">¿Es confiable?</h1>
-    <p class="insight a" style="--d:.25s">Auditar es <b>marcar, no corregir</b>. Cada registro sale con una variable que dice si tiene una alerta y por qué.</p>
+    <p class="def a" style="--d:.18s"><b>Qué es:</b> revisar cada registro contra reglas de calidad y marcar lo que no las cumple.</p>
+    <p class="insight a" style="--d:.25s">Auditar es <b>marcar, no corregir</b>: cada registro sale con una variable que dice si tiene una alerta y por qué.</p>
     <div class="a" style="--d:.5s;display:flex;flex-direction:column;gap:16px;font-size:26px;color:var(--gris);margin-top:20px">
       <div style="padding-bottom:16px;border-bottom:2px dotted var(--navy)"><b style="color:var(--navy)">1 &nbsp;</b>Se marca: nada se borra ni se cambia acá.</div>
       <div style="padding-bottom:16px;border-bottom:2px dotted var(--navy)"><b style="color:var(--navy)">2 &nbsp;</b>Las alertas pasan a validación humana.</div>
@@ -377,7 +412,8 @@ body:hover #nav{opacity:1}
   <div class="izq">
     <div class="kicker a">BLOQUE 2 · PROCESAR · 03 CLEAN</div>
     <h1 class="preg a" style="--d:.1s">¿Está bien escrito?</h1>
-    <p class="insight a" style="--d:.25s">Tres pasos, <b>siempre en el mismo orden</b>, y el valor original nunca se pierde.</p>
+    <p class="def a" style="--d:.18s"><b>Qué es:</b> dejar usable una fuente a la vez: corregir, normalizar, recategorizar y etiquetar.</p>
+    <p class="insight a" style="--d:.25s">Tres pasos <b>siempre en el mismo orden</b>, y el valor original nunca se pierde.</p>
   </div>
   <div class="der">
     <div style="display:flex;gap:16px">
@@ -407,29 +443,49 @@ body:hover #nav{opacity:1}
   <div class="izq">
     <div class="kicker a">BLOQUE 2 · PROCESAR · 04 ENRICH</div>
     <div class="opcional a" style="--d:.05s">◌ solo en algunos proyectos</div>
-    <h1 class="preg a" style="--d:.1s">¿Qué le falta saber?</h1>
-    <p class="insight a" style="--d:.25s">Se trae información <b>de afuera</b>, fuente por fuente, y solo para lo nuevo: lo ya procesado no se vuelve a pagar.</p>
-    <div class="cuando a" style="--d:.45s"><b>Cuándo aparece:</b> respuestas abiertas que hay que clasificar, direcciones que hay que ubicar en un mapa, datos que da una API.</div>
+    <h1 class="preg a" style="--d:.1s;font-size:76px">¿Qué más podemos sacar de cada registro?</h1>
+    <p class="def a" style="--d:.18s"><b>Qué es:</b> agregar columnas nuevas a la base procesando lo que cada registro ya trae, casi siempre con IA.</p>
+    <p class="insight a" style="--d:.25s;font-size:32px">La IA lee por nosotros, pero <b>solo lo nuevo</b>: lo ya enriquecido no se vuelve a pagar.</p>
+    <div class="cuando a" style="--d:.45s"><b>Cuándo aparece:</b> cuando cada registro trae algo que hay que leer o interpretar: los TDR de una licitación, una respuesta abierta, un documento adjunto.</div>
   </div>
   <div class="der">
-    <div style="display:grid;grid-template-columns:330px minmax(0,1fr);gap:40px;height:640px">
-      <div style="display:flex;flex-direction:column;gap:14px">
-        <div style="font-size:18px;font-weight:700;letter-spacing:.1em;color:var(--gris)">RESPUESTAS ABIERTAS</div>
-        <div class="caja a ai" style="--d:.6s;padding:16px 20px;font-size:21px;font-style:italic">"no tengo señal en casa"</div>
-        <div class="caja a ai" style="--d:.8s;padding:16px 20px;font-size:21px;font-style:italic">"el curso era muy largo"</div>
-        <div class="caja a ai" style="--d:1s;padding:16px 20px;font-size:21px;font-style:italic">"me quedé sin datos"</div>
-        <div class="caja a ai" style="--d:1.2s;padding:16px 20px;font-size:21px;font-style:italic">"no entendí el tema"</div>
-        <div class="caja a ai" style="--d:1.4s;padding:16px 20px;font-size:21px;font-style:italic">"trabajo todo el día"</div>
+    <div class="a" style="--d:.5s;font-size:20px;font-weight:700;letter-spacing:.1em;color:var(--gris)">EL CASO DE LICITACIONES</div>
+    <div style="margin-top:14px;display:grid;grid-template-columns:250px 70px minmax(0,1fr);align-items:center;gap:0">
+      <div class="a ai" style="--d:.7s;padding:22px;background:var(--blanco);box-shadow:inset 0 0 0 2px var(--navy)">
+        <div style="font-size:16px;font-weight:700;letter-spacing:.08em;color:var(--gris)">UN REGISTRO</div>
+        <div style="font-size:22px;font-weight:700;margin-top:6px;line-height:1.3">Convocatoria SEACE</div>
+        <div class="mono" style="font-size:16px;color:var(--gris);margin-top:4px">CONV-PROC-62-2026</div>
+        <div style="margin-top:16px;display:flex;align-items:center;gap:10px;font-size:18px">
+          <svg aria-hidden="true" width="34" height="40" viewBox="0 0 24 28" fill="none" stroke="#030F50" stroke-width="1.8"><path d="M3 1h12l6 6v20H3z"></path><path d="M15 1v6h6M7 14h10M7 18h10M7 22h6"></path></svg>
+          <span>el TDR adjunto,<br>40 páginas</span>
+        </div>
       </div>
-      <div style="display:flex;flex-direction:column;gap:18px">
-        <div style="font-size:18px;font-weight:700;letter-spacing:.1em;color:var(--gris)">CATEGORÍAS</div>
-        <div style="padding:20px;background:var(--navy);color:var(--paper)"><div style="font-size:26px;font-weight:700">Conectividad</div><div style="font-size:19px;color:var(--peri);margin-top:6px"><span style="animation:vuela 6s 0s infinite">"no tengo señal…" &nbsp;</span><span style="animation:vuela 6s 1s infinite">"me quedé sin datos"</span></div></div>
-        <div style="padding:20px;background:var(--navy);color:var(--paper)"><div style="font-size:26px;font-weight:700">Contenido</div><div style="font-size:19px;color:var(--peri);margin-top:6px"><span style="animation:vuela 6s .5s infinite">"muy largo…" &nbsp;</span><span style="animation:vuela 6s 1.5s infinite">"no entendí…"</span></div></div>
-        <div style="padding:20px;background:var(--navy);color:var(--paper)"><div style="font-size:26px;font-weight:700">Tiempo</div><div style="font-size:19px;color:var(--peri);margin-top:6px"><span style="animation:vuela 6s 2s infinite">"trabajo todo el día"</span></div></div>
-        <div class="a" style="--d:1.8s;margin-top:auto;padding:24px;box-shadow:inset 0 0 0 2px var(--navy);background:var(--blanco)"><div style="font-size:56px;font-weight:800;color:var(--coral)"><span data-cuenta="37">0</span> <span style="font-size:26px;color:var(--navy);font-weight:500">nuevas de 1.248</span></div><div style="font-size:20px;color:var(--gris)">las demás ya estaban en el historial: no se vuelven a clasificar</div></div>
+      <div class="a" style="--d:1s;text-align:center">
+        <div style="font-size:15px;font-weight:700;letter-spacing:.08em;color:var(--coral)">IA</div>
+        <div style="font-size:40px;color:var(--coral);line-height:1">→</div>
+      </div>
+      <div class="w" style="--d:1.2s;background:var(--navy);color:var(--paper);padding:20px 24px">
+        <div style="font-size:16px;font-weight:700;letter-spacing:.08em;color:var(--peri)">COLUMNAS NUEVAS EN LA BASE</div>
+        <div class="col-n" style="--d:1.5s"><span class="mono">ai_budget</span><b>USD 85.000</b></div>
+        <div class="col-n" style="--d:1.75s"><span class="mono">ai_duracion_meses</span><b>6</b></div>
+        <div class="col-n" style="--d:2s"><span class="mono">ai_sector_equilibrium</span><b>Desarrollo social</b></div>
+        <div class="col-n" style="--d:2.25s"><span class="mono">ai_requiere_campo</span><b>Sí</b></div>
+        <div class="col-n" style="--d:2.5s"><span class="mono">ai_elig_score</span><b style="color:var(--coral)"><span data-cuenta="8">0</span> / 10</b></div>
+        <div style="margin-top:10px;font-size:16px;color:var(--peri)">… y unas 40 columnas más, con una justificación de la nota</div>
+      </div>
+    </div>
+    <div style="margin-top:34px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px">
+      <div class="a" style="--d:2.9s;padding:22px;background:var(--blanco);box-shadow:inset 0 0 0 2px var(--navy)">
+        <div style="font-size:16px;font-weight:700;letter-spacing:.08em;color:var(--gris)">DOS PREGUNTAS A LA IA</div>
+        <div style="font-size:21px;line-height:1.45;margin-top:8px"><b>Extraer:</b> ¿qué dice el documento? Sin juzgar.<br><b>Evaluar:</b> ¿nos conviene? Una nota de 0 a 10.</div>
+      </div>
+      <div class="a" style="--d:3.1s;padding:22px;background:var(--blanco);box-shadow:inset 0 0 0 2px var(--navy)">
+        <div style="font-size:16px;font-weight:700;letter-spacing:.08em;color:var(--gris)">EL HISTORIAL</div>
+        <div style="font-size:21px;line-height:1.45;margin-top:8px"><b style="color:var(--coral);font-size:34px"><span data-cuenta="37">0</span></b> nuevas de 1.248: las demás ya estaban enriquecidas y no se vuelven a procesar.</div>
       </div>
     </div>
   </div>
+  <div class="nota" style="position:absolute;left:120px;bottom:44px">Ejemplo ilustrativo, basado en el proyecto de scraping de licitaciones: los valores no son de una convocatoria real.</div>
 </section>
 
 <!-- ================================================================ 14 -->
@@ -439,24 +495,33 @@ body:hover #nav{opacity:1}
     <div class="kicker a">BLOQUE 2 · PROCESAR · 05 INTEGRATE</div>
     <div class="opcional a" style="--d:.05s">◌ solo en algunos proyectos</div>
     <h1 class="preg a" style="--d:.1s">¿Quién es quién?</h1>
-    <p class="insight a" style="--d:.25s">La misma persona en dos fuentes o en dos rondas tiene que ser <b>una sola persona</b>.</p>
-    <div class="cuando a" style="--d:.45s"><b>Cuándo aparece:</b> cuando hay más de una fuente o más de una ronda.</div>
+    <p class="def a" style="--d:.18s"><b>Qué es:</b> unir todas las fuentes y rondas en una sola base, con llaves que conectan cada tabla.</p>
+    <p class="insight a" style="--d:.25s">Cada persona, territorio o entidad <b>aparece una sola vez</b>, aunque venga de diez fuentes.</p>
+    <div class="cuando a" style="--d:.45s"><b>Cuándo aparece:</b> cuando hay más de una fuente o más de una ronda, por ejemplo datos tradicionales y no tradicionales sobre los mismos territorios.</div>
   </div>
-  <div class="der">
-    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px">
-      <div class="a ai" style="--d:.5s"><div style="font-size:18px;font-weight:700;letter-spacing:.1em;color:var(--gris);margin-bottom:10px">LA ENCUESTA</div>
-        <table class="tabla" style="font-size:21px;background:var(--blanco)"><tr><th>documento</th><th>nombre</th></tr><tr><td class="mono">4.512.345</td><td>Ana Gómez</td></tr><tr style="animation:funde 5s 1.5s infinite"><td class="mono">3.987.120</td><td>Luis Báez</td></tr><tr><td class="mono">5.001.876</td><td>Rosa Vera</td></tr></table></div>
-      <div class="a ai" style="--d:.8s"><div style="font-size:18px;font-weight:700;letter-spacing:.1em;color:var(--gris);margin-bottom:10px">EL REGISTRO</div>
-        <table class="tabla" style="font-size:21px;background:var(--blanco)"><tr><th>documento</th><th>nombre</th></tr><tr style="animation:funde 5s 1.5s infinite"><td class="mono">3.987.120</td><td>LUIS BAEZ</td></tr><tr><td class="mono">2.345.678</td><td>Carlos Ruiz</td></tr></table></div>
+  <div class="der" style="display:flex;flex-direction:column;gap:20px">
+    <div class="a" style="--d:.5s;font-size:20px;font-weight:700;letter-spacing:.1em;color:var(--gris)">EJEMPLO: UN SCORE DE VIOLENCIA POR MUNICIPIO</div>
+    <div class="estrella">
+      <div class="dim a ae" style="--d:.7s;left:0;top:0"><div class="dt">TERRITORIO</div><div class="mono">id_municipio</div><div class="g">departamento · población · urbano/rural</div></div>
+      <div class="dim a ae" style="--d:.9s;right:0;top:0"><div class="dt">TIEMPO</div><div class="mono">id_mes</div><div class="g">mes · trimestre · año</div></div>
+      <div class="dim trad a ae" style="--d:1.1s;left:0;bottom:0"><div class="dt">DATOS TRADICIONALES</div><div class="g">encuesta de hogares · denuncias policiales · registros de salud</div></div>
+      <div class="dim notrad a ae" style="--d:1.3s;right:0;bottom:0"><div class="dt">DATOS NO TRADICIONALES</div><div class="g">menciones en redes · búsquedas en Google · noticias</div></div>
+      <div class="lin a" style="--d:1.6s;left:250px;top:92px;width:150px;transform:rotate(22deg)"></div>
+      <div class="lin a" style="--d:1.6s;right:250px;top:92px;width:150px;transform:rotate(-22deg)"></div>
+      <div class="lin a" style="--d:1.7s;left:250px;bottom:92px;width:150px;transform:rotate(-22deg)"></div>
+      <div class="lin a" style="--d:1.7s;right:250px;bottom:92px;width:150px;transform:rotate(22deg)"></div>
+      <div class="hecho w" style="--d:2s">
+        <div class="dt" style="color:var(--coral)">TABLA DE HECHOS</div>
+        <div style="font-size:22px;font-weight:700;margin:4px 0 8px">un municipio en un mes</div>
+        <div class="mono" style="font-size:16px;line-height:1.6;color:var(--durazno)">id_municipio · id_mes<br>denuncias · menciones<br><b style="color:var(--coral)">score_violencia</b></div>
+      </div>
     </div>
-    <div class="a" style="--d:1.2s;text-align:center;font-size:48px;color:var(--coral);margin:20px 0">↓</div>
-    <div class="w" style="--d:1.4s"><div style="font-size:18px;font-weight:700;letter-spacing:.1em;color:var(--gris);margin-bottom:10px">LA BASE INTEGRADA</div>
-      <table class="tabla" style="font-size:21px;background:var(--blanco)"><tr><th>llave</th><th>documento</th><th>nombre</th><th>fuentes</th></tr>
-        <tr><td class="mono">P001</td><td class="mono">4.512.345</td><td>Ana Gómez</td><td class="g">encuesta</td></tr>
-        <tr style="animation:funde 5s 2s infinite"><td class="mono"><b>P002</b></td><td class="mono">3.987.120</td><td><b>Luis Báez</b></td><td><b>encuesta + registro</b></td></tr>
-        <tr><td class="mono">P003</td><td class="mono">5.001.876</td><td>Rosa Vera</td><td class="g">encuesta</td></tr>
-        <tr><td class="mono">P004</td><td class="mono">2.345.678</td><td>Carlos Ruiz</td><td class="g">registro</td></tr></table></div>
+    <div class="a" style="--d:2.4s;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;font-size:20px;line-height:1.4">
+      <div style="padding:18px 20px;background:var(--blanco);box-shadow:inset 0 0 0 2px var(--navy)"><b>Las dimensiones</b> describen: dónde, cuándo y de qué fuente. Cada una se guarda una sola vez.</div>
+      <div style="padding:18px 20px;background:var(--blanco);box-shadow:inset 0 0 0 2px var(--navy)"><b>El hecho</b> junta las medidas con las llaves de cada dimensión. Ahí se calcula el score.</div>
+    </div>
   </div>
+  <div class="nota" style="position:absolute;left:120px;bottom:44px">Ejemplo ilustrativo de un modelo estrella, inspirado en el violence score de UNICEF.</div>
 </section>
 
 <!-- ================================================================ 15 -->
@@ -466,7 +531,8 @@ body:hover #nav{opacity:1}
     <div class="kicker a">BLOQUE 2 · PROCESAR · 06 INDICATORS</div>
     <div class="opcional a" style="--d:.05s">◌ solo en algunos proyectos</div>
     <h1 class="preg a" style="--d:.1s">¿Qué mide?</h1>
-    <p class="insight a" style="--d:.25s">Los indicadores se calculan <b>una sola vez</b>, sobre la base integrada. Ahí queda la base final.</p>
+    <p class="def a" style="--d:.18s"><b>Qué es:</b> construir las variables, indicadores e índices del proyecto sobre la base integrada.</p>
+    <p class="insight a" style="--d:.25s">Se calculan <b>una sola vez</b> y dejan la base final: de ahí en adelante, todos leen de ella.</p>
     <div class="cuando a" style="--d:.45s"><b>Cuándo aparece:</b> cuando el proyecto construye índices o indicadores. Si no, la base limpia ya es la base final.</div>
   </div>
   <div class="der">
@@ -482,7 +548,7 @@ body:hover #nav{opacity:1}
     <div class="a" style="--d:2s;position:absolute;left:630px;top:0;width:170px;font-size:24px;font-weight:700;line-height:1.3">La frontera</div>
     <div class="a" style="--d:2.2s;position:absolute;left:630px;top:80px;width:170px;font-size:20px;color:var(--gris);line-height:1.4">De acá en adelante, todos leen solo de <span class="mono">06_final</span>.</div>
   </div>
-  <div class="banda a" style="--d:2.8s;font-size:30px">No todos los proyectos usan 04, 05 y 06, pero cuando aparezcan <b>&nbsp;ya sabes dónde van</b>.</div>
+  <div class="banda idea a" style="--d:2.8s;font-size:28px">No todos los proyectos usan 04, 05 y 06, pero cuando aparezcan <b>&nbsp;ya sabes dónde van</b>.</div>
 </section>
 
 <!-- ================================================================ 16 -->
@@ -491,7 +557,8 @@ body:hover #nav{opacity:1}
   <div class="izq">
     <div class="kicker a">BLOQUE 3 · PRODUCIR · 07 ANALYSIS</div>
     <h1 class="preg a" style="--d:.1s">¿Dónde va lo que nos piden?</h1>
-    <p class="insight a" style="--d:.25s">Todo lo que se calcula o arma para una persona va en 07: <b>un script y una carpeta por producto</b>. Lo que solo estuvo en pantalla no existe.</p>
+    <p class="def a" style="--d:.18s"><b>Qué es:</b> producir todo lo que se entrega a una persona: tablas, figuras, informes y listas.</p>
+    <p class="insight a" style="--d:.25s"><b>Un script y una carpeta por producto.</b> Lo que solo estuvo en pantalla no existe.</p>
     <div class="a" style="--d:.5s;display:flex;gap:12px;flex-wrap:wrap;font-size:22px">
       <span style="padding:10px 16px;background:var(--navy);color:var(--paper)">tablas</span><span style="padding:10px 16px;background:var(--navy);color:var(--paper)">figuras</span><span style="padding:10px 16px;background:var(--navy);color:var(--paper)">informes Quarto, Word, PDF</span><span style="padding:10px 16px;background:var(--navy);color:var(--paper)">listas</span><span style="padding:10px 16px;background:var(--navy);color:var(--paper)">tablas del dashboard</span>
     </div>
@@ -518,7 +585,8 @@ body:hover #nav{opacity:1}
   <div class="izq">
     <div class="kicker a">BLOQUE 3 · PRODUCIR · 08 MONITORING</div>
     <h1 class="preg a" style="--d:.1s">¿Cómo va el campo?</h1>
-    <p class="insight a" style="--d:.25s">El monitoreo no espera a la base final: <b>mira el campo mientras ocurre</b>, con un script por frecuencia.</p>
+    <p class="def a" style="--d:.18s"><b>Qué es:</b> medir el levantamiento mientras ocurre: avance, cuotas y alertas.</p>
+    <p class="insight a" style="--d:.25s">El monitoreo <b>no espera a la base final</b>: hay un script por hora y otro al cierre del día.</p>
     <div class="cuando a" style="--d:.45s">Lee la base limpia, <span class="mono">data/03_clean</span>, con todos los intentos y sus alertas: <b>es la única excepción a la frontera</b>.</div>
   </div>
   <div class="der" style="display:flex;flex-direction:column;gap:28px">
@@ -539,7 +607,8 @@ body:hover #nav{opacity:1}
   <div class="izq" style="width:740px">
     <div class="kicker a">BLOQUE 4 · PUBLICAR · 09 PUBLISH</div>
     <h1 class="preg a" style="--d:.1s">¿Dónde lo encuentran?</h1>
-    <p class="insight a" style="--d:.25s">Publicar <b>no calcula nada</b>: solo lleva cada cosa a su destino.</p>
+    <p class="def a" style="--d:.18s"><b>Qué es:</b> llevar cada cosa a su destino: Sheets, Drive, el cliente o una página web.</p>
+    <p class="insight a" style="--d:.25s">Publicar <b>no calcula nada</b>: solo lleva lo que ya está hecho.</p>
   </div>
   <div class="der" style="bottom:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px">
     <div class="a ae cic" style="--d:.5s;padding:24px;background:var(--navy);color:var(--paper);--dur:8s;--c:1s"><div style="font-size:30px;font-weight:700">Sheets → Looker</div><div class="mono" style="font-size:18px;opacity:.8;margin-top:6px">09_publish_sheets.R</div></div>
@@ -707,6 +776,11 @@ body:hover #nav{opacity:1}
   const ETAPAS = ['import', 'audit', 'clean', 'enrich', 'integrate', 'indicators', 'analysis', 'monitoring', 'publish'];
   document.querySelectorAll('.mapa').forEach(function (m) {
     const n = Number(m.getAttribute('data-etapa'));
+    // el sello grande con el número y el nombre de la etapa
+    const sello = document.createElement('div');
+    sello.className = 'sello';
+    sello.innerHTML = '<b>0' + n + '</b><span>' + ETAPAS[n - 1].toUpperCase() + '</span>';
+    m.parentNode.appendChild(sello);
     ETAPAS.forEach(function (e, i) {
       const k = i + 1;
       const d = document.createElement('div');
