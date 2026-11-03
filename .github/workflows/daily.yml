@@ -62,8 +62,8 @@ jobs:
       - name: Escribir la clave de la cuenta de servicio
         run: echo '${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}' > "$GOOGLE_SERVICE_ACCOUNT_KEY"
 
-      - name: 01_import_encuesta
-        run: Rscript src/01_import/01_import_encuesta.R
+      - name: 01_import_scto
+        run: Rscript src/01_import/01_import_scto.R
 
       - name: 01_import_registro
         run: Rscript src/01_import/01_import_registro.R

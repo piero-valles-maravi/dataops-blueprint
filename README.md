@@ -187,7 +187,7 @@ El árbol muestra hasta cuatro niveles. Para buscar una carpeta y leer la defini
 │   │   ├── functions.R                    solo funciones
 │   │   └── auth.R                         solo autenticación
 │   ├── 01_import/                         un script por fuente: descarga tal cual
-│   │   ├── 01_import_encuesta.R           la encuesta
+│   │   ├── 01_import_scto.R               la encuesta de SurveyCTO
 │   │   ├── 01_import_registro.R           una segunda fuente
 │   │   └── 01_import_validacion.R         las decisiones humanas
 │   ├── 02_audit/                          un script por fuente: marca alertas

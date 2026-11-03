@@ -18,7 +18,7 @@
 
 # 1. Ingesta -------------------------------------------------------------------
 
-source('src/01_import/01_import_encuesta.R')
+source('src/01_import/01_import_scto.R')
 source('src/01_import/01_import_registro.R')
 source('src/01_import/01_import_validacion.R')
 
