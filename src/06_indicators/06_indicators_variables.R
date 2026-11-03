@@ -11,55 +11,68 @@
 #   productos. EJEMPLO: renombrar o borrar según las fuentes del proyecto.     #
 #                                                                              #
 # CORRE DESPUES DE: 05_integrate (o la última etapa que exista)                #
-# LEE: data/05_integrate/<proyecto>_integrate.RData                            #
-# ESCRIBE: data/06_final/<proyecto>_final.RData                                #
+# LEE: data/05_integrate/proyecto_integrate.RData                              #
+# ESCRIBE: data/06_final/proyecto_final.RData                                  #
 #-----------------------------------------------------------------------------.#
 
-# 0. Setup ---------------------------------------------------------------------
+# Setup ------------------------------------------------------------------------
 
 # borra lo que haya en memoria: el script no depende de otro
 rm(list = ls())
 
-# los paquetes y las funciones compartidas
+# los paquetes del proyecto
 source('src/00_setup/packages.R')
+
+# las funciones compartidas
 source('src/00_setup/functions.R')
 
-# el prefijo de los archivos
-proyecto <- env_requerido('NOMBRE_PROYECTO')
+# el proyecto y la ronda: arman la carpeta y el nombre de cada archivo
+source('src/00_setup/config.R')
 
 
-# 1. Cargar --------------------------------------------------------------------
 
-load(file.path('data/05_integrate', paste0(proyecto, '_integrate.RData')))
+# Cargar datos -----------------------------------------------------------------
 
-# copia de trabajo: la base integrada queda intacta para comparar
-final <- integrate
+# la base integrada, con su llave única
+load(ruta_base(
+  '05_integrate',                                  # la etapa: carpeta en data/
+  'integrate'                                      # la base que se carga
+))                                                 # fin de load()
+
+# el objeto de trabajo: la base integrada queda intacta para comparar
+final_calculando <- integrate
 
 
-# 2. Variables derivadas -------------------------------------------------------
+
+# Variables derivadas ----------------------------------------------------------
 
 # recodificaciones y variables que se calculan a partir de otras
 
 
-# 3. Indicadores y scores ------------------------------------------------------
+
+# Indicadores y scores ---------------------------------------------------------
 
 # los indicadores del proyecto, cada uno con su definición en un comentario
 
 
-# 4. Ponderadores --------------------------------------------------------------
+
+# Ponderadores -----------------------------------------------------------------
 
 # si el diseño muestral los tiene
 
 
-# 5. Guardar en data/06_final --------------------------------------------------
 
-# la carpeta de salida se crea si no existe
-carpeta_salida <- 'data/06_final'
-dir.create(carpeta_salida, recursive = TRUE, showWarnings = FALSE)
+# Guardar final ----------------------------------------------------------------
 
-save(
-  final,
-  file = file.path(carpeta_salida, paste0(proyecto, '_final.RData'))
-)
+# la salida del script, con el objeto del mismo nombre que el archivo
+final <- final_calculando
 
+# en .RData, .sav, .dta, .xlsx, .csv y un Google Sheet, con proyecto y ronda
+# en el nombre (src/00_setup/config.R)
+guardar_etapa(
+  'final',                                         # el objeto, entre comillas
+  '06_final'                                       # la etapa: carpeta en data/
+)                                                  # fin de guardar_etapa()
+
+# borra todo: el script siguiente arranca de cero
 rm(list = ls())

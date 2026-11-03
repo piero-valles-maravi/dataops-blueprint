@@ -36,7 +36,6 @@ jobs:
       # la ruta donde el paso "Escribir la clave" guarda el JSON del secret
       GOOGLE_SERVICE_ACCOUNT_KEY: .secrets/cuenta_servicio.json
       # los mismos nombres que en .secrets/.Renviron
-      NOMBRE_PROYECTO: ${{ secrets.NOMBRE_PROYECTO }}
       SURVEYCTO_SERVER: ${{ secrets.SURVEYCTO_SERVER }}
       SURVEYCTO_USERNAME: ${{ secrets.SURVEYCTO_USERNAME }}
       SURVEYCTO_PASSWORD: ${{ secrets.SURVEYCTO_PASSWORD }}

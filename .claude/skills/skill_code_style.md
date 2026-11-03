@@ -93,7 +93,6 @@ Setup
 Rutas y carpetas
 Cargar datos
 <las secciones propias del script>
-Validación
 Selección de variables
 Guardar
 ```
@@ -405,7 +404,7 @@ Cuando varias asignaciones son de la misma naturaleza, los `=` se alinean:
 ### 4.4 Joins
 
 Con `by` explícito y, cuando el join tiene un cardinal esperado,
-`relationship` declarado. Es una validación gratis: si el join no cumple, aborta.
+`relationship` declarado. Si el join no cumple, aborta.
 
 ```r
   left_join(                      # trae el nombre de la base maestra
@@ -484,7 +483,6 @@ Otras convenciones:
 - **Tablas de llaves**: `<fuente>_llaves_<entidad>`, `<fuente>_llaves`,
   `<fuente>_llaves_lista`.
 - **Correcciones manuales**: `correcciones_<campo>`.
-- **Objetos de validación**: `validacion_<qué_valida>`.
 - Todo en `snake_case`, minúsculas, en español.
 
 ---
@@ -495,18 +493,16 @@ Otras convenciones:
 
 - **`for`** — se usa `map`, `map_chr`, `map2`.
 - **`sapply`** en código nuevo — se usa `map_chr` o `map_lgl`, que son de tipo
-  seguro. (`sapply(df, function(x) class(x)[1])` en la validación es la única
-  excepción tolerada.)
+  seguro.
 - **`transmute`** — se usa `mutate` + `select`.
 - **Definir funciones en cualquier script del pipeline** (`nombre <-
   function(...)`). Las funciones compartidas viven en el archivo de funciones
   del setup. Un script no define funciones: define pasos.
 - **`if` / `else` como control de flujo**, ni sueltos ni dentro de una función
   anónima. Una decisión por fila va con `ifelse()`, `if_else()` o `case_when()`.
-- **`stop()` y `stopifnot()`**: el script no corta a mano. Los contratos se
-  calculan en un objeto de validación (sección 8.5).
-- **`cat()` y `message()`**: el script no imprime texto armado a mano. Lo que hay
-  que mirar al correr queda como consulta activa (sección 8.1).
+- **`stop()` y `stopifnot()`**: el script no corta a mano. Lo único que corta
+  es el error propio de una función (un `load()` sin archivo).
+- **`cat()` y `message()`**: el script no imprime texto armado a mano.
 - **Pipes largos encadenados** (sección 2).
 - **Modificar la columna original** (sección 5).
 - **`attach`**, `<<-`, `setwd()`.
@@ -533,123 +529,12 @@ Otras convenciones:
   map(celular_grupos, ~ .x[!str_detect(.x, "^(\\d)\\1*$")])
   ```
 - **`tribble`** para las tablas de correcciones y los casos de prueba.
-- **`tibble`** para el objeto `validacion_<qué_valida>` de cada contrato.
 
 ---
 
-## 8. Validaciones
+## 8. Setup y entorno
 
-**Todo bloque termina con su bloque de validación.** No es opcional.
-
-### 8.1 Las consultas activas no se comentan con `#`
-
-Las que devuelven una tabla chica y se leen de un vistazo quedan **activas** (no
-desactivadas con `#`), sin asignar a nada, para que impriman al correr. Como
-cualquier línea, llevan su comentario:
-
-```r
-# 3. Cuántos quedaron en cada tipo
-
-# los registros por tipo de nombre, de más a menos
-rce_limpiando %>%
-  count(nombre_tipo, sort = TRUE)   # uno por tipo
-```
-
-### 8.2 Las exploratorias van comentadas, **con la conclusión escrita abajo**
-
-Las que abren un `View()` o devuelven cientos de filas quedan comentadas, y
-**debajo va la conclusión en prosa**. Esto es esencial del estilo: el script
-guarda el hallazgo, no solo el código que lo produjo.
-
-```r
-# 2. Cuánta información perdimos o no capturamos en las cuatro variables
-
-# rce_limpiando %>%
-#   filter(
-#     is.na(celular_norm) & is.na(celular_correo) &
-#       is.na(celular_nombre) & is.na(celular_cedula)
-#   ) %>%
-#   select(celular) %>%
-#   filter(celular != 'NULL') %>%
-#   View()
-
-# Solo 6 registros poco relevantes.
-```
-
-```r
-# Estos 20 casos realmente no hay forma de saber si son números de celular o no
-# Los dejaremos y se descartarán luego de detectar duplicados.
-```
-
-```r
-# Nada preocupante. Todo es plausible
-```
-
-**Un `View()` comentado sin conclusión abajo está incompleto.**
-
-### 8.3 La vista de inspección lleva `select` documentado columna por columna
-
-La consulta 1 de cada bloque es siempre la misma forma: el original, el
-`_limpio`, el `_norm`, el `_tipo` y **todas** las extracciones, cada una con su
-comentario, ordenada por tipo:
-
-```r
-# rce_limpiando %>%
-#   filter(!is.na(celular)) %>%
-#   select(
-#     celular,                 # original, sin tocar
-#     celular_norm,            # llave final
-#     celular_correo,          # correo escondido en el campo
-#     celular_nombre,          # nombre escondido en el campo
-#     celular_cedula,          # cédula escondida en el campo
-#     celular_limpio,          # texto limpio
-#     celular_tipo,            # qué contenía el campo
-#     celular_digitos,         # dígitos antes de reconstruir
-#     celular_con_cero,        # si venía con la convención del 0
-#     celular_regla,           # si cumple el patrón
-#     celular_validez          # si es número falso
-#   ) %>%
-#   arrange(celular_tipo, celular_norm) %>%
-#   View()
-```
-
-### 8.4 `names()` después de cada limpieza de columnas
-
-Al terminar de quitar las columnas de trabajo de un bloque:
-
-```r
-# las columnas que quedaron
-names(rce_limpiando)
-```
-
-### 8.5 Cuando la validación es un contrato, queda en un objeto
-
-El script **no corta a mano**: sin `if`, `stop()` ni `stopifnot()`. Cada
-contrato se calcula como una columna de un `tibble` llamado
-`validacion_<qué_valida>`, con el valor que **tiene que dar** escrito en el
-comentario, y el objeto queda como consulta activa (sección 8.1):
-
-```r
-# los contratos de la base: todos tienen que dar 0
-validacion_join <- tibble(
-  filas_de_mas = nrow(x) - nrow(y)     # 0 = el join no duplicó filas
-)                                      # fin de los contratos
-
-# imprime los contratos al correr en la consola
-validacion_join
-```
-
-El comentario de cada columna dice **qué revisar** si no da lo esperado. Ojo:
-con `source()` o `Rscript` las consultas activas **no imprimen**. El objeto se
-mira en el entorno de RStudio al correr el script a mano; en la corrida
-programada la validación no corta nada. Lo único que corta es el error propio
-de una función (un `load()` sin archivo, un `drive_auth()` sin credencial).
-
----
-
-## 9. Setup y entorno
-
-### 9.1 Apertura de un script
+### 8.1 Apertura de un script
 
 ```r
 # borra lo que haya en memoria: el script no depende de otro
@@ -673,7 +558,7 @@ Para limpiar datos **conservando las funciones**:
 rm(list = setdiff(ls(), as.character(lsf.str())))
 ```
 
-### 9.2 Rutas
+### 8.2 Rutas
 
 Relativas a la raíz del proyecto, siempre. Nunca `setwd()`. Nunca una ruta
 absoluta con el nombre de un usuario dentro del script.
@@ -681,7 +566,7 @@ absoluta con el nombre de un usuario dentro del script.
 Asimetría deliberada: **la carpeta de entrada no se crea** (si no existe queremos
 que falle) y **la de salida sí**.
 
-### 9.3 Credenciales
+### 8.3 Credenciales
 
 **Nunca en el script.** Salen de `Sys.getenv()`, que lee del `.Renviron` en local
 y de los secrets en CI, con el mismo código. Lo que no es secreto (un subdominio,
@@ -691,14 +576,14 @@ default.
 Si falta una credencial, el script falla en la función que la usa (por ejemplo
 `drive_auth()`), sin imprimir nunca un valor.
 
-### 9.4 Parámetros configurables
+### 8.4 Parámetros configurables
 
 Arriba, juntos, cada uno con su comentario de qué pasa si se cambia. Los que
 pueden venir del entorno, con `Sys.getenv(..., unset = <default>)`.
 
 ---
 
-## 10. Dónde vive cada columna derivada
+## 9. Dónde vive cada columna derivada
 
 Es una regla de arquitectura, no de formato, y decide en qué script va un
 cálculo nuevo:
@@ -724,7 +609,7 @@ Corolarios:
 
 ---
 
-## 11. Guardado
+## 10. Guardado
 
 Al final, en su propia sección, y con el nombre del objeto igual al del archivo:
 
@@ -753,7 +638,7 @@ llama igual, para que el script que lo carga no tenga que adivinar.
 
 ---
 
-## 12. Checklist de revisión
+## 11. Checklist de revisión
 
 - [ ] Encabezado de sección con guiones hasta el margen.
 - [ ] Un `mutate()` numerado por paso, reescribiendo el objeto.
@@ -774,11 +659,8 @@ llama igual, para que el script que lo carga no tenga que adivinar.
 - [ ] Sin `for`, sin `sapply`, sin `transmute`, sin definir funciones.
 - [ ] Sin `if` / `else`, sin `stop()` ni `stopifnot()`, sin `cat()` ni
       `message()`.
-- [ ] Cada bloque termina con su validación numerada.
 - [ ] Las consultas exploratorias comentadas **tienen la conclusión escrita
       abajo**.
 - [ ] `names()` después de quitar las columnas de trabajo.
-- [ ] Los contratos van en un `validacion_<qué_valida>`, con el valor esperado
-      y qué revisar en el comentario de cada columna.
 - [ ] Sin credenciales en el script; sin `setwd()`; sin rutas absolutas.
-- [ ] La columna derivada está en la capa que le corresponde (sección 10).
+- [ ] La columna derivada está en la capa que le corresponde (sección 9).

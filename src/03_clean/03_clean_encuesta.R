@@ -12,69 +12,96 @@
 #   EJEMPLO: renombrar o borrar según las fuentes del proyecto.                #
 #                                                                              #
 # CORRE DESPUES DE: 02_audit_encuesta                                          #
-# LEE: data/02_audit/<ronda>/ y sources/03_correcciones/                       #
-# ESCRIBE: data/03_clean/<ronda>/<proyecto>_encuesta_clean.RData               #
+# LEE: data/02_audit/ronda_1/ y sources/03_correcciones/                       #
+# ESCRIBE: data/03_clean/ronda_1/proyecto_ronda_1_encuesta_clean.RData         #
 #-----------------------------------------------------------------------------.#
 
-# 0. Setup ---------------------------------------------------------------------
+# Setup ------------------------------------------------------------------------
 
 # borra lo que haya en memoria: el script no depende de otro
 rm(list = ls())
 
-# los paquetes y las funciones compartidas
+# los paquetes del proyecto
 source('src/00_setup/packages.R')
+
+# las funciones compartidas
 source('src/00_setup/functions.R')
 
-# el prefijo de los archivos y la ronda a procesar: la "activa" de
-# sources/rondas.csv, o la que diga RONDA en .secrets/.Renviron
-proyecto <- env_requerido('NOMBRE_PROYECTO')
-ronda    <- ronda_activa()$ronda
+# el proyecto y la ronda: arman la carpeta y el nombre de cada archivo
+source('src/00_setup/config.R')
 
 
-# 1. Cargar --------------------------------------------------------------------
 
-load(file.path(
-  'data/02_audit', ronda, paste0(proyecto, '_encuesta_audit.RData')
-))
+# Cargar datos -----------------------------------------------------------------
 
-# copia de trabajo: la base auditada queda intacta para comparar
-encuesta <- encuesta_audit
+# la encuesta auditada, con sus alertas
+load(ruta_base(
+  '02_audit',                                      # la etapa: carpeta en data/
+  'encuesta_audit'                                 # la base que se carga
+))                                                 # fin de load()
 
-
-# 2. Corregir ------------------------------------------------------------------
-
-# las correcciones de sources/03_correcciones/, cada una con su motivo.
-# Nunca se corrige a mano un valor suelto en el código
+# el objeto de trabajo: la base auditada queda intacta para comparar
+encuesta_limpiando <- encuesta_audit
 
 
-# 3. Normalizar ----------------------------------------------------------------
 
-# skill_data_cleaning.md: texto (tildes, mayúsculas, espacios), nombres,
-# teléfonos, documentos, fechas y categorías "otro, especifique"
+# Aplicar correcciones ---------------------------------------------------------
+
+# las correcciones de sources/03_correcciones/, cada una con su motivo. El
+# valor original queda en <variable>_orig: nunca se pisa la columna original
 
 
-# 4. Etiquetar -----------------------------------------------------------------
+
+# Levantar alertas -------------------------------------------------------------
+
+# marca con 0/1 lo que la limpieza tiene que resolver o dejar documentado:
+# valores fuera de rango, categorías que no están en el instrumento, campos
+# con datos en el lugar equivocado. Acá se marca, no se corrige
+
+
+
+# Limpiar los datos ------------------------------------------------------------
+
+# skill_data_cleaning.md. Un paso numerado por tarea, reescribiendo el objeto
+
+
+
+## Normalizar ------------------------------------------------------------------
+
+# texto, nombres, teléfonos, documentos y fechas
+
+
+
+## Recategorizar ---------------------------------------------------------------
+
+# agrupa categorías y pasa "otro, especifique" a su categoría
+
+
+
+## Etiquetar -------------------------------------------------------------------
 
 # etiquetas de variables y valores desde el instrumento (labelled)
 
 
-# 5. Columnas comunes ----------------------------------------------------------
 
-# las mismas columnas comunes que las demás fuentes, para que 05_integrate
+## Columnas comunes ------------------------------------------------------------
+
+# las mismas columnas comunes en todas las fuentes, para que 05_integrate
 # solo tenga que apilar
 
-encuesta_clean <- encuesta
 
 
-# 6. Guardar en data/03_clean --------------------------------------------------
+# Guardar encuesta_clean -------------------------------------------------------
 
-# la carpeta de salida se crea si no existe
-carpeta_salida <- file.path('data/03_clean', ronda)
-dir.create(carpeta_salida, recursive = TRUE, showWarnings = FALSE)
+# la salida del script, con el objeto del mismo nombre que el archivo
+encuesta_clean <- encuesta_limpiando
 
-save(
-  encuesta_clean,
-  file = file.path(carpeta_salida, paste0(proyecto, '_encuesta_clean.RData'))
-)
+# en .RData, .sav, .dta, .xlsx, .csv y un Google Sheet, con proyecto y ronda
+# en el nombre (src/00_setup/config.R)
+guardar_etapa(
+  'encuesta_clean',                                # el objeto, entre comillas
+  '03_clean'                                       # la etapa: carpeta en data/
+)                                                  # fin de guardar_etapa()
 
+# borra todo: el script siguiente arranca de cero
 rm(list = ls())

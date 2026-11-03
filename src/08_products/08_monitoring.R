@@ -14,45 +14,60 @@
 #   08_monitoring_<tabla>.R                                                    #
 #                                                                              #
 # CORRE DESPUES DE: 03_clean                                                   #
-# LEE: data/03_clean/<ronda>/                                                  #
+# LEE: data/03_clean/ronda_1/                                                  #
 # ESCRIBE: outputs/08_products/monitoreo/                                      #
 #-----------------------------------------------------------------------------.#
 
-# 0. Setup ---------------------------------------------------------------------
+# Setup ------------------------------------------------------------------------
 
 # borra lo que haya en memoria: el script no depende de otro
 rm(list = ls())
 
-# los paquetes y las funciones compartidas
+# los paquetes del proyecto
 source('src/00_setup/packages.R')
+
+# las funciones compartidas
 source('src/00_setup/functions.R')
 
-# el prefijo de los archivos y la ronda a procesar: la "activa" de
-# sources/rondas.csv, o la que diga RONDA en .secrets/.Renviron
-proyecto <- env_requerido('NOMBRE_PROYECTO')
-ronda    <- ronda_activa()$ronda
+# el proyecto y la ronda: arman la carpeta y el nombre de cada archivo
+source('src/00_setup/config.R')
 
 
-# 1. Cargar --------------------------------------------------------------------
+
+# Rutas y carpetas -------------------------------------------------------------
+
+# dónde escribe
+carpeta_salida <- 'outputs/08_products/monitoreo'  # Output
+
+# crea la carpeta de salida si no existe
+dir.create(carpeta_salida, recursive = TRUE, showWarnings = FALSE)
+
+
+
+# Cargar datos -----------------------------------------------------------------
 
 # la ÚNICA excepción a la frontera: lee la base limpia sin filtrar, con todos
 # los intentos y sus alertas, porque mide el campo mientras ocurre
-load(file.path(
-  'data/03_clean', ronda, paste0(proyecto, '_encuesta_clean.RData')
-))
+load(ruta_base(
+  '03_clean',                                      # la etapa: carpeta en data/
+  'encuesta_clean'                                 # la base que se carga
+))                                                 # fin de load()
 
 
-# 2. Avance y cuotas -----------------------------------------------------------
+
+# Avance y cuotas --------------------------------------------------------------
 
 # encuestas completas por día, por zona y contra la meta de cada cuota
 
 
-# 3. Alertas por encuestador ---------------------------------------------------
+
+# Alertas por encuestador ------------------------------------------------------
 
 # cuántas alertas tiene cada encuestador, por dimensión
 
 
-# 4. Encuestas para validar ----------------------------------------------------
+
+# Encuestas para validar -------------------------------------------------------
 
 # las encuestas con alerta que todavía no tienen veredicto: van al Sheet de
 # validación de las supervisoras
@@ -62,14 +77,18 @@ load(file.path(
 monitoreo <- list()
 
 
-# 5. Guardar en outputs/08_products/monitoreo ----------------------------------
 
-carpeta_salida <- 'outputs/08_products/monitoreo'
-dir.create(carpeta_salida, recursive = TRUE, showWarnings = FALSE)
+# Guardar monitoreo ------------------------------------------------------------
 
+# el nombre con proyecto y ronda, igual que la base limpia que lee
+archivo_monitoreo <- paste0(nombre_base('03_clean', 'monitoreo'), '.RData')
+
+# la lista de tablas en un solo archivo: la lee 09_publish_sheets
 save(
-  monitoreo,
-  file = file.path(carpeta_salida, paste0(proyecto, '_monitoreo.RData'))
-)
+  monitoreo,                                       # las tablas del monitoreo
+  # el archivo
+  file = file.path(carpeta_salida, archivo_monitoreo)
+)                                                  # fin de save()
 
+# borra todo: el script siguiente arranca de cero
 rm(list = ls())

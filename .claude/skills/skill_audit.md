@@ -82,13 +82,13 @@ cuando la alerta se enciende**, no necesariamente la única que usa la regla.
 ```
 1.  Setup                        rutas · umbrales · cargar datos
 2.  Preparación de la base       instrumento · columnas · correcciones · tipos ·
-                                 pruebas · validación · clasificación
+                                 pruebas · clasificación
 3.  D1  Completitud              ┐
 4.  D2  Validez                  │
-5.  D3  Consistencia             │  cada una con tres partes:
+5.  D3  Consistencia             │  cada una con dos partes:
 6.  D4  Autenticidad             │    N.1 alertas por regla
 7.  D5  Elegibilidad             │    N.2 medidas agregadas
-8.  D6  Protocolo                │    N.3 validación (5 consultas)
+8.  D6  Protocolo                │
 9.  D7  Calidad por encuestador  │
 10. D8  Valores atípicos         │
 11. D9  Respuestas no sustantivas│
@@ -208,22 +208,14 @@ va en `sources/02_referencias/`, no en el script.
 Un envío sin fecha de inicio **se conserva**: sacarlo sin revisar es perder
 una encuesta.
 
-### 3.6 Validación de la preparación
-
-1. Columnas que se crearon vacías (nadie las respondió todavía).
-2. Columnas de la base que **no** están en el instrumento vigente: vienen de
-   una versión anterior o de un campo renombrado.
-3. Cuántas columnas quedaron de cada tipo.
-4. Registros antes y después de quitar las pruebas.
-
-### 3.7 Completar desde otra fuente (opcional)
+### 3.6 Completar desde otra fuente (opcional)
 
 Si otra fuente tiene un dato que la principal dejó en NS/NR (la red que una
 semilla dio en su registro), se completa **solo cuando la principal es
 negativa** (-777/-888), nunca se cambia una respuesta real. El valor original
 queda en `<variable>_<fuente>` y una marca `es_<variable>_desde_<fuente>`.
 
-### 3.8 Clasificación e historial
+### 3.7 Clasificación e historial
 
 Cuando cada registro es un intento sobre un caso (llamadas, visitas, rondas
 de un panel), se agregan columnas que **no son alertas**:
@@ -277,7 +269,7 @@ falta simplemente no suma.
 
 ### 4.1 La estructura de cada dimensión
 
-Las tres partes se repiten igual en las diez. Quien conoce una, las conoce
+Las dos partes se repiten igual en las diez. Quien conoce una, las conoce
 todas.
 
 **N.1 Alertas por regla.** Un comentario de bloque que dice qué marca, qué
@@ -312,18 +304,6 @@ ale_d3_n_inconsistente = rowSums(
 ),
 ale_d3_inconsistente = if_else(ale_d3_n_inconsistente > 0, 1, 0)
 ```
-
-**N.3 Validación.** Siempre las mismas cinco consultas, para leer el resultado
-sin abrir la base:
-
-1. Cuántos registros hay y cuántos tienen alguna alerta (n y %).
-2. Por estado y por versión del formulario: si se concentran en una versión
-   vieja, el problema es del formulario y no del campo.
-3. Qué alertas se encienden más (una fila por alerta, con n y %).
-4. Qué registros tienen alertas, cuántas y cuáles (una fila por registro, con
-   las alertas pegadas en texto).
-5. Un registro en particular, por su `KEY` (`encuesta_revision`, definido una
-   vez en D1).
 
 ### 4.2 Qué marca cada dimensión
 
@@ -436,7 +416,7 @@ fuera de 0,25–7,5 salarios mínimos del país. **Un atípico no es un error.**
 respondidas, o una variable clave para el análisis (el grado de red, el
 ingreso) sin respuesta.
 
-**D10 Gestión de casos.** Usa el historial de 3.8. Llamada sin caso, a un caso
+**D10 Gestión de casos.** Usa el historial de 3.7. Llamada sin caso, a un caso
 que no existe, encimada con la anterior; caso cerrado que se volvió a llamar;
 cierre por "no localizable" sin los N días de intentos; caso abierto tras N
 intentos; lo que el formulario leyó del dataset de casos (`pre_`) no coincide
@@ -459,22 +439,6 @@ alerta_final = case_when(
 
 Un registro que no es completo queda en 1 aunque tenga alertas (de protocolo,
 de gestión): su detalle sigue en las columnas `ale_`.
-
-Validación:
-
-1. Registros por clase.
-2. De los completos, cuántos tienen alerta en cada dimensión (una columna por
-   dimensión).
-3. Contratos:
-
-```r
-stopifnot(
-  'Una alerta ale_ quedó en NA o con un valor distinto de 0 y 1' =
-    all(as.matrix(select(data_audit, <alertas sin los conteos>)) %in% c(0, 1)),
-  'Un registro quedó sin alerta_final' =
-    !anyNA(data_audit$alerta_final)
-)
-```
 
 ---
 
@@ -527,7 +491,6 @@ alertas no cambia nada.
 - [ ] Las preguntas nuevas solo se exigen desde su versión.
 - [ ] Las medidas agregadas se excluyen a sí mismas.
 - [ ] Las columnas `aux_` se borraron.
-- [ ] Cada dimensión tiene sus cinco consultas de validación.
 - [ ] `alerta_final` y `resultado_final` existen para todos los registros, con
       sus contratos.
 - [ ] Ninguna lista de ids, encuestadores ni fechas escrita en el script: va en

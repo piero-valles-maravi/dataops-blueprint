@@ -10,8 +10,8 @@ description: >
   02_clean_*, extraer datos escritos en el campo equivocado, o preparar una
   fuente para una base maestra. También cuando el usuario comparta una base
   cruda y pregunte cómo limpiarla, o pida revisar un script de limpieza que ya
-  existe. El resultado es un script con la estructura, el orden y las
-  validaciones de los 02_clean_* de este repositorio, sea cual sea la fuente.
+  existe. El resultado es un script con la estructura, el orden y los
+  pasos de los 02_clean_* de este repositorio, sea cual sea la fuente.
 ---
 
 # Limpieza de una fuente de datos
@@ -113,8 +113,8 @@ Dos variables, una de entrada y una de salida. Asimetría deliberada:
 
 ### 2.3 Cargar el crudo
 
-Con un comentario que diga **cuántas filas trae**. Ese número es el punto de
-partida de todas las validaciones y el detector de regresiones: si en la próxima
+Con un comentario que diga **cuántas filas trae**. Ese número es el detector
+de regresiones: si en la próxima
 corrida cambia mucho, la ingesta se cortó.
 
 ### 2.4 Descartar lo que está roto (no lo que está sucio)
@@ -187,7 +187,7 @@ aparece_en_la_cedula_de_identidad`) y cada fuente los escribe distinto.
 
 Cuando una fuente entrega **dos poblaciones en dos archivos** con nombres de
 columna completamente distintos (alumnos y docentes, por ejemplo), el script
-tiene **una sección por población**, cada una con sus pasos y su validación, y
+tiene **una sección por población**, cada una con sus pasos, y
 recién al final se apilan (sección 2.7).
 
 ### 2.7 Apilar poblaciones, si hay más de una
@@ -209,9 +209,6 @@ Tres pasos, y el del medio es el que evita el error silencioso:
 3. **Apilar** con `bind_rows`, que completa con `NA` lo que una población no
    tiene. Eso es correcto: si el padrón de alumnos no pregunta correo, los
    alumnos tienen que quedar con correo en `NA`.
-
-Validación obligatoria: el total tiene que ser la suma de las partes, y un
-`group_by(poblacion)` tiene que mostrar a las dos con sus llaves.
 
 ### 2.8 Normalización general
 
@@ -302,7 +299,7 @@ La convención de nombres es `<campo>_<entidad>`: `celular_documento` es *el
 documento que estaba escrito en el campo de celular*. La diagonal es la entidad
 propia del campo y se llama `<campo>_norm`.
 
-### 3.2 Los 14 pasos de un bloque
+### 3.2 Los 13 pasos de un bloque
 
 No todos aplican a todos los campos. La columna dice a cuáles.
 
@@ -321,8 +318,7 @@ No todos aplican a todos los campos. La columna dice a cuáles.
 | 10 | **Armar la llave `_norm`** según el tipo | los cuatro |
 | 11 | **Diagnóstico**: `_regla`, `_modificado`, `_validez`, `_norm_9` | celular, documento |
 | 12 | **Quitar auxiliares** (las list-columns siempre) | los cuatro |
-| 13 | **Validación** numerada | los cuatro |
-| 14 | **Quitar columnas de trabajo** + `names()` | los cuatro |
+| 13 | **Quitar columnas de trabajo** + `names()` | los cuatro |
 
 El paso 2 va **antes** del 3 a propósito: si se limpia primero, el correo se
 destruye y ya no se puede extraer. Y el paso 3 quita el correo del texto para
@@ -842,98 +838,6 @@ permisivo, en los campos ajenos se es estricto.
 
 ---
 
-## 6b. Paso 13 — La validación de un bloque: siempre las mismas cuatro consultas
-
-Cada bloque de llave cierra con estas cuatro, en este orden y numeradas. No son
-opcionales y no cambian de bloque a bloque: son las que hacen que la próxima
-corrida encuentre los casos nuevos.
-
-**1. Vista general.** Un `select()` comentado columna por columna: el original,
-el `_limpio`, el `_norm`, el `_tipo` y **todas** las extracciones, ordenado por
-tipo. Sirve para descubrir patrones que ninguna regla cubre todavía.
-
-```r
-# x %>%
-#   filter(!is.na(campo)) %>%
-#   select(
-#     campo,           # original, sin tocar
-#     campo_limpio,    # texto limpio
-#     campo_norm,      # llave final
-#     campo_tipo,      # qué contenía el campo
-#     campo_correo,    # correo escondido
-#     campo_nombre,    # nombre escondido
-#     campo_cedula,    # documento escondido
-#     campo_celular,   # celular escondido
-#     campo_digitos    # dígitos antes de reconstruir
-#   ) %>%
-#   arrange(campo_tipo, campo_norm) %>%
-#   View()
-```
-
-**2. Qué se perdió.** Las filas donde el original **tenía dato** y ninguna de las
-cuatro columnas de salida lo capturó, excluyendo los `"NULL"`:
-
-```r
-# x %>%
-#   filter(
-#     is.na(campo_norm) & is.na(campo_correo) &
-#       is.na(campo_nombre) & is.na(campo_cedula)
-#   ) %>%
-#   filter(campo != "NULL") %>%
-#   select(campo, campo_limpio, campo_tipo) %>%
-#   View()
-```
-
-Es la consulta más importante de las cuatro: mide la pérdida real, que es lo
-único que no se ve en un conteo por tipo.
-
-**3. Conteo por tipo**, cruzado con `_regla` cuando esa columna existe:
-
-```r
-x %>%
-  count(campo_tipo, sort = TRUE)
-
-x %>%
-  count(campo_tipo, campo_regla, sort = TRUE)
-```
-
-**4. Los casos límite.** Los que **entraron a la llave pero no cumplen el
-patrón**. Ahí aparecen los patrones nuevos:
-
-```r
-# x %>%
-#   filter(campo_regla == "No cumple reglas") %>%
-#   select(campo, campo_digitos, campo_norm, campo_tipo) %>%
-#   View()
-```
-
-**Cuáles quedan activas y cuáles comentadas:**
-
-| Consulta | Estado en el script |
-|---|---|
-| 1. Vista general | **comentada**, con la conclusión escrita abajo |
-| 2. Qué se perdió | **comentada**, con la conclusión escrita abajo |
-| 3. Conteo por tipo | **activa**, imprime en cada corrida |
-| 4. Casos límite | **comentada**, con la conclusión escrita abajo |
-
-La 3 queda activa porque es chica y se lee de un vistazo. Las otras tres abren
-un `View()` o devuelven cientos de filas, así que quedan comentadas — pero
-**siempre con la conclusión en prosa debajo**:
-
-```r
-# Solo 6 registros poco relevantes.
-# 11 registros que realmente no aportan nada
-# Nada preocupante. Todo es plausible
-# Estos 20 casos realmente no hay forma de saber si son números de celular o no
-# Los dejaremos y se descartarán luego de detectar duplicados.
-```
-
-**Una consulta comentada sin conclusión abajo está incompleta.** El script tiene
-que guardar el hallazgo, no solo el código que lo produjo: el que lo lea en seis
-meses necesita saber que eso ya se revisó y qué se decidió.
-
----
-
 ## 7. Paso 5b — La tabla de correcciones manuales
 
 Los casos que ninguna regla resuelve van acá, versionados en el script:
@@ -959,7 +863,7 @@ x <- x %>%
 **La corrección tiene que pisar TODAS las columnas que alimentan los pasos
 siguientes, no solo la primera.** Acá pisa `_digitos` **y** `_grupos`, porque los
 pasos 5, 6 y 7 leen los grupos. Pisar solo la primera es un error que no se ve:
-la corrección aparece en la vista de validación y no llega a la llave.
+la corrección aparece en la vista de inspección y no llega a la llave.
 
 ---
 
@@ -1101,27 +1005,7 @@ fecha y su problema. El caso típico: la misma persona registrada en dos turnos 
 dos secciones. **Esas filas no se eliminan acá**: no se sabe a cuál pertenece, y
 solo el cruce con las otras fuentes lo dirá.
 
-### 8.7 Las validaciones finales
-
-Siempre las mismas cinco:
-
-1. **No se perdió ninguna llave**: `n_distinct` de cada tipo en la tabla larga
-   tiene que coincidir con el `n_distinct` de la columna en el dataset final.
-2. **Filas crudas vs. intermedias vs. finales**, las tres impresas.
-3. **No quedan combinaciones repetidas** dentro de un mismo registro:
-   `count(id_origen, ...) %>% filter(n > 1) %>% nrow()` tiene que dar 0.
-4. **Ningún registro se perdió**: `n_distinct(final$id_origen)` == `nrow(intermedio)`.
-5. **Cobertura de cada llave**, con `sin_ninguna` incluido.
-
-Y dos de diagnóstico que **no descartan nada, solo miden para poder reclamar en
-la fuente**:
-
-- **Llaves compartidas entre personas distintas.** Contando `n_distinct(id_origen)`
-  y **no filas**, porque el `unnest` dejó varias filas por registro y contar
-  filas mediría la expansión, no el problema.
-- La vista final de las cuatro llaves, comentada.
-
-### 8.8 La selección final: el contrato
+### 8.7 La selección final: el contrato
 
 **Las columnas de salida son un contrato entre todas las fuentes.** Mismos
 nombres, mismo orden, mismos tipos, para que la integración sea un `bind_rows()`
@@ -1164,39 +1048,6 @@ Reglas del contrato:
 - Una columna que solo aporta una fuente queda en `NA` en las demás, y eso está
   bien y se documenta.
 
-Validación del contrato, tres consultas:
-
-```r
-names(x_clean)
-sapply(x_clean, function(x) class(x)[1])
-nrow(x_clean); n_distinct(x_clean$fila_origen); n_distinct(x_clean$id_origen)
-x_clean %>% summarise(sin_fuente = sum(is.na(fuente)), ...)
-```
-
-Si hay que mantener un flujo viejo, se guardan **dos objetos con los mismos
-datos y distinto vocabulario**, y el comentario dice quién consume cada uno.
-
-**Dos formas de escribir la selección**, y cuándo usar cada una:
-
-- **Enumerar las columnas una por una**, como arriba. Es la forma preferida para
-  el objeto que cumple el contrato: el `select` explícito **es** la declaración
-  del contrato, y si una fuente deja de traer una columna, falla acá y no tres
-  scripts después.
-- **Descartar por patrón**, cuando lo que sobra son decenas de columnas de
-  trabajo y enumerar las buenas sería más largo:
-  ```r
-  select(
-    starts_with('xxx_'),
-    -ends_with('_orig'),
-    -starts_with('xxx_nombre_')
-  )
-  ```
-  Sirve para el objeto del vocabulario viejo o para un dataset intermedio. **No
-  para el objeto del contrato**: un `starts_with` acepta en silencio una columna
-  nueva que nadie esperaba.
-
----
-
 ## 9. Arquetipo B — Tabla de detalle o evento
 
 Mucho más corto. No tiene bloques de llave: la llave **ya viene limpia de la
@@ -1224,13 +1075,10 @@ plataforma** y solo hay que emparejar el formato.
 8. **El resumen por persona**: `group_by(correo_llave)` + `summarise`.
    **Contar ítems distintos y no filas**, porque una persona puede tener el
    mismo ítem repetido si se reinscribió: `n_distinct(item_id)`, no `n()`.
-9. **Validación**: el grano (filas, personas, ítems, pares persona-ítem), que el
-   resumen tenga **una fila por persona y ni una más**, la distribución del
-   avance, y los ítems más frecuentes.
-10. **Salida: dos objetos.** El detalle (una fila por persona e ítem) y el
-    resumen (una fila por persona). El comentario aclara que **este archivo no
-    sigue el contrato de las fuentes de personas**: su grano es distinto, así que
-    no tiene `id_origen` ni llaves, y se cruza por la llave única.
+9. **Salida: dos objetos.** El detalle (una fila por persona e ítem) y el
+   resumen (una fila por persona). El comentario aclara que **este archivo no
+   sigue el contrato de las fuentes de personas**: su grano es distinto, así que
+   no tiene `id_origen` ni llaves, y se cruza por la llave única.
 
 ---
 
@@ -1249,15 +1097,7 @@ El más corto. No tiene personas.
 4. **Normalización general**, con **el mismo tratamiento que las otras fuentes**:
    un catálogo cuyos valores no coinciden con los de la fuente de personas no
    sirve para cruzar.
-5. **Validación**, y acá es más exigente que en A:
-   - **Las llaves del catálogo son únicas** (una fila por objeto).
-   - **Ninguna columna puede venir vacía**: es una tabla de dimensión, si le
-     falta un valor no cumple su función.
-   - **El vocabulario de cada atributo**, para comprobar que quedó igual al de
-     las otras fuentes.
-   - **Un total de control** contra otra fuente: la matrícula del catálogo tiene
-     que dar las mismas filas que el padrón de personas.
-6. **Salida**: las columnas del catálogo y nada más. Sin `fuente`, sin
+5. **Salida**: las columnas del catálogo y nada más. Sin `fuente`, sin
    `fila_origen`, sin `id_origen`.
 
 ---
@@ -1269,12 +1109,12 @@ Lo que es **universal** (no tocar):
 - Las cinco reglas de la sección 0.
 - Los tres arquetipos y cómo distinguirlos.
 - El orden de los bloques de llave, y el motivo (el nombre es el vocabulario).
-- Los 14 pasos y el orden interno de la limpieza base (sección 5), sobre todo NFKC
+- Los 13 pasos y el orden interno de la limpieza base (sección 5), sobre todo NFKC
   primero.
 - La matriz de extracción cruzada (sección 3.1) y la asimetría de la sección 6.5.
 - Todo el cierre: `_orig`, `id_origen`, tablas largas, `group_by` en vez de
   `distinct`, `faltantes`, `unnest` encadenado, `id_origen` dentro del
-  `distinct`, las cinco validaciones, el contrato.
+  `distinct`, el contrato.
 - Las reglas del correo (sección 6.2) son casi universales; solo cambian los dominios
   locales de la lista.
 
@@ -1304,7 +1144,7 @@ Todas son errores reales que llegaron a producción en este proyecto.
    también. Con una columna enteramente `NA` (la llave que una fuente no tiene),
    el vector de validez queda en `NA`, `ifelse()` devuelve un vector **lógico**
    en vez de texto, y `na_if()` aborta con un error de `vec_cast`.
-   **Toda validación abre con `!is.na(x) &` y cierra con
+   **Toda regla de validez abre con `!is.na(x) &` y cierra con
    `na_if(as.character(y), "")`.**
 
 2. **Comparar texto contra un número.** `documento <= 9999` sobre una columna de
@@ -1415,12 +1255,9 @@ Todas son errores reales que llegaron a producción en este proyecto.
 - [ ] Lo desconocido entra a la llave; solo sale lo identificado como otra cosa.
 - [ ] Celular y documento tienen sus columnas de diagnóstico.
 - [ ] Las list-columns y las columnas matriz están borradas.
-- [ ] Cada bloque termina con **las cuatro** consultas de validación, con la 3
-      activa y las otras tres comentadas **y con su conclusión escrita abajo**.
 - [ ] Está el `id_origen` antes de las tablas de llaves.
 - [ ] Las llaves se colapsan con `group_by` + `summarise`, no con `distinct`.
 - [ ] Está el bloque `faltantes` antes del `unnest` encadenado.
 - [ ] El `distinct` final incluye `id_origen`.
-- [ ] Están las cinco validaciones finales y las dos de diagnóstico.
 - [ ] La salida cumple el contrato: mismos nombres, orden y tipos.
 - [ ] Cada regla no obvia tiene su número medido en el comentario.

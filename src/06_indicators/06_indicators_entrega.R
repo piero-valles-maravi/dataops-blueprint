@@ -8,73 +8,81 @@
 # NOMBRE: 06_indicators_entrega                                                #
 # DETALLE: arma la versión de entrega de la base final: solo registros         #
 #   válidos, sin datos personales ni columnas de trabajo, en el orden del      #
-#   instrumento. Verifica con stop() que no quede ningún dato personal.        #
+#   instrumento. La validación verifica que no quede ningún dato personal.     #
 #   EJEMPLO: renombrar o borrar según las fuentes del proyecto.                #
 #                                                                              #
 # CORRE DESPUES DE: 06_indicators_variables                                    #
-# LEE: data/06_final/<proyecto>_final.RData                                    #
-# ESCRIBE: data/06_final/<proyecto>_entrega.RData                              #
+# LEE: data/06_final/proyecto_final.RData                                      #
+# ESCRIBE: data/06_final/proyecto_entrega.RData                                #
 #-----------------------------------------------------------------------------.#
 
-# 0. Setup ---------------------------------------------------------------------
+# Setup ------------------------------------------------------------------------
 
 # borra lo que haya en memoria: el script no depende de otro
 rm(list = ls())
 
-# los paquetes y las funciones compartidas
+# los paquetes del proyecto
 source('src/00_setup/packages.R')
+
+# las funciones compartidas
 source('src/00_setup/functions.R')
 
-# el prefijo de los archivos
-proyecto <- env_requerido('NOMBRE_PROYECTO')
+# el proyecto y la ronda: arman la carpeta y el nombre de cada archivo
+source('src/00_setup/config.R')
 
 
-# 1. Cargar --------------------------------------------------------------------
 
-load(file.path('data/06_final', paste0(proyecto, '_final.RData')))
+# Cargar datos -----------------------------------------------------------------
 
-entrega <- final
+# la base final analítica
+load(ruta_base(
+  '06_final',                                      # la etapa: carpeta en data/
+  'final'                                          # la base que se carga
+))                                                 # fin de load()
+
+# el objeto de trabajo: la base final queda intacta para comparar
+entrega_preparando <- final
 
 
-# 2. Dejar solo los registros válidos ------------------------------------------
+
+# Dejar solo los registros válidos ---------------------------------------------
 
 # según resultado_final de 02_audit
 
 
-# 3. Quitar datos personales y columnas de trabajo -----------------------------
+
+# Quitar datos personales y columnas de trabajo --------------------------------
 
 # los datos personales del proyecto: nombres, documentos, teléfonos, correos,
 # direcciones, coordenadas
 datos_personales <- c()
 
-# las columnas de trabajo: alertas, validaciones y auxiliares
-entrega <- entrega |>
-  select(-any_of(datos_personales), -starts_with(c('ale_', 'aux_', 'val_')))
+# sin datos personales ni alertas, validaciones y auxiliares
+entrega_preparando <- entrega_preparando %>%
+  select(                                          # lo que se entrega
+    -any_of(datos_personales),                     # fuera los datos personales
+    -starts_with(c('ale_', 'aux_', 'val_'))        # fuera las de trabajo
+  )                                                # fin del select
 
 
-# 4. Ordenar como el instrumento -----------------------------------------------
+
+# Ordenar como el instrumento --------------------------------------------------
 
 # el orden de las columnas sigue el de sources/01_instrumento/
 
 
-# 5. Verificar -----------------------------------------------------------------
 
-# control: no puede quedar ningún dato personal en la entrega
-if (any(datos_personales %in% names(entrega))) {
-  stop('La entrega todavía tiene datos personales: ',
-       paste(intersect(datos_personales, names(entrega)), collapse = ', '))
-}
+# Guardar entrega --------------------------------------------------------------
 
+# la salida del script, con el objeto del mismo nombre que el archivo
+entrega <- entrega_preparando
 
-# 6. Guardar en data/06_final --------------------------------------------------
+# en .RData, .sav, .dta, .xlsx, .csv y un Google Sheet, con proyecto y ronda
+# en el nombre (src/00_setup/config.R)
+guardar_etapa(
+  'entrega',                                       # el objeto, entre comillas
+  '06_final'                                       # la etapa: carpeta en data/
+)                                                  # fin de guardar_etapa()
 
-# la carpeta de salida se crea si no existe
-carpeta_salida <- 'data/06_final'
-dir.create(carpeta_salida, recursive = TRUE, showWarnings = FALSE)
-
-save(
-  entrega,
-  file = file.path(carpeta_salida, paste0(proyecto, '_entrega.RData'))
-)
-
+# borra todo: el script siguiente arranca de cero
 rm(list = ls())

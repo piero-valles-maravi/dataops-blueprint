@@ -18,50 +18,75 @@
 # ESCRIBE: GSHEET_ID_MONITOREO, GSHEET_ID_VALIDACION y GSHEET_ID_DASHBOARD     #
 #-----------------------------------------------------------------------------.#
 
-# 0. Setup ---------------------------------------------------------------------
+# Setup ------------------------------------------------------------------------
 
 # borra lo que haya en memoria: el script no depende de otro
 rm(list = ls())
 
-# los paquetes, las funciones y las credenciales (.secrets/.Renviron)
+# los paquetes del proyecto
 source('src/00_setup/packages.R')
+
+# las funciones compartidas
 source('src/00_setup/functions.R')
+
+# el proyecto y la ronda: arman la carpeta y el nombre de cada archivo
+source('src/00_setup/config.R')
+
+# las credenciales: .secrets/.Renviron y la cuenta de servicio de Google
 source('src/00_setup/auth.R')
 
-# el prefijo de los archivos
-proyecto <- env_requerido('NOMBRE_PROYECTO')
 
 
-# 1. Monitoreo: el Sheet que lee Looker ----------------------------------------
+# Rutas y carpetas -------------------------------------------------------------
 
-# solo si 08_monitoring dejó sus tablas (monitoreo por hora). Cada tabla pisa
-# su pestaña con el mismo esquema de columnas, para que Looker no se rompa
-archivo_monitoreo <- file.path('outputs/08_products/monitoreo',
-                               paste0(proyecto, '_monitoreo.RData'))
-
-if (file.exists(archivo_monitoreo)) {
-
-  load(archivo_monitoreo)
-
-  purrr::iwalk(monitoreo, function(tabla, pestana) {
-    googlesheets4::sheet_write(
-      tabla, ss = env_requerido('GSHEET_ID_MONITOREO'), sheet = pestana
-    )
-  })
-
-}
+# las tablas del monitoreo que deja 08_monitoring
+# Input
+carpeta_monitoreo <- 'outputs/08_products/monitoreo'
 
 
-# 2. Validación: las encuestas nuevas con alerta -------------------------------
+
+# Cargar datos -----------------------------------------------------------------
+
+# sin tablas por defecto: el pipeline completo no corre 08_monitoring
+monitoreo <- list()
+
+# el archivo del monitoreo, si 08_monitoring lo dejó
+archivos_monitoreo <- list.files(
+  carpeta_monitoreo,                               # dónde buscar
+  pattern    = '_monitoreo\\.RData$',              # solo el del monitoreo
+  full.names = TRUE                                # con la ruta, para cargarlo
+)                                                  # fin de list.files()
+
+# carga las tablas: si no hay archivo, monitoreo sigue vacío
+walk(archivos_monitoreo, ~ load(.x, envir = globalenv()))
+
+
+
+# Monitoreo: el Sheet que lee Looker -------------------------------------------
+
+# cada tabla pisa su pestaña con el mismo esquema de columnas, para que
+# Looker no se rompa. Si monitoreo está vacío, no hace nada
+iwalk(
+  monitoreo,                                       # las tablas del monitoreo
+  ~ googlesheets4::sheet_write(                    # escribe una tabla
+    .x,                                            # la tabla
+    ss    = env_requerido('GSHEET_ID_MONITOREO'),  # el Sheet de Looker
+    sheet = .y                                     # la pestaña con su nombre
+  )                                                # fin de sheet_write()
+)                                                  # fin de iwalk()
+
+
+
+# Validación: las encuestas nuevas con alerta ----------------------------------
 
 # se AGREGAN al Sheet de validación, nunca se pisa: ahí están las decisiones
 # de las supervisoras. Solo las que todavía no están en el Sheet
 
 
-# 3. Dashboard de resultados ---------------------------------------------------
+
+# Dashboard de resultados ------------------------------------------------------
 
 # solo en el pipeline completo, si el proyecto tiene dashboard de resultados
-id_dashboard <- env_opcional('GSHEET_ID_DASHBOARD')
 
-
+# borra todo: el script siguiente arranca de cero
 rm(list = ls())

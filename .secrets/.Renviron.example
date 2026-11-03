@@ -34,19 +34,10 @@
 
 # Proyecto --------------------------------------------------------------------
 
-# prefijo de todos los archivos que guarda el pipeline, en snake_case
-# ej.: NOMBRE_PROYECTO=encuesta_diaspora
-NOMBRE_PROYECTO=
-
 # zona horaria del proyecto: fecha los archivos y la hora de actualización del
 # dashboard. Es la misma TZ que usan los workflows
 # ej.: TZ=America/Lima
 TZ=
-
-# (opcional) ronda a procesar. Vacía = la que figura como "activa" en
-# sources/rondas.csv. Se usa para volver a procesar una ronda cerrada
-# ej.: RONDA=ronda_1
-RONDA=
 
 
 # Cuenta de servicio de Google ------------------------------------------------

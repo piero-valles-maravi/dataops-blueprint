@@ -17,60 +17,89 @@
 #   descriptivos_                                                              #
 #-----------------------------------------------------------------------------.#
 
-# 0. Setup ---------------------------------------------------------------------
+# Setup ------------------------------------------------------------------------
 
 # borra lo que haya en memoria: el script no depende de otro
 rm(list = ls())
 
-# los paquetes y las funciones compartidas
+# los paquetes del proyecto
 source('src/00_setup/packages.R')
+
+# las funciones compartidas
 source('src/00_setup/functions.R')
 
-# el prefijo de los archivos
-proyecto <- env_requerido('NOMBRE_PROYECTO')
+# el proyecto y la ronda: arman la carpeta y el nombre de cada archivo
+source('src/00_setup/config.R')
 
 
-# 1. Cargar --------------------------------------------------------------------
 
-# lee SOLO de data/06_final
-load(file.path('data/06_final', paste0(proyecto, '_final.RData')))
+# Rutas y carpetas -------------------------------------------------------------
+
+# las tablas y las figuras van en carpetas separadas
+carpeta_tablas  <- 'outputs/07_analysis/tablas'    # Output
+carpeta_figuras <- 'outputs/07_analysis/figuras'   # Output
+
+# crea las dos carpetas de salida si no existen
+walk(
+  c(carpeta_tablas, carpeta_figuras),              # las dos carpetas
+  dir.create,                                      # las crea
+  recursive    = TRUE,                             # con las carpetas de arriba
+  showWarnings = FALSE                             # sin aviso si ya existen
+)                                                  # fin de walk()
 
 
-# 2. Tablas --------------------------------------------------------------------
+
+# Cargar datos -----------------------------------------------------------------
+
+# la base final analítica
+load(ruta_base(
+  '06_final',                                      # la etapa: carpeta en data/
+  'final'                                          # la base que se carga
+))                                                 # fin de load()
+
+
+
+# Tablas -----------------------------------------------------------------------
 
 # los descriptivos y cruces principales, con ponderadores si los hay. Lista
 # nombrada: el nombre es el de la pestaña del Excel
 tablas <- list(
-  total = tibble(registros = nrow(final))
-)
+  total = tibble(registros = nrow(final))          # EJEMPLO: cuántos registros
+)                                                  # fin de la lista
 
 
-# 3. Figuras -------------------------------------------------------------------
+
+# Figuras ----------------------------------------------------------------------
 
 # lista nombrada de ggplot: el nombre es el del archivo
 figuras <- list()
 
 
-# 4. Guardar en outputs/07_analysis --------------------------------------------
 
-# las tablas y figuras se guardan, nunca quedan solo en pantalla
-for (carpeta in file.path('outputs/07_analysis', c('tablas', 'figuras'))) {
-  dir.create(carpeta, recursive = TRUE, showWarnings = FALSE)
-}
+# Guardar descriptivos ---------------------------------------------------------
 
 # todas las tablas en un Excel, una pestaña por tabla
 writexl::write_xlsx(
-  tablas,
-  file.path('outputs/07_analysis/tablas', 'descriptivos_tablas.xlsx')
-)
+  tablas,                                          # la lista de tablas
+  # el archivo
+  file.path(carpeta_tablas, paste0(proyecto, '_descriptivos_tablas.xlsx'))
+)                                                  # fin de write_xlsx()
 
 # cada figura en su PNG, con el nombre de la lista
-purrr::iwalk(figuras, function(figura, nombre) {
-  ggsave(
-    file.path('outputs/07_analysis/figuras',
-              paste0('descriptivos_', nombre, '.png')),
-    figura, width = 8, height = 5, dpi = 300
-  )
-})
+iwalk(
+  figuras,                                         # la lista de figuras
+  ~ ggsave(                                        # guarda una figura
+    file.path(                                     # el archivo
+      carpeta_figuras,                             # en la carpeta de figuras
+      # con el nombre de la lista
+      paste0(proyecto, '_descriptivos_', .y, '.png')
+    ),                                             # fin de file.path()
+    .x,                                            # la figura
+    width  = 8,                                    # ancho en pulgadas
+    height = 5,                                    # alto en pulgadas
+    dpi    = 300                                   # resolución para imprimir
+  )                                                # fin de ggsave()
+)                                                  # fin de iwalk()
 
+# borra todo: el script siguiente arranca de cero
 rm(list = ls())

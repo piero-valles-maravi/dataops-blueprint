@@ -11,85 +11,99 @@
 #   borra nada. EJEMPLO: renombrar o borrar según las fuentes del proyecto.    #
 #                                                                              #
 # CORRE DESPUES DE: 01_import_registro                                         #
-# LEE: data/01_raw/<ronda>/                                                    #
-# ESCRIBE: data/02_audit/<ronda>/<proyecto>_registro_audit.RData               #
+# LEE: data/01_raw/ronda_1/                                                    #
+# ESCRIBE: data/02_audit/ronda_1/proyecto_ronda_1_registro_audit.RData         #
 #-----------------------------------------------------------------------------.#
 
-# 0. Setup ---------------------------------------------------------------------
+# Setup ------------------------------------------------------------------------
 
 # borra lo que haya en memoria: el script no depende de otro
 rm(list = ls())
 
-# los paquetes y las funciones compartidas
+# los paquetes del proyecto
 source('src/00_setup/packages.R')
+
+# las funciones compartidas
 source('src/00_setup/functions.R')
 
-# el prefijo de los archivos y la ronda a procesar: la "activa" de
-# sources/rondas.csv, o la que diga RONDA en .secrets/.Renviron
-proyecto <- env_requerido('NOMBRE_PROYECTO')
-ronda    <- ronda_activa()$ronda
+# el proyecto y la ronda: arman la carpeta y el nombre de cada archivo
+source('src/00_setup/config.R')
 
 
-# 1. Cargar --------------------------------------------------------------------
 
-load(file.path('data/01_raw', ronda, paste0(proyecto, '_registro_raw.RData')))
+# Cargar datos -----------------------------------------------------------------
 
-# copia de trabajo: el crudo queda intacto para comparar
-registro <- registro_raw
+# el registro tal como llegó
+load(ruta_base(
+  '01_raw',                                        # la etapa: carpeta en data/
+  'registro_raw'                                   # la base que se carga
+))                                                 # fin de load()
+
+# el objeto de trabajo: el crudo queda intacto para comparar
+registro_auditando <- registro_raw
 
 
-# 2. Preparar la base ----------------------------------------------------------
+
+# Preparar la base -------------------------------------------------------------
 
 # completar columnas, validar tipos y clasificar los registros (es_)
 
 
-# 3. Alertas por dimensión -----------------------------------------------------
+
+# Alertas por dimensión --------------------------------------------------------
 
 # skill_audit.md, "Adaptar a fuentes que no son encuestas". Acá NO se
-# corrige ni se borra nada: se marca. Cada dimensión con sus alertas por
-# regla (0/1), sus medidas agregadas y sus consultas de validación
+# corrige ni se borra nada: se marca
 
-# 3.1 D1 Completitud -----------------------------------------------------------
+
+
+## D1 Completitud --------------------------------------------------------------
 
 # alertas ale_d1_<variable>, luego ale_d1_n_<medida> y ale_d1_<medida>
 
 
-# 3.2 D2 Validez ---------------------------------------------------------------
+
+## D2 Validez ------------------------------------------------------------------
 
 # alertas ale_d2_<variable>, luego ale_d2_n_<medida> y ale_d2_<medida>
 
 
-# 3.3 D3 Consistencia ----------------------------------------------------------
+
+## D3 Consistencia -------------------------------------------------------------
 
 # alertas ale_d3_<variable>, luego ale_d3_n_<medida> y ale_d3_<medida>
 
 
-# 3.4 D4 Duplicados ------------------------------------------------------------
+
+## D4 Duplicados ---------------------------------------------------------------
 
 # alertas ale_d4_<variable>, luego ale_d4_n_<medida> y ale_d4_<medida>
 
 
-# 3.5 D8 Atípicos --------------------------------------------------------------
+
+## D8 Atípicos -----------------------------------------------------------------
 
 # alertas ale_d8_<variable>, luego ale_d8_n_<medida> y ale_d8_<medida>
 
 
-# 4. Consolidar ----------------------------------------------------------------
+
+# Consolidar -------------------------------------------------------------------
 
 # ale_n_total, ale_n_dimensiones y alerta_final (1, 2 o 3)
 
-registro_audit <- registro
 
 
-# 5. Guardar en data/02_audit --------------------------------------------------
+# Guardar registro_audit -------------------------------------------------------
 
-# la carpeta de salida se crea si no existe
-carpeta_salida <- file.path('data/02_audit', ronda)
-dir.create(carpeta_salida, recursive = TRUE, showWarnings = FALSE)
+# la salida del script, con el objeto del mismo nombre que el archivo
+registro_audit <- registro_auditando
 
-save(
-  registro_audit,
-  file = file.path(carpeta_salida, paste0(proyecto, '_registro_audit.RData'))
-)
+# en .RData, .sav, .dta, .xlsx, .csv y un Google Sheet, con proyecto y ronda
+# en el nombre (src/00_setup/config.R)
+guardar_etapa(
+  'registro_audit',                                # el objeto, entre comillas
+  '02_audit'                                       # la etapa: carpeta en data/
+)                                                  # fin de guardar_etapa()
 
+# borra todo: el script siguiente arranca de cero
 rm(list = ls())
