@@ -16,8 +16,8 @@ description: >
 
 # Estilo de programación en R
 
-Estas convenciones están extraídas de los scripts `02_clean_*`,
-`03_base_maestra.R` y `01_import_*` del proyecto Tigo-Dataflow. El objetivo
+Estas convenciones salieron de los scripts de limpieza, integración e ingesta
+de proyectos reales y son las que siguen todos los scripts de `src/`. El objetivo
 declarado del estilo es que **cualquiera pueda leer el script de arriba abajo y
 entender no solo qué hace sino por qué**, y que un cambio de seis meses después
 no rompa nada silenciosamente.
@@ -41,19 +41,18 @@ línea de cierre lleva `.#` al final:
 
 ```r
 #-----------------------------------------------------------------------------.#
-# PROYECTO: TIGO - JÓVENES CONECTADOS                                          #
+# PROYECTO: <NOMBRE DEL PROYECTO>                                              #
 #                                                                              #
 # RESPONSABLES DEL CODIGO:                                                     #
-#   PIERO VALLES-MARAVI (ESPECIALISTA) - pvalles@equilibriumbdc.com            #
-#   MARIA JOSE MESIAS SEVILLA (ASISTENTE)                                      #
-#   DIEGO OLIVARES (ASISTENTE) - dolivares@equilibriumbdc.com                  #
+#   <NOMBRE APELLIDO (ROL)> - <correo>                                         #
 #                                                                              #
-# FECHA DE CREACION: 02/09/2026                                                #
-# NOMBRE: 03_base_maestra                                                      #
+# FECHA DE CREACION: <dd/mm/aaaa>                                              #
+# NOMBRE: 03_clean_encuesta                                                    #
 # DETALLE: <qué hace, y sobre todo qué NO hace acá>                            #
 #                                                                              #
 # CORRE DESPUES DE: <los scripts de los que depende>                           #
-# SALIDA: <cada objeto, con una línea de qué es>                               #
+# LEE: <las carpetas o archivos que carga>                                     #
+# ESCRIBE: <el archivo que guarda>                                             #
 #-----------------------------------------------------------------------------.#
 ```
 
@@ -311,14 +310,11 @@ En bloques de asignaciones cortas y paralelas, el comentario va al margen
 derecho y **alineado en columna**:
 
 ```r
-load(file.path(carpeta_clean, "mec2026_clean.RData"))  # 43.613 filas / 43.602 registros
-load(file.path(carpeta_clean, "mec2025_clean.RData"))  # 50.254 filas / 50.253 registros
-load(file.path(carpeta_clean, "rof_clean.RData"))      # 30.263 filas / 28.819 registros
-```
-
-```r
-carpeta_clean <- "data/02_clean/" # Input
-carpeta_final <- "data/03_final/" # Output
+datos_personales <- c(
+  'nombre',                                        # nombre completo
+  'documento',                                     # cédula o DNI
+  'celular'                                        # con código de país
+)                                                  # fin de c()
 ```
 
 ### 3.7 Notas de trabajo en mayúsculas
@@ -541,15 +537,18 @@ Otras convenciones:
 rm(list = ls())
 
 # los paquetes del proyecto
-source('src/00_setup/00_packages.R')
+source('src/00_setup/packages.R')
 
 # las funciones compartidas
-source('src/00_setup/00_functions.R')
+source('src/00_setup/functions.R')
+
+# el proyecto y la ronda: arman la carpeta y el nombre de cada archivo
+source('src/00_setup/config.R')
 ```
 
-Los paquetes y las funciones van **en dos archivos separados**, y la
-autenticación de servicios de red en un tercero. Un `source()` no debe golpear la
-red.
+Los paquetes, las funciones y la configuración van **en archivos separados**, y
+la autenticación de servicios de red en un cuarto (`auth.R`), que solo cargan los
+scripts que la usan. Un `source()` no debe golpear la red.
 
 Para limpiar datos **conservando las funciones**:
 
@@ -563,8 +562,18 @@ rm(list = setdiff(ls(), as.character(lsf.str())))
 Relativas a la raíz del proyecto, siempre. Nunca `setwd()`. Nunca una ruta
 absoluta con el nombre de un usuario dentro del script.
 
+**Las bases de `data/` no se escriben a mano.** Se cargan con `ruta_base()`, que
+arma la carpeta y el nombre con el proyecto y la ronda de `config.R`:
+
+```r
+load(ruta_base(
+  '02_audit',                                      # la etapa: carpeta en data/
+  'encuesta_audit'                                 # la base que se carga
+))                                                 # fin de load()
+```
+
 Asimetría deliberada: **la carpeta de entrada no se crea** (si no existe queremos
-que falle) y **la de salida sí**.
+que falle) y **la de salida sí**: `guardar_etapa()` la crea.
 
 ### 8.3 Credenciales
 
@@ -590,51 +599,52 @@ cálculo nuevo:
 
 | La columna es… | Va en |
 |---|---|
-| una llave, necesaria para poder cruzar | `02_cleaning` |
-| un indicador que **todos** los productos usan | `03_integration`, después de integrar |
-| un indicador de **un solo** entregable | `04_products`, junto al script que lo usa |
+| una llave, necesaria para poder cruzar | `03_clean` |
+| información que viene de afuera (IA, geocodificación, una API) | `04_enrich`, fuente por fuente |
+| un indicador que **todos** los productos usan | `06_indicators`, después de integrar |
+| un indicador de **un solo** entregable | `08_products`, junto al script que lo usa |
 
 Corolarios:
 
-- **En `02_cleaning` se limpia una sola fuente y no se carga ninguna otra.** Si un
+- **En `03_clean` se limpia una sola fuente y no se carga ninguna otra.** Si un
   cálculo necesita dos fuentes, no va acá. El comentario lo dice explícitamente:
   *"La comparación en sí no se hace acá: este script limpia un solo archivo y no
   carga ninguno de los otros dos."*
-- **En `03_integration` no se limpia.** Las fuentes llegan con el mismo
+- **En `05_integrate` no se limpia.** Las fuentes llegan con el mismo
   vocabulario y las llaves normalizadas; ahí se apila, se enlaza y se marca.
 - **Las funciones de llave de la integración validan, no limpian.** Son
   idempotentes y nunca reconstruyen un valor. Si un campo trae algo irrecuperable,
   la columna lo conserva y la llave queda en `NA`. Reconstruir es trabajo de
-  `02_cleaning`.
+  `03_clean`.
 
 ---
 
 ## 10. Guardado
 
-Al final, en su propia sección, y con el nombre del objeto igual al del archivo:
+Al final, en su propia sección, con `guardar_etapa()` en vez de `save()`. Guarda
+la base en `.RData`, `.sav`, `.dta`, `.xlsx`, `.csv` y un Google Sheet, y arma la
+carpeta y el nombre con el proyecto y la ronda de `config.R`:
 
 ```r
-# Guardar rce_clean ------------------------------------------------
+# Guardar encuesta_clean -------------------------------------------------------
 
 # la salida del script, con el objeto del mismo nombre que el archivo
-save(rce_clean, file = file.path(carpeta_rce_clean, "rce_clean.RData"))
+encuesta_clean <- encuesta_limpiando
+
+# en .RData, .sav, .dta, .xlsx, .csv y un Google Sheet, con proyecto y ronda
+# en el nombre (src/00_setup/config.R)
+guardar_etapa(
+  'encuesta_clean',                                # el objeto, entre comillas
+  '03_clean'                                       # la etapa: carpeta en data/
+)                                                  # fin de guardar_etapa()
 ```
 
-Cuando se guardan varios objetos, van en un `save()` con uno por línea y cada
-uno con su comentario al margen:
+-> `data/03_clean/ronda_1/tigo_ronda_1_encuesta_clean.RData`, y lo mismo en los
+otros cuatro formatos.
 
-```r
-# los tres objetos de la integración, en un solo archivo
-save(
-  base_maestra_desagregado,     # una fila por registro de origen
-  base_maestra_final,           # una fila por persona, la que se usa para contar
-  llaves,                       # la tabla de enlaces, para auditar un cruce
-  file = file.path(carpeta_final, "base_maestra.RData") # el archivo
-)                               # fin de save()
-```
-
-Si el archivo lleva fecha en el nombre, **el objeto adentro no**: siempre se
-llama igual, para que el script que lo carga no tenga que adivinar.
+El archivo lleva proyecto y ronda en el nombre; **el objeto adentro no**: siempre
+se llama igual (`encuesta_clean`), para que el script que lo carga no tenga que
+adivinar.
 
 ---
 
@@ -659,8 +669,6 @@ llama igual, para que el script que lo carga no tenga que adivinar.
 - [ ] Sin `for`, sin `sapply`, sin `transmute`, sin definir funciones.
 - [ ] Sin `if` / `else`, sin `stop()` ni `stopifnot()`, sin `cat()` ni
       `message()`.
-- [ ] Las consultas exploratorias comentadas **tienen la conclusión escrita
-      abajo**.
-- [ ] `names()` después de quitar las columnas de trabajo.
-- [ ] Sin credenciales en el script; sin `setwd()`; sin rutas absolutas.
+- [ ] Sin credenciales en el script; sin `setwd()`; sin rutas escritas a mano:
+      `ruta_base()` para cargar y `guardar_etapa()` para guardar.
 - [ ] La columna derivada está en la capa que le corresponde (sección 9).

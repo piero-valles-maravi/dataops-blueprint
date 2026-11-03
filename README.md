@@ -32,11 +32,12 @@ Se clona, se renombra y se completa. Sirve igual para una encuesta de una sola r
 
 1. **Use this template** en GitHub y nombrar el repositorio `pipeline_<proyecto>`.
 2. Renombrar `dataops-blueprint.Rproj` a `<proyecto>.Rproj`.
-3. Borrar las etapas que el proyecto no usa (su carpeta en `src/` y `data/`, y su paso en los workflows). **Los números de las demás no cambian.**
-4. Copiar `.secrets/.Renviron.example` como `.secrets/.Renviron`, completar los valores y dejar la clave de Google en `.secrets/`. Cargar las mismas variables como *secrets* del repositorio en GitHub, con el mismo nombre; la clave va en `GOOGLE_SERVICE_ACCOUNT_JSON`, con el contenido del JSON.
-5. Completar `sources/rondas.csv` y dejar el instrumento en `sources/01_instrumento/`.
-6. Completar `.claude/CONTEXTO_PROYECTO.md` y el README siguiendo `.claude/skills/skill_readme.md`.
-7. Llenar `src/00_setup/packages.R` y correr `renv::init()` para generar `renv.lock`.
+3. Editar `src/00_setup/config.R`: el nombre del proyecto y la ronda (`NULL` si el proyecto no tiene rondas). Es lo único que se toca para cambiar de ronda.
+4. Borrar las etapas que el proyecto no usa (su carpeta en `src/` y `data/`, su línea en `00_master.R` y su paso en los workflows). **Los números de las demás no cambian.** Sin rondas, borrar también las subcarpetas de ronda de `data/01_raw` a `data/04_enrich`.
+5. Copiar `.secrets/.Renviron.example` como `.secrets/.Renviron`, completar los valores y dejar la clave de Google en `.secrets/`. Cargar las mismas variables como *secrets* del repositorio en GitHub, con el mismo nombre; la clave va en `GOOGLE_SERVICE_ACCOUNT_JSON`, con el contenido del JSON.
+6. Dejar el instrumento en `sources/01_instrumento/` y el `formid` de la ronda en `src/01_import/01_import_scto.R`.
+7. Completar `.claude/CONTEXTO_PROYECTO.md` y el README siguiendo `.claude/skills/skill_readme.md`.
+8. Dejar en `src/00_setup/packages.R` solo los paquetes que el proyecto usa y correr `renv::init()` para generar `renv.lock`.
 
 Este blueprint es para **proyectos con datos tabulares**. Un proyecto cualitativo o de revisión de literatura no usa estas etapas.
 
@@ -123,12 +124,20 @@ La regla es **qué es y quién lo lee**:
 
 | Si es… | Va en | Nombre del archivo | En git |
 |---|---|---|---|
-| una base de datos que lee otro script | `data/0N_<etapa>/` | fijo, se sobrescribe en cada corrida | no, solo las carpetas |
-| un resultado, tabla, gráfico o informe | `outputs/0N_<etapa>/<nombre>/` | con fecha, se acumula | no, solo las carpetas |
-| algo que lee un sistema (Looker, la web) | su destino: Sheets, Drive, Pages | lo decide el destino | — |
+| una base de datos que lee otro script | `data/0N_<etapa>/` | `<proyecto>_<ronda>_<base>_<etapa>`, se sobrescribe en cada corrida | no, solo las carpetas |
+| un resultado, tabla, gráfico o informe | `outputs/0N_<etapa>/<nombre>/` | `<proyecto>_<nombre>`, con fecha si se acumula | no, solo las carpetas |
+| una copia en Drive o un Sheet | la carpeta de Drive de la etapa | el mismo nombre, con la fecha al final | — |
+| algo que lee un sistema (Looker, la web) | su destino: Sheets, Pages | lo decide el destino | — |
 | un insumo que entra de afuera | `sources/` | lo decide el equipo | sí |
 
 **En `data/` solo van bases de datos.** Ninguna tabla de resultados, gráfico ni informe.
+
+**Proyecto y ronda salen de `src/00_setup/config.R`.** Ningún script escribe una ruta a mano: carga con `load(ruta_base('02_audit', 'encuesta_audit'))` y guarda con `guardar_etapa('encuesta_clean', '03_clean')`, que deja la base en `.RData`, `.sav`, `.dta`, `.xlsx`, `.csv` y un Google Sheet.
+
+| `config.R` | Etapas `01` a `04` | Etapas `05` y `06` |
+|---|---|---|
+| `ronda <- 'ronda_1'` | `data/03_clean/ronda_1/tigo_ronda_1_encuesta_clean.RData` | `data/06_final/tigo_final.RData` |
+| `ronda <- NULL` | `data/03_clean/tigo_encuesta_clean.RData` | `data/06_final/tigo_final.RData` |
 
 `data/06_final/` es la **frontera**: de ahí para atrás todo es preparación; de ahí para adelante, todo usa la base final. La única excepción es el flujo de monitoreo (`08_monitoring_*`), que lee de `data/03_clean/` porque mide el proceso de campo mientras ocurre (sección 2.3).
 
@@ -174,7 +183,6 @@ El árbol muestra hasta cuatro niveles. Para buscar una carpeta y leer la defini
 │   └── cuenta_servicio.json               (local) la clave de Google
 │
 ├── sources/                               insumos que el pipeline NO produce
-│   ├── rondas.csv                         una fila por ronda
 │   ├── 01_instrumento/                    el cuestionario de cada ronda
 │   │   └── <ronda>_<version>.xlsx         XLSForm de la ronda
 │   ├── 02_referencias/                    catálogos, metas, umbrales, prompts
@@ -185,6 +193,7 @@ El árbol muestra hasta cuatro niveles. Para buscar una carpeta y leer la defini
 │   ├── 00_setup/                          lo que carga todo script
 │   │   ├── packages.R                     solo paquetes
 │   │   ├── functions.R                    solo funciones
+│   │   ├── config.R                       proyecto y ronda
 │   │   └── auth.R                         solo autenticación
 │   ├── 01_import/                         un script por fuente: descarga tal cual
 │   │   ├── 01_import_scto.R               la encuesta de SurveyCTO
@@ -216,7 +225,7 @@ El árbol muestra hasta cuatro niveles. Para buscar una carpeta y leer la defini
 │       ├── 09_publish_sheets.R            los Sheets: Looker, validación, dashboard
 │       └── 09_publish_drive.R             el respaldo en Drive
 │
-├── data/                                  SOLO bases de datos .RData
+├── data/                                  SOLO bases de datos
 │   ├── 01_raw/                            lo que llegó, tal cual
 │   │   ├── piloto/                        datos de piloto
 │   │   ├── ronda_1/                       datos de ronda_1
@@ -260,7 +269,13 @@ El árbol muestra hasta cuatro niveles. Para buscar una carpeta y leer la defini
     ├── apps_script/                       el disparador de los workflows
     │   └── disparador.gs                  el script
     └── dashboard/                         página web en GitHub Pages
-        └── index.html                     la página
+        ├── index.html                     la página
+        ├── _ds/                           el sistema de diseño
+        │   ├── fonts/                     las tipografías
+        │   └── tokens/                    colores, tipografía, espaciado
+        ├── assets/                        imágenes de la página
+        │   └── logos/                     los logos
+        └── datos/                         los CSV que lee la página
 ```
 
 El repositorio trae scripts de ejemplo en cada carpeta de `src/` (una encuesta y un registro como fuentes) y las subcarpetas `piloto/`, `ronda_1/`, `ronda_2/` y `ronda_3/` en `data/01_raw` a `04_enrich`: cada proyecto los renombra o borra según sus fuentes y rondas. Si una corrida deja varios archivos de un mismo producto, van en una subcarpeta con la fecha de corte.

@@ -7,19 +7,32 @@ description: >
   plataformas, encuestas, CSV de un cliente. Actívalo cuando el pedido mencione
   limpiar una base, normalizar cédulas / documentos / correos / teléfonos /
   nombres, deduplicar personas, armar llaves de cruce, escribir un script
-  02_clean_*, extraer datos escritos en el campo equivocado, o preparar una
+  03_clean_*, extraer datos escritos en el campo equivocado, o preparar una
   fuente para una base maestra. También cuando el usuario comparta una base
   cruda y pregunte cómo limpiarla, o pida revisar un script de limpieza que ya
   existe. El resultado es un script con la estructura, el orden y los
-  pasos de los 02_clean_* de este repositorio, sea cual sea la fuente.
+  pasos de los 03_clean_* de este repositorio, sea cual sea la fuente.
 ---
 
 # Limpieza de una fuente de datos
 
-Este procedimiento es el destilado de ocho scripts `02_clean_*` que limpian
+Este procedimiento es el destilado de ocho scripts `03_clean_*` que limpian
 cinco fuentes distintas (dos padrones oficiales, dos formularios web y tres
 exports de una plataforma de cursos). Está escrito para que se pueda aplicar a
 cualquier base sucia, no solo a las de este proyecto.
+
+## Las tres partes de un script de limpieza
+
+Entre el setup y el guardado, todo `03_clean_<fuente>.R` tiene tres secciones,
+en este orden:
+
+1. **Aplicar correcciones.** Las de `sources/03_correcciones/`, cada una con su
+   motivo. El valor original queda en `_orig`.
+2. **Levantar alertas.** Marca con 0/1 lo que la limpieza tiene que resolver o
+   dejar documentado. Se marca, no se corrige.
+3. **Limpiar los datos**, con una subsección por tarea: normalizar,
+   recategorizar, etiquetar y dejar las columnas comunes. Lo que sigue en esta
+   skill es el detalle de esta tercera parte.
 
 Lo que se limpia acá **no** es "dejar la tabla linda". Es dejar cada registro
 con **llaves de identidad confiables**, para que después se pueda decir si dos
@@ -656,7 +669,7 @@ Dos precisiones:
 - La marca `_con_cero` se calcula **antes** de quitar los ceros, y se usa en el
   `case_when`. Sin ella no se distingue `0981...` de `981...`.
 
-**La lista blanca es UNA, y vive en `src/00_setup/00_functions.R`.** Se usa así
+**La lista blanca es UNA, y vive en `src/00_setup/functions.R`.** Se usa así
 y no se vuelve a escribir a mano en ningún script:
 
 ```r
@@ -685,7 +698,7 @@ que decide es la convención de escritura, que ya está confirmada por el equipo
 > paraguayos reales sin normalizar** solo en el RCE.
 
 Al escribir una fuente nueva: usar las constantes, y si aparece un prefijo nuevo
-en los datos, agregarlo **en `00_functions.R`**, medido, no de memoria.
+en los datos, agregarlo **en `functions.R`**, medido, no de memoria.
 
 **Clasificación `_tipo`**: `celular` · `cedula` · `correo` · `nombre` ·
 `vacio_o_basura` · `muy_corto` (menos de 6 dígitos) · `revisar` (hay dígitos que

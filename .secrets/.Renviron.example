@@ -50,7 +50,7 @@ GOOGLE_SERVICE_ACCOUNT_KEY=.secrets/cuenta_servicio.json
 
 
 # Fuente 1: la encuesta de SurveyCTO (01_import_scto) -------------------------
-# El formid NO va aquí: cambia por ronda y vive en sources/rondas.csv
+# El formid NO va aquí: no es secreto y va escrito en 01_import_scto.R
 
 # subdominio del servidor de SurveyCTO (lo que va antes de .surveycto.com)
 # ej.: SURVEYCTO_SERVER=miorganizacion

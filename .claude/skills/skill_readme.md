@@ -1,8 +1,8 @@
 ---
 name: readme-proyecto-datos
 description: >
-  Estructura y parte gráfica de los README de los proyectos de datos de Piero
-  Valles (Equilibrium BDC): banner SVG propio, badges, nota de estado, índice
+  Estructura y parte gráfica de los README de los proyectos de datos que
+  nacen de dataops-blueprint: banner SVG propio, badges, nota de estado, índice
   numerado, tablas de estado y de scripts, y diagramas Mermaid (flujo de datos,
   estructura, gantt de corridas, flujo del cuestionario, cómo trabaja un
   script). Úsala SIEMPRE que haya que escribir, rehacer, actualizar u ordenar un
@@ -58,7 +58,7 @@ Contenido (índice numerado)
 ```markdown
 <div align="center">
 
-![Pipeline MANN Pricing RGM](sources/02_images/banner.svg)
+![Pipeline MANN Pricing RGM](.github/images/banner.svg)
 
 # Pipeline MANN Pricing RGM
 
@@ -108,7 +108,7 @@ La misma en el banner, los badges y cualquier figura:
 
 ## 3. El banner
 
-Un SVG propio en `sources/02_images/banner.svg`, **escrito a mano**, sin
+Un SVG propio en `.github/images/banner.svg`, **escrito a mano**, sin
 imágenes externas. La plantilla está en `skill_readme_banner.svg`, junto a esta
 skill: se copia y se cambian los textos, el ícono y la tarjeta.
 
