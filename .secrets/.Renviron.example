@@ -9,15 +9,17 @@
 #      el punto R no lo lee y el .gitignore no lo tapa).
 #   2. Completar los valores a la derecha del =. Las variables opcionales que el
 #      proyecto no usa se dejan vacías o se borran.
-#   3. Reiniciar la sesión de R: el archivo se lee solo al ARRANCAR.
+#   3. Listo: R no lo lee solo porque no está en la raíz; lo carga
+#      src/00_setup/auth.R en cada corrida, así que no hace falta reiniciar R
+#      después de editarlo.
 #
 # Cuatro cosas que muerden:
 #   - Una variable por línea, NOMBRE=valor, sin comillas ni espacios alrededor
 #     del =. Un comentario escrito DESPUÉS del valor pasa a ser parte del valor
 #     (y la API responde 404 porque no encuentra ese id). Los comentarios van
 #     siempre en su propia línea.
-#   - R se detiene en el PRIMER .Renviron que encuentra y no los combina: todas
-#     las variables van en este archivo y ninguna en el de la carpeta personal.
+#   - Todas las variables van en este archivo. Un .Renviron en la raíz o en la
+#     carpeta personal se mezcla con este, y si repite un nombre gana este.
 #   - Cada Sheet y carpeta de Drive tiene que estar compartida con el correo de
 #     la cuenta de servicio (auth.R lo imprime al autenticarse). Si no, la API
 #     responde 403 y el error no dice que es un permiso.
