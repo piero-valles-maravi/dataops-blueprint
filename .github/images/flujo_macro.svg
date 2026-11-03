@@ -1,45 +1,90 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="330" viewBox="0 0 1200 330" role="img" aria-label="El proceso en cuatro bloques: ingesta, procesar, producir y publicar">
-<defs><linearGradient id="fondo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#064E3B"/><stop offset="0.55" stop-color="#065F46"/><stop offset="1" stop-color="#1E3A8A"/></linearGradient>
-<marker id="punta" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#6EE7B7"/></marker></defs>
+<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='440' viewBox='0 0 1200 440' role='img' aria-label='El proceso en cuatro bloques: Ingesta, Procesar, Producir y Publicar'>
 <style>
-.t{font:700 26px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#FFFFFF}.sub{font:400 15px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#D1FAE5}
-.big{font:800 34px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#FBBF24}.blk{font:700 21px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#FFFFFF}.txt{font:400 14px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#D1FAE5}
-.et{font:600 13px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#FBBF24}.num{font:700 15px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#064E3B}.nom{font:400 12px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#065F46}
-.lbl{font:600 14px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#FBBF24}.dst{font:600 13px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#064E3B}.dat{font:400 12px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#A7F3D0}
-.flujo{stroke-dasharray:6 8;animation:corre 1.2s linear infinite}@keyframes corre{to{stroke-dashoffset:-28}}
+.t{font:700 58px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF}
+.sub{font:400 19px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5}
+.ten{font:400 19px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#6EE7B7}
+.kick{font:700 13px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FBBF24;letter-spacing:.14em}
+.h2{font:700 30px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF}
+.lbl{font:600 15px Segoe UI, Ubuntu, system-ui, sans-serif}
+.mini{font:600 13px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5}
+.txt{font:400 15px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5}
+.peq{font:400 13px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5}
+.mono{font:400 13px ui-monospace, Consolas, monospace;fill:#FBBF24}
+.card{animation:card 8s ease-in-out infinite}@keyframes card{0%,30%,100%{transform:translateY(0)}5%,24%{transform:translateY(-6px)}}
+.borde{stroke:#6EE7B7;stroke-opacity:.3;animation:borde 8s ease-in-out infinite}@keyframes borde{0%,30%,100%{stroke:#6EE7B7;stroke-opacity:.3}5%,24%{stroke:#FBBF24;stroke-opacity:1}}
+.icono{stroke:#6EE7B7;animation:icono 8s ease-in-out infinite}@keyframes icono{0%,30%,100%{stroke:#6EE7B7}5%,24%{stroke:#FBBF24}}
+.badge{fill:#065F46;animation:badge 8s ease-in-out infinite}@keyframes badge{0%,30%,100%{fill:#065F46}5%,24%{fill:#FBBF24}}
+.badget{font:700 13px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5;animation:badget 8s ease-in-out infinite}@keyframes badget{0%,30%,100%{fill:#D1FAE5}5%,24%{fill:#064E3B}}
+.guion{animation:guion .6s linear infinite}@keyframes guion{to{stroke-dashoffset:-12}}
+.pkt{opacity:0;animation:pkt 2s linear infinite}@keyframes pkt{0%{transform:translateX(0);opacity:0}10%,90%{opacity:1}100%{transform:translateX(60px);opacity:0}}
+.front{animation:front 3s ease-in-out infinite}@keyframes front{0%,100%{opacity:.55}50%{opacity:1}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important}}
 </style>
-<rect width="1200" height="330" rx="24" fill="url(#fondo)"/>
-<text x="40" y="48" class="t">El proceso de un vistazo</text>
-<text x="40" y="72" class="sub">Todo proyecto pasa por los mismos cuatro bloques, de la fuente al destino</text>
-<rect x="40" y="100" width="245" height="190" rx="18" fill="#FFFFFF" fill-opacity="0.07" stroke="#D1FAE5" stroke-opacity="0.35"/>
-<rect x="40" y="100" width="245" height="190" rx="18" fill="#FBBF24" fill-opacity="0.12" stroke="#FBBF24" stroke-width="3" opacity="0"><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.238;0.250;1" dur="8s" repeatCount="indefinite"/></rect>
-<text x="62" y="150" class="big">1</text>
-<text x="98" y="145" class="blk">Ingesta</text>
-<text x="62" y="192" class="txt">Traer los datos de cada</text>
-<text x="62" y="213" class="txt">fuente, tal cual llegan</text>
-<text x="62" y="260" class="et">etapa 01</text>
-<line x1="291" y1="195" x2="326" y2="195" stroke="#6EE7B7" stroke-width="3" class="flujo" marker-end="url(#punta)"/>
-<rect x="332" y="100" width="245" height="190" rx="18" fill="#FFFFFF" fill-opacity="0.07" stroke="#D1FAE5" stroke-opacity="0.35"/>
-<rect x="332" y="100" width="245" height="190" rx="18" fill="#FBBF24" fill-opacity="0.12" stroke="#FBBF24" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.238;0.250;0.488;0.500;1" dur="8s" repeatCount="indefinite"/></rect>
-<text x="354" y="150" class="big">2</text>
-<text x="390" y="145" class="blk">Procesar</text>
-<text x="354" y="192" class="txt">Auditar, limpiar, enriquecer</text>
-<text x="354" y="213" class="txt">e integrar: la base final</text>
-<text x="354" y="260" class="et">etapas 02 a 06</text>
-<line x1="583" y1="195" x2="618" y2="195" stroke="#6EE7B7" stroke-width="3" class="flujo" marker-end="url(#punta)"/>
-<rect x="624" y="100" width="245" height="190" rx="18" fill="#FFFFFF" fill-opacity="0.07" stroke="#D1FAE5" stroke-opacity="0.35"/>
-<rect x="624" y="100" width="245" height="190" rx="18" fill="#FBBF24" fill-opacity="0.12" stroke="#FBBF24" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.488;0.500;0.738;0.750;1" dur="8s" repeatCount="indefinite"/></rect>
-<text x="646" y="150" class="big">3</text>
-<text x="682" y="145" class="blk">Producir</text>
-<text x="646" y="192" class="txt">Analizar y armar lo que</text>
-<text x="646" y="213" class="txt">mira o recibe una persona</text>
-<text x="646" y="260" class="et">etapas 07 y 08</text>
-<line x1="875" y1="195" x2="910" y2="195" stroke="#6EE7B7" stroke-width="3" class="flujo" marker-end="url(#punta)"/>
-<rect x="916" y="100" width="245" height="190" rx="18" fill="#FFFFFF" fill-opacity="0.07" stroke="#D1FAE5" stroke-opacity="0.35"/>
-<rect x="916" y="100" width="245" height="190" rx="18" fill="#FBBF24" fill-opacity="0.12" stroke="#FBBF24" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.738;0.750;0.988;0.994;1" dur="8s" repeatCount="indefinite"/></rect>
-<text x="938" y="150" class="big">4</text>
-<text x="974" y="145" class="blk">Publicar</text>
-<text x="938" y="192" class="txt">Llevar cada cosa a</text>
-<text x="938" y="213" class="txt">donde se mira</text>
-<text x="938" y="260" class="et">etapa 09</text>
-</svg>
+<defs>
+<linearGradient id='fondo' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#064E3B'/><stop offset='.55' stop-color='#065F46'/><stop offset='1' stop-color='#1E3A8A'/></linearGradient>
+<pattern id='grilla' width='24' height='24' patternUnits='userSpaceOnUse'><path d='M24 0H0V24' fill='none' stroke='#6EE7B7' stroke-opacity='.07'/></pattern>
+<clipPath id='marco'><rect width='1200' height='440' rx='24'/></clipPath>
+</defs>
+<g clip-path='url(#marco)'>
+<rect width='1200' height='440' fill='url(#fondo)'/>
+<rect width='1200' height='440' fill='url(#grilla)'/>
+<text x='48' y='48' class='kick'>EL PROCESO DE UN VISTAZO</text>
+<text x='48' y='88' class='h2'>Todo proyecto pasa por los mismos cuatro bloques</text>
+<g class='card' style='animation-delay:0s'>
+<rect x='48' y='122' width='224' height='250' rx='20' fill='#064E3B' fill-opacity='.85' stroke-width='2' class='borde' style='animation-delay:0s'/>
+<g transform='translate(70 144) scale(1.6667)'><path d='M12 3v12M7 10l5 5 5-5M5 21h14' fill='none' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' class='icono' style='animation-delay:0s'/></g>
+<rect x='218' y='151' width='32' height='26' rx='13' class='badge' style='animation-delay:0s'/>
+<text x='234' y='169' text-anchor='middle' class='badget' style='animation-delay:0s'>01</text>
+<text x='70' y='214' style='font:700 12px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#6EE7B7;letter-spacing:.14em'>BLOQUE 1</text>
+<text x='70' y='248' style='font:700 28px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>Ingesta</text>
+<text x='70' y='278' class='txt'>Se traen los datos de</text>
+<text x='70' y='300' class='txt'>cada fuente, tal cual</text>
+<text x='70' y='322' class='txt'>llegan.</text>
+<text x='70' y='350' class='mono'>data/01_raw/</text>
+</g>
+<line x1='276' y1='247' x2='332' y2='247' stroke='#6EE7B7' stroke-opacity='.6' stroke-width='2' stroke-dasharray='6 6' class='guion'/>
+<circle cx='274' cy='247' r='6' fill='#FBBF24' class='pkt' style='animation-delay:1s'/>
+<g class='card' style='animation-delay:2s'>
+<rect x='336' y='122' width='224' height='250' rx='20' fill='#064E3B' fill-opacity='.85' stroke-width='2' class='borde' style='animation-delay:2s'/>
+<g transform='translate(358 144) scale(1.6667)'><path d='M4 6h16M7 12h10M10 18h4' fill='none' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' class='icono' style='animation-delay:2s'/></g>
+<rect x='482' y='151' width='56' height='26' rx='13' class='badge' style='animation-delay:2s'/>
+<text x='510' y='169' text-anchor='middle' class='badget' style='animation-delay:2s'>02–06</text>
+<text x='358' y='214' style='font:700 12px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#6EE7B7;letter-spacing:.14em'>BLOQUE 2</text>
+<text x='358' y='248' style='font:700 28px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>Procesar</text>
+<text x='358' y='278' class='txt'>Se auditan, limpian,</text>
+<text x='358' y='300' class='txt'>enriquecen e integran</text>
+<text x='358' y='322' class='txt'>hasta la base final.</text>
+<text x='358' y='350' class='mono'>data/02 → 06_final/</text>
+</g>
+<line x1='564' y1='247' x2='620' y2='247' stroke='#6EE7B7' stroke-opacity='.6' stroke-width='2' stroke-dasharray='6 6' class='guion'/>
+<circle cx='562' cy='247' r='6' fill='#FBBF24' class='pkt' style='animation-delay:3s'/>
+<g class='card' style='animation-delay:4s'>
+<rect x='624' y='122' width='224' height='250' rx='20' fill='#064E3B' fill-opacity='.85' stroke-width='2' class='borde' style='animation-delay:4s'/>
+<g transform='translate(646 144) scale(1.6667)'><path d='M4 20V10M10 20V4M16 20v-7M22 20H2' fill='none' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' class='icono' style='animation-delay:4s'/></g>
+<rect x='770' y='151' width='56' height='26' rx='13' class='badge' style='animation-delay:4s'/>
+<text x='798' y='169' text-anchor='middle' class='badget' style='animation-delay:4s'>07–08</text>
+<text x='646' y='214' style='font:700 12px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#6EE7B7;letter-spacing:.14em'>BLOQUE 3</text>
+<text x='646' y='248' style='font:700 28px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>Producir</text>
+<text x='646' y='278' class='txt'>Se analiza la base final</text>
+<text x='646' y='300' class='txt'>y se arma lo que mira</text>
+<text x='646' y='322' class='txt'>una persona.</text>
+<text x='646' y='350' class='mono'>outputs/</text>
+</g>
+<line x1='852' y1='247' x2='908' y2='247' stroke='#6EE7B7' stroke-opacity='.6' stroke-width='2' stroke-dasharray='6 6' class='guion'/>
+<circle cx='850' cy='247' r='6' fill='#FBBF24' class='pkt' style='animation-delay:5s'/>
+<g class='card' style='animation-delay:6s'>
+<rect x='912' y='122' width='224' height='250' rx='20' fill='#064E3B' fill-opacity='.85' stroke-width='2' class='borde' style='animation-delay:6s'/>
+<g transform='translate(934 144) scale(1.6667)'><path d='M4 12l16-8-6 16-3-7-7-1z' fill='none' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' class='icono' style='animation-delay:6s'/></g>
+<rect x='1082' y='151' width='32' height='26' rx='13' class='badge' style='animation-delay:6s'/>
+<text x='1098' y='169' text-anchor='middle' class='badget' style='animation-delay:6s'>09</text>
+<text x='934' y='214' style='font:700 12px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#6EE7B7;letter-spacing:.14em'>BLOQUE 4</text>
+<text x='934' y='248' style='font:700 28px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>Publicar</text>
+<text x='934' y='278' class='txt'>Se lleva cada cosa a</text>
+<text x='934' y='300' class='txt'>su destino. No se</text>
+<text x='934' y='322' class='txt'>calcula nada.</text>
+<text x='934' y='350' class='mono'>Sheets · Drive · Pages</text>
+</g>
+<g class='front'>
+<rect x='580' y='394' width='10' height='10' rx='2' fill='#FBBF24' transform='rotate(45 585 399)'/>
+<text x='600' y='404' style='font:600 13px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FDE68A'>data/06_final es la frontera: Producir y Publicar solo leen de ahí</text>
+</g></g></svg>

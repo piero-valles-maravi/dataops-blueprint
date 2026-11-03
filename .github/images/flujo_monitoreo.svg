@@ -1,56 +1,90 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="430" viewBox="0 0 1200 430" role="img" aria-label="Flujo de monitoreo: por hora y diario">
-<defs><linearGradient id="fondo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#064E3B"/><stop offset="0.55" stop-color="#065F46"/><stop offset="1" stop-color="#1E3A8A"/></linearGradient>
-<marker id="punta" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#6EE7B7"/></marker></defs>
+<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='600' viewBox='0 0 1200 600' role='img' aria-label='El flujo de monitoreo: por hora y diario'>
 <style>
-.t{font:700 26px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#FFFFFF}.sub{font:400 15px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#D1FAE5}
-.big{font:800 34px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#FBBF24}.blk{font:700 21px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#FFFFFF}.txt{font:400 14px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#D1FAE5}
-.et{font:600 13px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#FBBF24}.num{font:700 15px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#064E3B}.nom{font:400 12px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#065F46}
-.lbl{font:600 14px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#FBBF24}.dst{font:600 13px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#064E3B}.dat{font:400 12px 'Segoe UI', Ubuntu, system-ui, sans-serif;fill:#A7F3D0}
-.flujo{stroke-dasharray:6 8;animation:corre 1.2s linear infinite}@keyframes corre{to{stroke-dashoffset:-28}}
+.t{font:700 58px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF}
+.sub{font:400 19px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5}
+.ten{font:400 19px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#6EE7B7}
+.kick{font:700 13px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FBBF24;letter-spacing:.14em}
+.h2{font:700 30px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF}
+.lbl{font:600 15px Segoe UI, Ubuntu, system-ui, sans-serif}
+.mini{font:600 13px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5}
+.txt{font:400 15px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5}
+.peq{font:400 13px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5}
+.mono{font:400 13px ui-monospace, Consolas, monospace;fill:#FBBF24}
+.aguja{transform-origin:65px 135px;animation:aguja 4s linear infinite}@keyframes aguja{to{transform:rotate(360deg)}}
+.chipH{fill:#064E3B;stroke:#6EE7B7;stroke-opacity:.5;animation:chipH 5s ease-in-out infinite}@keyframes chipH{0%,14%,100%{fill:#064E3B;stroke:#6EE7B7;stroke-opacity:.5}3%,10%{fill:#F59E0B;stroke:#FDE68A;stroke-opacity:1}}
+.chipD{fill:#064E3B;stroke:#6EE7B7;stroke-opacity:.5}
+.llega{stroke:#6EE7B7;stroke-opacity:.45;animation:llega 5s ease-in-out infinite}@keyframes llega{0%,70%,100%{stroke:#6EE7B7;stroke-opacity:.45}78%,92%{stroke:#FBBF24;stroke-opacity:1}}
+.fijo{stroke:#6EE7B7;stroke-opacity:.45}
+.guion{animation:guion .7s linear infinite}@keyframes guion{to{stroke-dashoffset:-12}}
+.hora{animation:hora 5s linear infinite}@keyframes hora{from{transform:translateX(0)}to{transform:translateX(600px)}}
+.dia{animation:dia 7s linear infinite}@keyframes dia{from{transform:translateX(0)}to{transform:translateX(600px)}}
+.luna{animation:luna 3s ease-in-out infinite}@keyframes luna{0%,100%{opacity:.6}50%{opacity:1}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important}}
 </style>
-<rect width="1200" height="430" rx="24" fill="url(#fondo)"/>
-<text x="40" y="48" class="t">El flujo de monitoreo</text>
-<text x="40" y="72" class="sub">Mientras dura el campo: las mismas tres etapas, y dos salidas con frecuencias distintas</text>
-<path d="M40 250 H470 C515 250 515 165 570 165 H1180" fill="none" stroke="#6EE7B7" stroke-opacity="0.5" stroke-width="3" class="flujo"/>
-<path d="M40 250 H470 C515 250 515 345 570 345 H1180" fill="none" stroke="#6EE7B7" stroke-opacity="0.5" stroke-width="3" class="flujo"/>
-<path d="M1095 149 C1095 112 1060 108 1010 108 H170 C120 108 100 140 100 227" fill="none" stroke="#FBBF24" stroke-opacity="0.6" stroke-width="2" class="flujo" marker-end="url(#punta)"/>
-<text x="600" y="100" text-anchor="middle" class="et">las decisiones de las supervisoras vuelven en la siguiente corrida (01_import_validacion)</text>
-<circle r="14" fill="#FBBF24" fill-opacity="0.25"><animateMotion path="M40 250 H470 C515 250 515 165 570 165 H1180" dur="4.0s" begin="0.00s" repeatCount="indefinite"/></circle>
-<circle r="7" fill="#FBBF24"><animateMotion path="M40 250 H470 C515 250 515 165 570 165 H1180" dur="4.0s" begin="0.00s" repeatCount="indefinite"/></circle>
-<circle r="14" fill="#FBBF24" fill-opacity="0.25"><animateMotion path="M40 250 H470 C515 250 515 165 570 165 H1180" dur="4.0s" begin="1.33s" repeatCount="indefinite"/></circle>
-<circle r="7" fill="#FBBF24"><animateMotion path="M40 250 H470 C515 250 515 165 570 165 H1180" dur="4.0s" begin="1.33s" repeatCount="indefinite"/></circle>
-<circle r="14" fill="#FBBF24" fill-opacity="0.25"><animateMotion path="M40 250 H470 C515 250 515 165 570 165 H1180" dur="4.0s" begin="2.67s" repeatCount="indefinite"/></circle>
-<circle r="7" fill="#FBBF24"><animateMotion path="M40 250 H470 C515 250 515 165 570 165 H1180" dur="4.0s" begin="2.67s" repeatCount="indefinite"/></circle>
-<circle r="14" fill="#ECFDF5" fill-opacity="0.25"><animateMotion path="M40 250 H470 C515 250 515 345 570 345 H1180" dur="10.0s" begin="0.00s" repeatCount="indefinite"/></circle>
-<circle r="7" fill="#ECFDF5"><animateMotion path="M40 250 H470 C515 250 515 345 570 345 H1180" dur="10.0s" begin="0.00s" repeatCount="indefinite"/></circle>
-<circle r="12" fill="#FBBF24" fill-opacity="0.25"><animateMotion path="M1095 149 C1095 112 1060 108 1010 108 H170 C120 108 100 140 100 227" dur="6.0s" begin="1.00s" repeatCount="indefinite"/></circle>
-<circle r="5" fill="#FBBF24"><animateMotion path="M1095 149 C1095 112 1060 108 1010 108 H170 C120 108 100 140 100 227" dur="6.0s" begin="1.00s" repeatCount="indefinite"/></circle>
-<rect x="30" y="207" width="450" height="86" rx="16" fill="#FFFFFF" fill-opacity="0.07" stroke="#D1FAE5" stroke-opacity="0.35"/>
-<text x="46" y="314" class="lbl">En las dos corridas</text>
-<rect x="48" y="228" width="104" height="44" rx="10" fill="#ECFDF5"/>
-<text x="100" y="247" text-anchor="middle" class="num">01</text>
-<text x="100" y="264" text-anchor="middle" class="nom">import</text>
-<rect x="193" y="228" width="104" height="44" rx="10" fill="#ECFDF5"/>
-<text x="245" y="247" text-anchor="middle" class="num">02</text>
-<text x="245" y="264" text-anchor="middle" class="nom">audit</text>
-<rect x="338" y="228" width="104" height="44" rx="10" fill="#ECFDF5"/>
-<text x="390" y="247" text-anchor="middle" class="num">03</text>
-<text x="390" y="264" text-anchor="middle" class="nom">clean</text>
-<text x="580" y="131" class="lbl">Cada hora · hourly.yml</text>
-<rect x="603" y="143" width="104" height="44" rx="10" fill="#ECFDF5"/>
-<text x="655" y="162" text-anchor="middle" class="num">08</text>
-<text x="655" y="179" text-anchor="middle" class="nom">monitoring</text>
-<rect x="745" y="143" width="120" height="44" rx="10" fill="#ECFDF5"/>
-<text x="805" y="162" text-anchor="middle" class="num">09</text>
-<text x="805" y="179" text-anchor="middle" class="nom">publish_sheets</text>
-<rect x="880" y="149" width="130" height="32" rx="16" fill="#FBBF24"/>
-<text x="945" y="170" text-anchor="middle" class="dst">Looker Studio</text>
-<rect x="1020" y="149" width="150" height="32" rx="16" fill="#FBBF24"/>
-<text x="1095" y="170" text-anchor="middle" class="dst">Sheet de validación</text>
-<text x="580" y="393" class="lbl">Una vez al día, al cierre · daily.yml</text>
-<rect x="595" y="323" width="120" height="44" rx="10" fill="#ECFDF5"/>
-<text x="655" y="342" text-anchor="middle" class="num">09</text>
-<text x="655" y="359" text-anchor="middle" class="nom">publish_drive</text>
-<rect x="765" y="329" width="250" height="32" rx="16" fill="#FBBF24"/>
-<text x="890" y="350" text-anchor="middle" class="dst">Google Drive · respaldo con fecha</text>
-</svg>
+<defs>
+<linearGradient id='fondo' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#064E3B'/><stop offset='.55' stop-color='#065F46'/><stop offset='1' stop-color='#1E3A8A'/></linearGradient>
+<pattern id='grilla' width='24' height='24' patternUnits='userSpaceOnUse'><path d='M24 0H0V24' fill='none' stroke='#6EE7B7' stroke-opacity='.07'/></pattern>
+<clipPath id='marco'><rect width='1200' height='600' rx='24'/></clipPath>
+</defs>
+<g clip-path='url(#marco)'>
+<rect width='1200' height='600' fill='url(#fondo)'/>
+<rect width='1200' height='600' fill='url(#grilla)'/>
+<text x='48' y='48' class='kick'>EL FLUJO DE MONITOREO</text>
+<text x='48' y='88' class='h2'>Mientras dura el campo, dos workflows siguen el levantamiento</text>
+<circle cx='65' cy='135' r='16' fill='none' stroke='#FBBF24' stroke-width='2'/>
+<line class='aguja' x1='65' y1='135' x2='65' y2='124' stroke='#FBBF24' stroke-width='2' stroke-linecap='round'/>
+<text x='94' y='141' style='font:700 18px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>hourly.yml</text>
+<text x='196' y='141' class='txt' style='font-size:14px'>cada hora, de 05:00 a 20:00</text>
+<line x1='120' y1='204' x2='720' y2='204' stroke='#6EE7B7' stroke-opacity='.55' stroke-width='2' stroke-dasharray='6 6' class='guion'/>
+<rect x='62' y='180' width='116' height='48' rx='12' stroke-width='1.5' class='chipH' style='animation-delay:0.00s'/>
+<text x='120' y='202' text-anchor='middle' style='font:700 15px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>01</text>
+<text x='120' y='218' text-anchor='middle' style='font:400 11px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5'>import</text>
+<rect x='212' y='180' width='116' height='48' rx='12' stroke-width='1.5' class='chipH' style='animation-delay:1.25s'/>
+<text x='270' y='202' text-anchor='middle' style='font:700 15px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>02</text>
+<text x='270' y='218' text-anchor='middle' style='font:400 11px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5'>audit</text>
+<rect x='362' y='180' width='116' height='48' rx='12' stroke-width='1.5' class='chipH' style='animation-delay:2.50s'/>
+<text x='420' y='202' text-anchor='middle' style='font:700 15px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>03</text>
+<text x='420' y='218' text-anchor='middle' style='font:400 11px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5'>clean</text>
+<rect x='512' y='180' width='116' height='48' rx='12' stroke-width='1.5' class='chipH' style='animation-delay:3.75s'/>
+<text x='570' y='202' text-anchor='middle' style='font:700 15px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>08</text>
+<text x='570' y='218' text-anchor='middle' style='font:400 11px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5'>monitoring</text>
+<rect x='662' y='180' width='116' height='48' rx='12' stroke-width='1.5' class='chipH' style='animation-delay:5.00s'/>
+<text x='720' y='202' text-anchor='middle' style='font:700 15px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>09</text>
+<text x='720' y='218' text-anchor='middle' style='font:400 11px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5'>publish_sheets</text>
+<g class='hora'><circle cx='120' cy='204' r='13' fill='#FBBF24' fill-opacity='.25'/><circle cx='120' cy='204' r='7' fill='#FBBF24'/></g>
+<path d='M778 204H818M818 151V253M818 151H858M818 253H858' fill='none' stroke='#6EE7B7' stroke-opacity='.5' stroke-width='2'/>
+<rect x='860' y='124' width='290' height='54' rx='12' fill='#1E3A8A' fill-opacity='.55' stroke-width='1.5' class='llega' style='animation-delay:0.0s'/>
+<g transform='translate(876 139)'><path d='M4 20V10M10 20V4M16 20v-7M22 20H2' fill='none' stroke='#FBBF24' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></g>
+<text x='912' y='148' style='font:700 15px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>Looker Studio</text>
+<text x='912' y='165' style='font:400 12px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5'>el avance, las cuotas y las alertas</text>
+<rect x='860' y='226' width='290' height='54' rx='12' fill='#1E3A8A' fill-opacity='.55' stroke-width='1.5' class='llega' style='animation-delay:0.3s'/>
+<g transform='translate(876 241)'><path d='M4 12l5 5L20 6' fill='none' stroke='#FBBF24' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></g>
+<text x='912' y='250' style='font:700 15px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>Sheet de validación</text>
+<text x='912' y='267' style='font:400 12px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5'>las supervisoras deciden cada alerta</text>
+<path id='vuelta' d='M1005 280 V292 Q1005 320 977 320 H148 Q120 320 120 292 V230' fill='none' stroke='#FBBF24' stroke-opacity='.6' stroke-width='2' stroke-dasharray='7 6' class='guion'/>
+<circle r='7' fill='#FDE68A'><animateMotion dur='5s' begin='2.5s' repeatCount='indefinite'><mpath href='#vuelta'/></animateMotion></circle>
+<text x='380' y='344' style='font:600 13px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FDE68A'>las decisiones vuelven en la corrida siguiente, por 01_import_validacion</text>
+<g transform='translate(48 388) scale(1.4167)' class='luna'><path d='M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z' fill='none' stroke='#FBBF24' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></g>
+<text x='94' y='411' style='font:700 18px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>daily.yml</text>
+<text x='184' y='411' class='txt' style='font-size:14px'>una vez, a las 21:00, después de la última corrida por hora</text>
+<line x1='120' y1='474' x2='720' y2='474' stroke='#6EE7B7' stroke-opacity='.55' stroke-width='2' stroke-dasharray='6 6' class='guion'/>
+<rect x='62' y='450' width='116' height='48' rx='12' stroke-width='1.5' class='chipD' style='animation-delay:0.00s'/>
+<text x='120' y='472' text-anchor='middle' style='font:700 15px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>01</text>
+<text x='120' y='488' text-anchor='middle' style='font:400 11px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5'>import</text>
+<rect x='212' y='450' width='116' height='48' rx='12' stroke-width='1.5' class='chipD' style='animation-delay:0.00s'/>
+<text x='270' y='472' text-anchor='middle' style='font:700 15px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>02</text>
+<text x='270' y='488' text-anchor='middle' style='font:400 11px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5'>audit</text>
+<rect x='362' y='450' width='116' height='48' rx='12' stroke-width='1.5' class='chipD' style='animation-delay:0.00s'/>
+<text x='420' y='472' text-anchor='middle' style='font:700 15px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>03</text>
+<text x='420' y='488' text-anchor='middle' style='font:400 11px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5'>clean</text>
+<rect x='662' y='450' width='116' height='48' rx='12' stroke-width='1.5' class='chipD' style='animation-delay:0.00s'/>
+<text x='720' y='472' text-anchor='middle' style='font:700 15px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>09</text>
+<text x='720' y='488' text-anchor='middle' style='font:400 11px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5'>publish_drive</text>
+<g class='dia'><circle cx='120' cy='474' r='13' fill='#6EE7B7' fill-opacity='.25'/><circle cx='120' cy='474' r='7' fill='#6EE7B7'/></g>
+<line x1='778' y1='474' x2='858' y2='474' stroke='#6EE7B7' stroke-opacity='.5' stroke-width='2'/>
+<rect x='860' y='446' width='290' height='54' rx='12' fill='#1E3A8A' fill-opacity='.55' stroke-width='1.5' class='fijo' style='animation-delay:0.0s'/>
+<g transform='translate(876 461)'><path d='M7 18a5 5 0 0 1-.6-10A6 6 0 0 1 18 9a4 4 0 0 1-1 9zM12 11v6M9 14l3 3 3-3' fill='none' stroke='#6EE7B7' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></g>
+<text x='912' y='470' style='font:700 15px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF'>Google Drive</text>
+<text x='912' y='487' style='font:400 12px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5'>la foto del día de cada carpeta, con fecha</text>
+<text x='48' y='574' style='font:400 13px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5'>Los dos leen <tspan style='font-family:ui-monospace, Consolas, monospace;fill:#FDE68A'>data/03_clean</tspan> sin filtrar, comparten el grupo de concurrencia y los dispara <tspan style='font-family:ui-monospace, Consolas, monospace;fill:#FDE68A'>tools/apps_script/disparador.gs</tspan>.</text>
+</g></svg>
