@@ -102,6 +102,52 @@ p,h1,h2,h3{margin:0}
 .enc-qr p{font-size:24px;color:var(--durazno);margin-top:8px}
 .enc-qr .url{font-size:17px;color:var(--peri);font-family:var(--mono);padding:0 30px;word-break:break-all}
 .demo{position:absolute;left:120px;top:136px;font-size:18px;font-weight:700;color:var(--coral);letter-spacing:.08em}
+.t6 td{padding-top:11px;padding-bottom:11px}
+
+/* ===== Votación: abierta, cerrada y con la respuesta a la vista ===== */
+.ctrl{position:absolute;right:660px;top:136px;display:flex;gap:10px;z-index:6}
+.ctrl button{font:600 16px Geologica,system-ui,sans-serif;color:var(--navy);background:var(--blanco);border:0;box-shadow:inset 0 0 0 2px var(--navy);padding:8px 14px;cursor:pointer}
+.ctrl button:hover{background:var(--navy);color:var(--paper)}
+.ctrl kbd{font:700 14px var(--mono);margin-right:6px;color:var(--coral)}
+.cerrada .enc-cab .tit{background:var(--navy);color:var(--coral)}
+.cerrada .vivo{animation:none;background:var(--gris)}
+.cerrada .enc-qr{display:none}
+.enc-res{position:absolute;right:120px;top:186px;width:520px;height:780px;background:var(--navy);color:var(--paper);border-top-left-radius:64px;padding:56px 48px;display:none;flex-direction:column;gap:22px}
+.cerrada .enc-res{display:flex;animation:wipe 1s cubic-bezier(.65,0,.25,1) both}
+.enc-res .k{font-size:20px;font-weight:700;letter-spacing:.12em;color:var(--coral)}
+.enc-res .resp{display:flex;align-items:center;gap:26px}
+.enc-res .letra-g{width:150px;height:150px;flex:none;background:var(--coral);color:var(--navy);display:flex;align-items:center;justify-content:center;font-size:110px;font-weight:800;animation:sello .7s .9s cubic-bezier(.2,.7,.2,1) both}
+.enc-res .resp-t{font-size:30px;font-weight:700;line-height:1.25}
+.enc-res .sep{height:2px;background:var(--peri)}
+.enc-res .exp{font-size:24px;line-height:1.45;color:var(--durazno)}
+.enc-res .acierto{margin-top:auto;display:flex;align-items:baseline;gap:14px}
+.enc-res .acierto b{font-size:84px;font-weight:800;color:var(--coral)}
+.enc-res .acierto span{font-size:24px;color:var(--peri)}
+.revelada .op:not(.correcta){opacity:.4;transition:opacity .5s}
+.revelada .op.correcta .barra{background:var(--coral)}
+.revelada .op.correcta .texto{color:var(--navy);font-weight:700}
+.revelada .op.correcta .texto::after{content:"✓ CORRECTA";margin-left:16px;padding:4px 10px;font-size:16px;letter-spacing:.08em;background:var(--coral);color:var(--navy);vertical-align:middle}
+@keyframes wipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes sello{0%{opacity:0;transform:scale(1.6) rotate(-8deg)}60%{opacity:1;transform:scale(.94) rotate(-8deg)}100%{opacity:1;transform:rotate(-8deg)}}
+
+/* medidor del control final: la aguja barre, rebota y queda oscilando apenas */
+.medidor{width:424px;height:250px;display:block;margin:6px auto 0}
+.aguja{transform-box:view-box;transform-origin:212px 220px;transform:rotate(var(--rot));animation:aguja 2.8s cubic-bezier(.3,.6,.25,1) .6s both}
+.vaiven{transform-box:view-box;transform-origin:212px 220px;animation:vaiven 2.6s ease-in-out 3.4s infinite}
+@keyframes aguja{0%{transform:rotate(-90deg)}45%{transform:rotate(calc(var(--rot) + 22deg))}63%{transform:rotate(calc(var(--rot) - 10deg))}78%{transform:rotate(calc(var(--rot) + 5deg))}90%{transform:rotate(calc(var(--rot) - 2deg))}100%{transform:rotate(var(--rot))}}
+@keyframes vaiven{0%,100%{transform:rotate(0)}25%{transform:rotate(3deg)}50%{transform:rotate(-1deg)}75%{transform:rotate(-2.5deg)}}
+
+/* barras: crecen desde la izquierda al entrar y se deslizan al cambiar de valor */
+.activa .op .carril{animation:crece .9s cubic-bezier(.2,.7,.2,1) var(--d,0s) both;transform-origin:left}
+@keyframes crece{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+/* tablas y paneles: se dibujan de izquierda a derecha */
+.activa .w{animation:wipe 1.2s cubic-bezier(.65,0,.25,1) var(--d,0s) both}
+/* la portada: el campo coral entra girando y luego flota apenas */
+.activa .orbita{animation:orbita 1.4s cubic-bezier(.2,.7,.2,1) both,flota 10s ease-in-out 1.4s infinite}
+@keyframes orbita{from{opacity:0;transform:rotate(-6deg) scale(.9)}to{opacity:1;transform:none}}
+@keyframes flota{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01s!important;animation-iteration-count:1!important;transition-duration:.01s!important}}
 
 /* controles en pantalla */
 #nav{position:fixed;left:16px;bottom:14px;display:flex;gap:8px;opacity:0;transition:opacity .3s;z-index:10}
@@ -128,7 +174,7 @@ body:hover #nav{opacity:1}
 
 <!-- ================================================================ 1 -->
 <section class="slide oscuro" id="s1">
-  <div class="a ae" style="--d:.1s;position:absolute;right:0;top:0;width:440px;height:860px;background:var(--coral);border-bottom-left-radius:64px"></div>
+  <div class="orbita" style="position:absolute;right:0;top:-20px;width:440px;height:880px;background:var(--coral);border-bottom-left-radius:64px;transform-origin:top right"></div>
   <div class="a" style="--d:.5s;position:absolute;right:120px;top:120px;width:200px;height:200px;background:var(--navy)"></div>
   <div class="a" style="--d:.6s;position:absolute;right:120px;top:340px;width:200px;height:2px;background:var(--navy)"></div>
   <img src="assets/logo_tagline_blanco.svg" alt="Equilibrium" style="position:absolute;left:120px;top:96px;height:72px">
@@ -210,8 +256,8 @@ body:hover #nav{opacity:1}
 <section class="slide claro" id="s6">
   <div class="kicker a" style="position:absolute;left:120px;top:110px">DENTRO DE LOS CUATRO BLOQUES</div>
   <h1 class="preg m a" style="--d:.1s;position:absolute;left:120px;top:156px">¿Por qué separar en tantas etapas?</h1>
-  <p class="insight a" style="--d:.3s;position:absolute;left:120px;top:300px;width:620px">Porque <b>cada etapa responde una pregunta</b>. Si una falla, sabemos cuál fue y la volvemos a correr sola.</p>
-  <table class="tabla" style="position:absolute;left:820px;top:160px;width:980px;font-size:26px">
+  <p class="insight a" style="--d:.3s;position:absolute;left:120px;top:300px;width:600px">Porque <b>cada etapa responde una pregunta</b>. Si una falla, sabemos cuál fue y la volvemos a correr sola.</p>
+  <table class="tabla t6" style="position:absolute;left:800px;top:290px;width:1000px;font-size:25px">
     <thead><tr class="a" style="--d:.2s"><th style="width:90px">#</th><th style="width:250px">ETAPA</th><th>LA PREGUNTA QUE RESPONDE</th><th style="width:170px">BLOQUE</th></tr></thead>
     <tbody>
       <tr class="a ai" style="--d:.5s"><td><b>01</b></td><td class="mono">import</td><td>¿Qué llegó?</td><td class="g">Ingesta</td></tr>
@@ -306,7 +352,7 @@ body:hover #nav{opacity:1}
       <div><b style="color:var(--navy)">3 &nbsp;</b>La decisión vuelve al pipeline como una fuente más.</div>
     </div>
   </div>
-  <div class="der a ae" style="--d:.4s;background:var(--blanco);box-shadow:inset 0 0 0 1px var(--borde)">
+  <div class="der w" style="--d:.4s;background:var(--blanco);box-shadow:inset 0 0 0 1px var(--borde)">
     <div style="height:76px;background:var(--navy);color:var(--paper);display:flex;align-items:center;justify-content:space-between;padding:0 32px"><div style="font-size:24px;font-weight:700">Encuesta 1.042</div><div style="font-size:18px;color:var(--peri)">ronda_1 · encuestador 07</div></div>
     <div style="position:relative;margin:24px 32px 0;height:452px;overflow:hidden">
       <div class="fila-a" style="--fondo:var(--coral)"><span>Edad</span><b>150</b><i style="animation-delay:0s">Validez</i></div>
@@ -380,7 +426,7 @@ body:hover #nav{opacity:1}
         <div style="padding:20px;background:var(--navy);color:var(--paper)"><div style="font-size:26px;font-weight:700">Conectividad</div><div style="font-size:19px;color:var(--peri);margin-top:6px"><span style="animation:vuela 6s 0s infinite">"no tengo señal…" &nbsp;</span><span style="animation:vuela 6s 1s infinite">"me quedé sin datos"</span></div></div>
         <div style="padding:20px;background:var(--navy);color:var(--paper)"><div style="font-size:26px;font-weight:700">Contenido</div><div style="font-size:19px;color:var(--peri);margin-top:6px"><span style="animation:vuela 6s .5s infinite">"muy largo…" &nbsp;</span><span style="animation:vuela 6s 1.5s infinite">"no entendí…"</span></div></div>
         <div style="padding:20px;background:var(--navy);color:var(--paper)"><div style="font-size:26px;font-weight:700">Tiempo</div><div style="font-size:19px;color:var(--peri);margin-top:6px"><span style="animation:vuela 6s 2s infinite">"trabajo todo el día"</span></div></div>
-        <div class="a" style="--d:1.8s;margin-top:auto;padding:24px;box-shadow:inset 0 0 0 2px var(--navy);background:var(--blanco)"><div style="font-size:56px;font-weight:800;color:var(--coral)">37 <span style="font-size:26px;color:var(--navy);font-weight:500">nuevas de 1.248</span></div><div style="font-size:20px;color:var(--gris)">las demás ya estaban en el historial: no se vuelven a clasificar</div></div>
+        <div class="a" style="--d:1.8s;margin-top:auto;padding:24px;box-shadow:inset 0 0 0 2px var(--navy);background:var(--blanco)"><div style="font-size:56px;font-weight:800;color:var(--coral)"><span data-cuenta="37">0</span> <span style="font-size:26px;color:var(--navy);font-weight:500">nuevas de 1.248</span></div><div style="font-size:20px;color:var(--gris)">las demás ya estaban en el historial: no se vuelven a clasificar</div></div>
       </div>
     </div>
   </div>
@@ -404,7 +450,7 @@ body:hover #nav{opacity:1}
         <table class="tabla" style="font-size:21px;background:var(--blanco)"><tr><th>documento</th><th>nombre</th></tr><tr style="animation:funde 5s 1.5s infinite"><td class="mono">3.987.120</td><td>LUIS BAEZ</td></tr><tr><td class="mono">2.345.678</td><td>Carlos Ruiz</td></tr></table></div>
     </div>
     <div class="a" style="--d:1.2s;text-align:center;font-size:48px;color:var(--coral);margin:20px 0">↓</div>
-    <div class="a ae" style="--d:1.4s"><div style="font-size:18px;font-weight:700;letter-spacing:.1em;color:var(--gris);margin-bottom:10px">LA BASE INTEGRADA</div>
+    <div class="w" style="--d:1.4s"><div style="font-size:18px;font-weight:700;letter-spacing:.1em;color:var(--gris);margin-bottom:10px">LA BASE INTEGRADA</div>
       <table class="tabla" style="font-size:21px;background:var(--blanco)"><tr><th>llave</th><th>documento</th><th>nombre</th><th>fuentes</th></tr>
         <tr><td class="mono">P001</td><td class="mono">4.512.345</td><td>Ana Gómez</td><td class="g">encuesta</td></tr>
         <tr style="animation:funde 5s 2s infinite"><td class="mono"><b>P002</b></td><td class="mono">3.987.120</td><td><b>Luis Báez</b></td><td><b>encuesta + registro</b></td></tr>
@@ -624,7 +670,9 @@ body:hover #nav{opacity:1}
 (function () {
   const CFG = window.CONFIG_PRESENTACION;
   const URL_VOTOS = CFG.APPS_SCRIPT_URL;
-  const DEMO = !URL_VOTOS;
+  // sin Apps Script, o con ?demo=1 en la dirección, los votos se simulan:
+  // sirve para ensayar sin tocar el Sheet de los votos reales
+  const DEMO = !URL_VOTOS || /[?&]demo=1/.test(location.search);
   const slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
   const deck = document.getElementById('deck');
   let actual = 0;
@@ -731,17 +779,40 @@ body:hover #nav{opacity:1}
     pintarQR(qr.querySelector('.qr'), urlVoto(ids));
     qr.querySelector('.url').textContent = urlVoto(ids).replace(/^https?:\/\//, '');
     s.appendChild(qr);
+    // los controles del presentador: cerrar la votación cuando ya votaron
+    // o cuando no quiere esperar más, y mostrar u ocultar la respuesta
+    const ctrl = document.createElement('div');
+    ctrl.className = 'ctrl';
+    ctrl.innerHTML = '<button type="button" class="b-cerrar"><kbd>C</kbd>Cerrar votación</button><button type="button" class="b-revelar"><kbd>R</kbd>Respuesta</button>';
+    ctrl.querySelector('.b-cerrar').addEventListener('click', function () { alternarCierre(s); });
+    ctrl.querySelector('.b-revelar').addEventListener('click', function () { s.classList.toggle('revelada'); });
+    s.appendChild(ctrl);
     if (DEMO) {
       const d = document.createElement('div');
       d.className = 'demo';
-      d.textContent = 'MODO DEMOSTRACIÓN · votos simulados (falta APPS_SCRIPT_URL en config.js)';
+      d.textContent = 'MODO ENSAYO · votos simulados';
       s.appendChild(d);
     }
   });
 
-  // pinta los conteos { p1: { '0': 3, '1': 5 } } en la diapositiva
+  // un número que sube o baja hasta su nuevo valor, en vez de saltar
+  function animarNumero(el, hasta, formato) {
+    const desde = Number(el.getAttribute('data-valor') || 0);
+    el.setAttribute('data-valor', String(hasta));
+    const t0 = performance.now(), dur = 700;
+    function paso(t) {
+      const k = Math.min(1, (t - t0) / dur), suave = 1 - Math.pow(1 - k, 3);
+      el.textContent = formato(desde + (hasta - desde) * suave);
+      if (k < 1) requestAnimationFrame(paso);
+    }
+    requestAnimationFrame(paso);
+  }
+  const enPct = function (x) { return Math.round(x) + ' %'; };
+
+  // pinta los conteos { p1: { '0': 3, '1': 5 } } en la diapositiva y los guarda
   function pintar(s, conteo) {
     let totalMax = 0;
+    s.ultimoConteo = conteo;
     s.querySelectorAll('.enc').forEach(function (b) {
       const id = b.getAttribute('data-id');
       const c = conteo[id] || {};
@@ -750,16 +821,95 @@ body:hover #nav{opacity:1}
       ops.forEach(function (o) { const v = c[o.getAttribute('data-op')] || 0; total += v; max = Math.max(max, v); });
       ops.forEach(function (o) {
         const v = c[o.getAttribute('data-op')] || 0;
-        const pct = total ? Math.round(100 * v / total) : 0;
-        o.querySelector('.pct').textContent = pct + ' %';
+        animarNumero(o.querySelector('.pct'), total ? 100 * v / total : 0, enPct);
         o.querySelector('.barra').style.width = (total ? 100 * v / total : 0) + '%';
         o.classList.toggle('lider', v === max && max > 0);
       });
       totalMax = Math.max(totalMax, total);
     });
+    s.totalRespuestas = totalMax;
     const n = s.querySelector('.enc-n span');
-    if (n) n.textContent = 'n = ' + totalMax + ' respuestas · en vivo';
+    if (n) n.textContent = 'n = ' + totalMax + ' respuestas · ' + (s.classList.contains('cerrada') ? 'votación cerrada' : 'en vivo');
   }
+
+  // el panel que reemplaza al QR al cerrar la votación
+  function panelResultado(s) {
+    let p = s.querySelector('.enc-res');
+    if (!p) { p = document.createElement('div'); p.className = 'enc-res'; s.appendChild(p); }
+    const ids = s.getAttribute('data-encuesta').split(',');
+    const conteo = s.ultimoConteo || {};
+    const e = window.ENCUESTAS[ids[0]];
+    p.innerHTML = '';
+
+    if (ids.length === 1 && e.correcta !== null) {
+      // una pregunta con respuesta correcta: la letra, el texto, el porqué y cuántos acertaron
+      const c = conteo[ids[0]] || {};
+      let total = 0; Object.keys(c).forEach(function (k) { total += c[k]; });
+      const aciertos = c[String(e.correcta)] || 0;
+      p.innerHTML = '<div class="k">RESPUESTA CORRECTA</div><div class="resp"><div class="letra-g"></div><div class="resp-t"></div></div><div class="sep"></div><div class="exp"></div><div class="acierto"><b data-valor="0">0 %</b><span>acertó</span></div>';
+      p.querySelector('.letra-g').textContent = 'ABCDE'[e.correcta];
+      p.querySelector('.resp-t').textContent = e.opciones[e.correcta];
+      p.querySelector('.exp').textContent = e.explicacion;
+      setTimeout(function () { animarNumero(p.querySelector('.acierto b'), total ? 100 * aciertos / total : 0, enPct); }, 1200);
+      return;
+    }
+
+    // el control final: el medidor de claridad y la etapa con más dudas
+    const cl = conteo.p5 || {};
+    let n = 0, suma = 0;
+    Object.keys(cl).forEach(function (k) { n += cl[k]; suma += cl[k] * (Number(k) + 1); });
+    const prom = n ? suma / n : 3;
+    const rot = (prom - 1) / 4 * 180 - 90;
+    const du = conteo.p6 || {};
+    let top = null;
+    Object.keys(du).forEach(function (k) { if (top === null || du[k] > du[top]) top = k; });
+    let tot6 = 0; Object.keys(du).forEach(function (k) { tot6 += du[k]; });
+    const colores = ['#C9CBD1', '#788EC7', '#1A55A6', '#F7FAF2', '#F7966B'];
+    let arcos = '';
+    for (let i = 0; i < 5; i++) {
+      const a0 = Math.PI * (1 - i / 5) - 0.02, a1 = Math.PI * (1 - (i + 1) / 5) + 0.02;
+      const x0 = 212 + 180 * Math.cos(a0), y0 = 220 - 180 * Math.sin(a0);
+      const x1 = 212 + 180 * Math.cos(a1), y1 = 220 - 180 * Math.sin(a1);
+      arcos += '<path d="M' + x0.toFixed(1) + ' ' + y0.toFixed(1) + ' A180 180 0 0 1 ' + x1.toFixed(1) + ' ' + y1.toFixed(1) + '" fill="none" stroke="' + colores[i] + '" stroke-width="40"/>';
+    }
+    p.innerHTML = '<div class="k">¿QUÉ TAN CLARO QUEDÓ?</div>' +
+      '<svg class="medidor" viewBox="0 0 424 250" aria-label="Medidor de claridad">' + arcos +
+      '<g class="aguja" style="--rot:' + rot.toFixed(1) + 'deg"><g class="vaiven"><line x1="212" y1="220" x2="212" y2="62" stroke="#F7966B" stroke-width="8" stroke-linecap="square"/></g></g>' +
+      '<circle cx="212" cy="220" r="18" fill="#F7966B"/></svg>' +
+      '<div style="text-align:center"><b class="prom" data-valor="0" style="font-size:88px;font-weight:800;color:var(--coral)">0</b><span style="font-size:30px;color:var(--peri)"> de 5</span></div>' +
+      '<div class="sep"></div><div class="k">LA ETAPA CON MÁS DUDAS</div>' +
+      '<div style="font-size:40px;font-weight:700;font-family:var(--mono)" class="top6"></div>' +
+      '<div class="exp top6p"></div>';
+    p.querySelector('.top6').textContent = top === null ? 'sin votos' : window.ENCUESTAS.p6.opciones[Number(top)];
+    p.querySelector('.top6p').textContent = top === null ? '' : Math.round(100 * du[top] / tot6) + ' % la eligió: ahí vamos a reforzar.';
+    setTimeout(function () { animarNumero(p.querySelector('.prom'), prom, function (x) { return x.toFixed(1).replace('.', ','); }); }, 900);
+  }
+
+  // cerrar: se congelan los resultados, el celular deja de mostrar la pregunta
+  // y aparece la respuesta; reabrir vuelve a contar
+  function cerrar(s) {
+    if (reloj) { clearInterval(reloj); reloj = null; }
+    s.classList.add('cerrada', 'revelada');
+    s.querySelector('.enc-cab .tit').textContent = 'VOTACIÓN CERRADA · ' + (s.totalRespuestas || 0) + ' RESPUESTAS';
+    s.querySelector('.ctrl .b-cerrar').innerHTML = '<kbd>C</kbd>Reabrir votación';
+    pintar(s, s.ultimoConteo || {});
+    panelResultado(s);
+    activar('');
+  }
+  function reabrir(s) {
+    s.classList.remove('cerrada', 'revelada');
+    s.querySelector('.enc-cab .tit').textContent = 'CONTROL DE ATENCIÓN · RESPONDE CON TU CELULAR';
+    s.querySelector('.ctrl .b-cerrar').innerHTML = '<kbd>C</kbd>Cerrar votación';
+    escuchar(s);
+  }
+  function escuchar(s) {
+    const ids = s.getAttribute('data-encuesta');
+    if (reloj) { clearInterval(reloj); reloj = null; }
+    activar(ids);
+    consultar(s, ids);
+    reloj = setInterval(function () { consultar(s, ids); }, DEMO ? 1100 : CFG.INTERVALO_MS);
+  }
+  function alternarCierre(s) { if (s.classList.contains('cerrada')) reabrir(s); else cerrar(s); }
 
   // votos simulados para probar sin Apps Script
   const simulados = {};
@@ -797,12 +947,17 @@ body:hover #nav{opacity:1}
     document.getElementById('progreso').style.width = (100 * (actual + 1) / slides.length) + '%';
     if (history.replaceState) history.replaceState(null, '', '#' + (actual + 1));
     if (reloj) { clearInterval(reloj); reloj = null; }
-    const ids = s.getAttribute('data-encuesta');
-    if (ids) {
-      activar(ids);
-      consultar(s, ids);
-      reloj = setInterval(function () { consultar(s, ids); }, DEMO ? 1100 : CFG.INTERVALO_MS);
+    // una encuesta abierta se escucha; una cerrada queda congelada con su respuesta
+    if (s.getAttribute('data-encuesta')) {
+      if (s.classList.contains('cerrada')) { pintar(s, s.ultimoConteo || {}); panelResultado(s); }
+      else escuchar(s);
     }
+    // los números grandes cuentan desde cero al entrar
+    s.querySelectorAll('[data-cuenta]').forEach(function (el) {
+      el.setAttribute('data-valor', '0');
+      const meta = Number(el.getAttribute('data-cuenta'));
+      setTimeout(function () { animarNumero(el, meta, function (x) { return Math.round(x).toLocaleString('es'); }); }, 600);
+    });
   }
   slides.forEach(function (s, i) {
     const p = document.createElement('div');
@@ -817,7 +972,8 @@ body:hover #nav{opacity:1}
     else if (ev.key === 'Home') ir(0);
     else if (ev.key === 'End') ir(slides.length - 1);
     else if (ev.key === 'f' || ev.key === 'F') pantalla();
-    else if (ev.key === 'r' || ev.key === 'R') slides[actual].classList.toggle('revelada');
+    else if ((ev.key === 'r' || ev.key === 'R') && slides[actual].getAttribute('data-encuesta')) slides[actual].classList.toggle('revelada');
+    else if ((ev.key === 'c' || ev.key === 'C') && slides[actual].getAttribute('data-encuesta')) alternarCierre(slides[actual]);
   });
   function pantalla() {
     if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen();

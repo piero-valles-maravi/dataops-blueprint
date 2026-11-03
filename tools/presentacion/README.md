@@ -42,10 +42,20 @@ del Sheet (dejando el encabezado).
 | → · espacio · Enter | siguiente |
 | ← | anterior |
 | F | pantalla completa |
-| R | en una pregunta de control, revela la respuesta correcta |
+| C | en una pregunta de control, cierra la votación (o la reabre) |
+| R | en una pregunta de control, muestra u oculta la respuesta correcta |
 | Inicio · Fin | primera · última |
 
 Escribir `#7` al final de la dirección lleva a la diapositiva 7.
+
+**Cerrar una votación.** Cuando ya votaron todos, o cuando no quieres esperar más,
+aprieta **C** (o el botón *Cerrar votación*). Los resultados se congelan, el
+celular avisa que la votación cerró, y en lugar del QR aparece la respuesta
+correcta con su explicación y cuántos acertaron. En la pregunta final aparece el
+medidor de claridad y la etapa con más dudas. **C** otra vez la reabre.
+
+**Ensayar sin tocar los votos reales.** Agregando `?demo=1` a la dirección
+(`…/presentacion/?demo=1`) los votos se simulan y no se escribe nada en el Sheet.
 
 El QR de la portada sirve para toda la presentación: el celular muestra sola la
 pregunta que está en pantalla. Cada pregunta trae además su propio QR.

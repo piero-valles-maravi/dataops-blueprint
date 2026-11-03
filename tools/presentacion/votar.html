@@ -99,7 +99,14 @@
     if (!URL_VOTOS) return;
     fetch(URL_VOTOS + '?accion=activa')
       .then(function (r) { return r.json(); })
-      .then(function (d) { if (d.activa) mostrar(String(d.activa)); })
+      .then(function (d) {
+        if (d.activa) { mostrar(String(d.activa)); return; }
+        // la presentación cerró la votación: se avisa y se espera la próxima
+        if (mostradas) {
+          mostradas = '';
+          document.getElementById('contenido').innerHTML = '<div class="espera"><b>Votación cerrada</b>Mira el resultado en pantalla. La próxima pregunta aparece acá sola.</div>';
+        }
+      })
       .catch(function () {});
   }
 
