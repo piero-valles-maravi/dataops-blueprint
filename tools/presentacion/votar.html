@@ -53,6 +53,7 @@
   }
 
   let mostradas = '';
+  let enviadas = 0;
 
   // dibuja las preguntas indicadas (p1 o p5,p6)
   function mostrar(ids) {
@@ -73,7 +74,10 @@
         const campo = b.querySelector('.libre');
         const enviar = function () {
           const texto = normalizar(campo.value);
-          if (texto) votar(id, texto, b, b.querySelector('.enviar'));
+          if (!texto) return;
+          votar(id, texto, b, b.querySelector('.enviar'));
+          campo.value = '';
+          campo.focus();
         };
         b.querySelector('.enviar').addEventListener('click', enviar);
         campo.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') enviar(); });
@@ -103,15 +107,19 @@
     boton.setAttribute('aria-pressed', 'true');
     let aviso = bloque.querySelector('.gracias');
     if (!aviso) { aviso = document.createElement('div'); aviso.className = 'gracias'; bloque.appendChild(aviso); }
-    aviso.textContent = typeof opcion === 'string'
-      ? 'Respuesta enviada. Puedes cambiarla escribiendo otra.'
+    const libre = typeof opcion === 'string';
+    if (libre) enviadas += 1;
+    aviso.textContent = libre
+      ? 'Respuesta enviada (' + enviadas + '). Puedes enviar otra.'
       : 'Voto enviado. Puedes cambiarlo tocando otra opción.';
     if (!URL_VOTOS) return;
+    // en una pregunta abierta cada respuesta suma: va con un id propio, para que
+    // el Apps Script no la tome como un cambio de la anterior
     fetch(URL_VOTOS, {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ accion: 'votar', p: id, opcion: String(opcion), votante: votante })
+      body: JSON.stringify({ accion: 'votar', p: id, opcion: String(opcion), votante: libre ? votante + '-' + Date.now() : votante })
     });
   }
 
