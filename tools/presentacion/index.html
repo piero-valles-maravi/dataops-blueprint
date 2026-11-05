@@ -376,9 +376,9 @@ p,h1,h2,h3{margin:0}
 .ctrl kbd{font:700 14px var(--mono);margin-right:6px;color:var(--coral)}
 .cerrada .enc-cab .tit{background:var(--navy);color:var(--coral)}
 .cerrada .vivo{animation:none;background:var(--gris)}
-.cerrada .enc-qr{display:none}
+.cerrada .enc-qr,.revelada .enc-qr{display:none}
 .enc-res{position:absolute;right:120px;top:186px;width:520px;height:780px;background:var(--navy);color:var(--paper);border-top-left-radius:64px;padding:56px 48px;display:none;flex-direction:column;gap:22px}
-.cerrada .enc-res{display:flex;animation:wipe 1s cubic-bezier(.65,0,.25,1) both}
+.cerrada .enc-res,.revelada .enc-res{display:flex;animation:wipe 1s cubic-bezier(.65,0,.25,1) both}
 .enc-res .k{font-size:20px;font-weight:700;letter-spacing:.12em;color:var(--coral)}
 .enc-res .resp{display:flex;align-items:center;gap:26px}
 .enc-res .letra-g{width:150px;height:150px;flex:none;background:var(--coral);color:var(--navy);display:flex;align-items:center;justify-content:center;font-size:110px;font-weight:800;animation:sello .7s .9s cubic-bezier(.2,.7,.2,1) both}
@@ -474,13 +474,13 @@ body:hover #nav{opacity:1}
     <div class="flecha a" style="--d:1.45s">→</div>
     <div class="caja a" style="--d:1.6s;width:280px;height:170px;background:var(--navy);color:var(--paper)"><div style="font-size:32px;font-weight:700">Dashboard</div><div style="font-size:20px;color:var(--peri)">mirar el campo</div></div>
   </div>
-  <div class="banda idea a" style="--d:2.2s">Eso es real, pero es solo <b>&nbsp;el monitoreo del campo</b>: no es el pipeline completo.</div>
+  <div class="banda idea a" style="--d:2.2s"><span>Eso es real, pero es solo <b>el monitoreo del campo</b>: no es el pipeline completo.</span></div>
 </section>
 
 <!-- ================================================================ 4 -->
 <section class="slide claro" id="s4">
   <div class="kicker a" style="position:absolute;left:120px;top:110px">LO QUE NO SE VE</div>
-  <h1 class="preg m a" style="--d:.1s;position:absolute;left:120px;top:156px;width:1600px">¿Qué pasa con los datos cuando termina el campo?</h1>
+  <h1 class="preg m a" style="--d:.1s;position:absolute;left:120px;top:156px;width:1600px">¿Qué más le pasa a los datos, durante y después del campo?</h1>
   <div class="a" style="--d:.3s;position:absolute;left:120px;top:356px;font-size:20px;font-weight:700;letter-spacing:.1em;color:var(--gris)">LO QUE CONOCEMOS</div>
   <div class="a" style="--d:.35s;position:absolute;left:120px;top:396px;display:flex;gap:12px;opacity:.55">
     <div class="caja" style="width:170px;height:76px;font-size:22px;font-weight:700">Importar</div>
@@ -491,13 +491,13 @@ body:hover #nav{opacity:1}
   </div>
   <div class="a" style="--d:.9s;position:absolute;left:120px;top:540px;font-size:20px;font-weight:700;letter-spacing:.1em;color:var(--coral)">LO QUE TAMBIÉN PASA</div>
   <div style="position:absolute;left:120px;right:120px;top:580px;display:flex;gap:22px">
-    <div class="caja a" style="--d:1.1s;flex:1;height:170px;border-style:dashed"><div style="font-size:30px;font-weight:700">Enriquecer</div><div style="font-size:20px;color:var(--gris)">sumar lo que falta saber</div></div>
+    <div class="caja a" style="--d:1.1s;flex:1;height:170px;border-style:dashed"><div style="font-size:30px;font-weight:700">Enriquecer</div><div style="font-size:20px;color:var(--gris)">sacar más de cada registro</div></div>
     <div class="caja a" style="--d:1.35s;flex:1;height:170px;border-style:dashed"><div style="font-size:30px;font-weight:700">Integrar</div><div style="font-size:20px;color:var(--gris)">unir fuentes y rondas</div></div>
     <div class="caja a" style="--d:1.6s;flex:1;height:170px;border-style:dashed"><div style="font-size:30px;font-weight:700">Calcular</div><div style="font-size:20px;color:var(--gris)">indicadores e índices</div></div>
     <div class="caja a" style="--d:1.85s;flex:1;height:170px;border-style:dashed"><div style="font-size:30px;font-weight:700">Analizar</div><div style="font-size:20px;color:var(--gris)">tablas, figuras, informes</div></div>
     <div class="caja a" style="--d:2.1s;flex:1;height:170px;border-style:dashed"><div style="font-size:30px;font-weight:700">Entregar</div><div style="font-size:20px;color:var(--gris)">al cliente, a Drive</div></div>
   </div>
-  <div class="banda idea a" style="--d:2.7s">Lo que vemos en el dashboard es <b>&nbsp;la última milla</b>. Antes, otras etapas convierten datos en resultados.</div>
+  <div class="banda idea a" style="--d:2.7s"><span>Lo que vemos en el dashboard es <b>la última milla</b>. En paralelo al campo o al cerrarlo, otras etapas convierten datos en resultados.</span></div>
 </section>
 
 <!-- ================================================================ 5 -->
@@ -530,7 +530,7 @@ body:hover #nav{opacity:1}
   <div class="pw-col a" style="--d:.9s;left:980px">
     <div class="pw-cab"><b>Los workflows</b><span class="mono">.github/workflows/</span></div>
     <img src="assets/flujo_monitoreo.svg" alt="El flujo de monitoreo">
-    <div class="pw-pie"><span class="mono">hourly.yml</span> y <span class="mono">daily.yml</span> corren una parte durante el campo; <span class="mono">completo.yml</span>, todo al cierre.</div>
+    <div class="pw-pie"><span class="mono">hourly.yml</span> y <span class="mono">daily.yml</span> corren una parte durante el campo; <span class="mono">completo.yml</span>, todo, en un corte o al cerrarlo.</div>
   </div>
 </section>
 
@@ -545,7 +545,7 @@ body:hover #nav{opacity:1}
       <tr class="a ai" style="--d:.5s"><td><b>01</b></td><td class="mono">import</td><td>¿Qué llegó?</td><td class="g">Ingesta</td></tr>
       <tr class="a ai" style="--d:.7s"><td><b>02</b></td><td class="mono">audit</td><td>¿Es confiable?</td><td class="g">Procesar</td></tr>
       <tr class="a ai" style="--d:.9s"><td><b>03</b></td><td class="mono">clean</td><td>¿Está bien escrito?</td><td class="g">Procesar</td></tr>
-      <tr class="a ai" style="--d:1.1s"><td><b>04</b></td><td class="mono">enrich</td><td>¿Qué le falta saber?</td><td class="g">Procesar</td></tr>
+      <tr class="a ai" style="--d:1.1s"><td><b>04</b></td><td class="mono">enrich</td><td>¿Qué más sale de cada registro?</td><td class="g">Procesar</td></tr>
       <tr class="a ai" style="--d:1.3s"><td><b>05</b></td><td class="mono">integrate</td><td>¿Quién es quién?</td><td class="g">Procesar</td></tr>
       <tr class="a ai" style="--d:1.5s"><td><b>06</b></td><td class="mono">indicators</td><td>¿Qué mide?</td><td class="g">Procesar</td></tr>
       <tr class="a ai" style="--d:1.7s"><td><b>07</b></td><td class="mono">analysis</td><td>¿Qué le entregamos a una persona?</td><td class="g">Producir</td></tr>
@@ -843,7 +843,7 @@ body:hover #nav{opacity:1}
     <div class="a" style="--d:2s;position:absolute;left:630px;top:0;width:170px;font-size:24px;font-weight:700;line-height:1.3">La frontera</div>
     <div class="a" style="--d:2.2s;position:absolute;left:630px;top:80px;width:170px;font-size:20px;color:var(--gris);line-height:1.4">De acá en adelante, todos leen solo de <span class="mono">06_final</span>.</div>
   </div>
-  <div class="banda idea a" style="--d:2.8s;font-size:28px">No todos los proyectos usan 04, 05 y 06, pero cuando aparezcan <b>&nbsp;ya sabes dónde van</b>.</div>
+  <div class="banda idea a" style="--d:2.8s;font-size:28px"><span>No todos los proyectos usan 04, 05 y 06, pero cuando aparezcan <b>ya sabes dónde van</b>.</span></div>
 </section>
 
 <!-- ================================================================ 16 -->
@@ -1047,7 +1047,7 @@ body:hover #nav{opacity:1}
     <div style="margin-top:62px;display:flex;flex-direction:column;gap:10px;font-size:18px">
       <div><b>05:00 a 20:00 · por hora:</b> <span style="color:var(--gris)">01 → 03 → monitoreo → 08, dashboard</span></div>
       <div><b>21:00 · diario:</b> <span style="color:var(--gris)">01 → 03 → monitoreo → 08, Drive</span></div>
-      <div><b>Cierre del campo · completo:</b> <span style="color:var(--gris)">01 → 08, a mano</span></div>
+      <div><b>Un corte o el cierre · completo:</b> <span style="color:var(--gris)">01 → 08, a mano</span></div>
     </div>
   </div>
 </section>
@@ -1437,7 +1437,7 @@ body:hover #nav{opacity:1}
     ctrl.className = 'ctrl';
     ctrl.innerHTML = '<button type="button" class="b-cerrar"><kbd>C</kbd>Cerrar votación</button><button type="button" class="b-revelar"><kbd>R</kbd>Respuesta</button>';
     ctrl.querySelector('.b-cerrar').addEventListener('click', function () { alternarCierre(s); });
-    ctrl.querySelector('.b-revelar').addEventListener('click', function () { s.classList.toggle('revelada'); });
+    ctrl.querySelector('.b-revelar').addEventListener('click', function () { revelar(s); });
     s.appendChild(ctrl);
     if (DEMO) {
       const d = document.createElement('div');
@@ -1529,27 +1529,33 @@ body:hover #nav{opacity:1}
     return p;
   }
 
-  // las respuestas de una pregunta abierta: las palabras más repetidas, más grandes y primero
+  // las respuestas de una pregunta abierta: cada frase tal como la escribieron;
+  // las palabras más repetidas se ven al mostrar la respuesta
   function pintarNube(nube, frases) {
     let total = 0;
     Object.keys(frases).forEach(function (k) { total += frases[k]; });
-    const c = contarPalabras(frases);
-    const resp = Object.keys(c).sort(function (a, b) { return c[b] - c[a]; }).slice(0, 30);
-    const max = resp.length ? c[resp[0]] : 1;
+    const resp = Object.keys(frases).sort(function (a, b) { return frases[b] - frases[a]; });
+    // con muchas respuestas, la letra se achica para que entren todas
+    const tam = resp.length > 24 ? 17 : resp.length > 12 ? 20 : 24;
     nube.innerHTML = '';
-    resp.forEach(function (t, i) {
+    resp.forEach(function (t) {
       const el = document.createElement('span');
-      el.className = 'pal' + (i === 0 ? ' top' : '');
-      el.style.fontSize = (22 + 26 * c[t] / max) + 'px';
+      el.className = 'pal';
+      el.style.fontSize = tam + 'px';
       el.textContent = t;
-      if (c[t] > 1) {
+      if (frases[t] > 1) {
         const n = document.createElement('i');
-        n.textContent = '×' + c[t];
+        n.textContent = '×' + frases[t];
         el.appendChild(n);
       }
       nube.appendChild(el);
     });
     return total;
+  }
+
+  // mostrar u ocultar la respuesta, sin cerrar la votación
+  function revelar(s) {
+    if (s.classList.toggle('revelada')) panelResultado(s);
   }
 
   // el panel que reemplaza al QR al cerrar la votación
@@ -1728,7 +1734,7 @@ body:hover #nav{opacity:1}
     else if (ev.key === 'Home') ir(0);
     else if (ev.key === 'End') ir(slides.length - 1);
     else if (ev.key === 'f' || ev.key === 'F') pantalla();
-    else if ((ev.key === 'r' || ev.key === 'R') && slides[actual].getAttribute('data-encuesta')) slides[actual].classList.toggle('revelada');
+    else if ((ev.key === 'r' || ev.key === 'R') && slides[actual].getAttribute('data-encuesta')) revelar(slides[actual]);
     else if ((ev.key === 'c' || ev.key === 'C') && slides[actual].getAttribute('data-encuesta')) alternarCierre(slides[actual]);
   });
   function pantalla() {

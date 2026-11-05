@@ -53,7 +53,7 @@ window.ENCUESTAS = {
       'De 01 a 06, para tener la base final al día'
     ],
     correcta: 1,
-    explicacion: 'Durante el campo el dato toma el atajo: importa, audita, limpia, pasa por el monitoreo y se publica. De 04 a 07 se corre al cierre del campo, con completo.yml.'
+    explicacion: 'Durante el campo el dato toma el atajo: importa, audita, limpia, pasa por el monitoreo y se publica. De 04 a 07 se corre aparte, con completo.yml: en un corte durante el campo o al cerrarlo.'
   },
   p5: {
     pregunta: '¿Qué tan claro te quedó el proceso?',
@@ -62,7 +62,7 @@ window.ENCUESTAS = {
     explicacion: ''
   },
   p7: {
-    pregunta: 'Después del taller: ¿qué te llevas para tu próximo proyecto?',
+    pregunta: '¿Qué te llevas para tu próximo proyecto?',
     abierta: true,
     opciones: [],
     correcta: null,
