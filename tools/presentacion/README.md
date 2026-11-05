@@ -1,4 +1,4 @@
-# Presentación: del formulario a la decisión
+# Presentación: el camino de un dato
 
 La presentación del pipeline de datos end to end para el equipo: 24 diapositivas
 en HTML, con la línea gráfica de Equilibrium y preguntas de control que se
