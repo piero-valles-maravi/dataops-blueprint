@@ -54,6 +54,14 @@ p,h1,h2,h3{margin:0}
 .estrella{position:relative;height:500px}
 /* analysis: la tabla de tres columnas, script y resultado */
 .t16{font-size:18px}
+/* pipeline vs workflows: los dos diagramas del README */
+.pw-col{position:absolute;top:340px;width:820px;display:flex;flex-direction:column;gap:14px}
+.pw-cab{display:flex;align-items:baseline;gap:16px;padding-bottom:10px;border-bottom:2px solid var(--navy)}
+.pw-cab b{font-size:30px}
+.pw-cab .mono{font-size:20px;color:var(--coral)}
+.pw-col img{width:820px;height:auto;display:block}
+.pw-pie{font-size:20px;line-height:1.4;color:var(--gris)}
+.pw-pie .mono{font-size:18px;color:var(--navy)}
 /* import: un ejemplo sencillo y uno complejo */
 .imp-ej{padding:22px 26px;background:var(--blanco);box-shadow:inset 0 0 0 2px var(--navy);display:flex;flex-direction:column;gap:16px}
 .imp-c{background:var(--navy);color:var(--paper);box-shadow:none;border-top-left-radius:32px}
@@ -392,6 +400,23 @@ body:hover #nav{opacity:1}
     <div class="caja a" style="--d:2.1s;flex:1;height:170px;border-style:dashed"><div style="font-size:30px;font-weight:700">Entregar</div><div style="font-size:20px;color:var(--gris)">al cliente, a Drive</div></div>
   </div>
   <div class="banda idea a" style="--d:2.7s">Lo que vemos en el dashboard es <b>&nbsp;la última milla</b>. Antes, otras etapas convierten datos en resultados.</div>
+</section>
+
+<!-- ================================================================ 4b -->
+<section class="slide claro" id="s4b">
+  <div class="kicker a" style="position:absolute;left:120px;top:64px">LO QUE NO SE VE · DOS COSAS DISTINTAS</div>
+  <h1 class="preg m a" style="--d:.1s;position:absolute;left:120px;top:104px">¿El pipeline y el workflow son lo mismo?</h1>
+  <p class="insight a" style="--d:.25s;position:absolute;left:120px;top:200px;width:1680px;font-size:28px">El <b>pipeline</b> dice <b>qué</b> se le hace al dato; el <b>workflow</b> dice <b>cuándo</b> corre y <b>qué parte</b> del pipeline.</p>
+  <div class="pw-col a" style="--d:.5s;left:120px">
+    <div class="pw-cab"><b>El pipeline</b><span class="mono">src/</span></div>
+    <img src="assets/flujo_pipeline.svg" alt="El pipeline completo en ocho etapas">
+    <div class="pw-pie">Ocho etapas, un script cada una. Es el mismo en todos los proyectos.</div>
+  </div>
+  <div class="pw-col a" style="--d:.9s;left:980px">
+    <div class="pw-cab"><b>Los workflows</b><span class="mono">.github/workflows/</span></div>
+    <img src="assets/flujo_monitoreo.svg" alt="El flujo de monitoreo">
+    <div class="pw-pie"><span class="mono">hourly.yml</span> y <span class="mono">daily.yml</span> corren una parte durante el campo; <span class="mono">completo.yml</span>, todo al cierre.</div>
+  </div>
 </section>
 
 <!-- ================================================================ 5 -->

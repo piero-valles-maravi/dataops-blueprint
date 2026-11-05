@@ -1,0 +1,94 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='520' viewBox='0 0 1200 520' role='img' aria-label='El pipeline completo en ocho etapas'>
+<style>
+.t{font:700 58px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF}
+.sub{font:400 19px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5}
+.ten{font:400 19px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#6EE7B7}
+.kick{font:700 13px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FBBF24;letter-spacing:.14em}
+.h2{font:700 30px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF}
+.lbl{font:600 15px Segoe UI, Ubuntu, system-ui, sans-serif}
+.mini{font:600 13px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5}
+.txt{font:400 15px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5}
+.peq{font:400 13px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5}
+.mono{font:400 13px ui-monospace, Consolas, monospace;fill:#FBBF24}
+.nodo{fill:#064E3B;stroke:#6EE7B7;stroke-opacity:.5;animation:nodo 8s ease-in-out infinite}@keyframes nodo{0%,12%,100%{fill:#064E3B;stroke:#6EE7B7;stroke-opacity:.5}2%,9%{fill:#FBBF24;stroke:#FDE68A;stroke-opacity:1}}
+.nodot{font:700 24px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5;animation:nodot 8s ease-in-out infinite}@keyframes nodot{0%,12%,100%{fill:#D1FAE5}2%,9%{fill:#064E3B}}
+.eco{opacity:0;transform-box:fill-box;transform-origin:center;animation:eco 8s ease-out infinite}@keyframes eco{0%{transform:scale(1);opacity:.8}8%{transform:scale(1.9);opacity:0}100%{opacity:0}}
+.etq{font:700 16px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#FFFFFF;animation:etq 8s ease-in-out infinite}@keyframes etq{0%,12%,100%{opacity:.6}2%,9%{opacity:1}}
+.ruta{font:400 12px ui-monospace, Consolas, monospace;fill:#6EE7B7;animation:ruta 8s ease-in-out infinite}@keyframes ruta{0%,12%,100%{fill:#6EE7B7}2%,9%{fill:#FBBF24}}
+.avance{transform-box:fill-box;transform-origin:left;animation:avance 8s linear infinite}@keyframes avance{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.viaja{animation:viaja 8s linear infinite}@keyframes viaja{from{transform:translateX(0)}to{transform:translateX(1040px)}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important}}
+</style>
+<defs><linearGradient id='progreso' x1='0' x2='1'><stop offset='0' stop-color='#6EE7B7'/><stop offset='1' stop-color='#FBBF24'/></linearGradient></defs>
+<defs>
+<linearGradient id='fondo' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#064E3B'/><stop offset='.55' stop-color='#065F46'/><stop offset='1' stop-color='#1E3A8A'/></linearGradient>
+<pattern id='grilla' width='24' height='24' patternUnits='userSpaceOnUse'><path d='M24 0H0V24' fill='none' stroke='#6EE7B7' stroke-opacity='.07'/></pattern>
+<clipPath id='marco'><rect width='1200' height='520' rx='24'/></clipPath>
+</defs>
+<g clip-path='url(#marco)'>
+<rect width='1200' height='520' fill='url(#fondo)'/>
+<rect width='1200' height='520' fill='url(#grilla)'/>
+<text x='48' y='48' class='kick'>EL PIPELINE COMPLETO</text>
+<text x='48' y='88' class='h2'>Ocho etapas: cada una lee la anterior y escribe solo en su carpeta</text>
+<rect x='22' y='132' width='116' height='36' rx='10' fill='#064E3B' fill-opacity='0.85' stroke='#6EE7B7' stroke-opacity='.35'/>
+<text x='80' y='155' text-anchor='middle' style='font:700 13px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#ECFDF5;letter-spacing:.12em'>INGESTA</text>
+<rect x='171' y='132' width='710' height='36' rx='10' fill='#065F46' fill-opacity='0.85' stroke='#6EE7B7' stroke-opacity='.35'/>
+<text x='526' y='155' text-anchor='middle' style='font:700 13px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#ECFDF5;letter-spacing:.12em'>PROCESAR</text>
+<rect x='913' y='132' width='116' height='36' rx='10' fill='#1E3A8A' fill-opacity='0.55' stroke='#6EE7B7' stroke-opacity='.35'/>
+<text x='971' y='155' text-anchor='middle' style='font:700 13px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#ECFDF5;letter-spacing:.12em'>PRODUCIR</text>
+<rect x='1062' y='132' width='116' height='36' rx='10' fill='#1E3A8A' fill-opacity='0.8' stroke='#6EE7B7' stroke-opacity='.35'/>
+<text x='1120' y='155' text-anchor='middle' style='font:700 13px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#ECFDF5;letter-spacing:.12em'>PUBLICAR</text>
+<rect x='80' y='258' width='1040' height='4' rx='2' fill='#6EE7B7' fill-opacity='.18'/>
+<rect class='avance' x='80' y='258' width='1040' height='4' rx='2' fill='url(#progreso)'/>
+<circle cx='80' cy='260' r='38' fill='none' stroke='#FBBF24' stroke-width='2' class='eco' style='animation-delay:0s'/>
+<circle cx='80' cy='260' r='38' stroke-width='2' class='nodo' style='animation-delay:0s'/>
+<text x='80' y='269' text-anchor='middle' class='nodot' style='animation-delay:0s'>01</text>
+<text x='80' y='330' text-anchor='middle' class='etq' style='animation-delay:0s'>import</text>
+<text x='80' y='352' text-anchor='middle' class='peq' style='opacity:.85'>trae cada fuente</text>
+<text x='80' y='376' text-anchor='middle' class='ruta' style='animation-delay:0s'>01_raw</text>
+<circle cx='229' cy='260' r='38' fill='none' stroke='#FBBF24' stroke-width='2' class='eco' style='animation-delay:1s'/>
+<circle cx='229' cy='260' r='38' stroke-width='2' class='nodo' style='animation-delay:1s'/>
+<text x='229' y='269' text-anchor='middle' class='nodot' style='animation-delay:1s'>02</text>
+<text x='229' y='330' text-anchor='middle' class='etq' style='animation-delay:1s'>audit</text>
+<text x='229' y='352' text-anchor='middle' class='peq' style='opacity:.85'>marca alertas</text>
+<text x='229' y='376' text-anchor='middle' class='ruta' style='animation-delay:1s'>02_audit</text>
+<circle cx='377' cy='260' r='38' fill='none' stroke='#FBBF24' stroke-width='2' class='eco' style='animation-delay:2s'/>
+<circle cx='377' cy='260' r='38' stroke-width='2' class='nodo' style='animation-delay:2s'/>
+<text x='377' y='269' text-anchor='middle' class='nodot' style='animation-delay:2s'>03</text>
+<text x='377' y='330' text-anchor='middle' class='etq' style='animation-delay:2s'>clean</text>
+<text x='377' y='352' text-anchor='middle' class='peq' style='opacity:.85'>corrige y limpia</text>
+<text x='377' y='376' text-anchor='middle' class='ruta' style='animation-delay:2s'>03_clean</text>
+<circle cx='526' cy='260' r='38' fill='none' stroke='#FBBF24' stroke-width='2' class='eco' style='animation-delay:3s'/>
+<circle cx='526' cy='260' r='38' stroke-width='2' class='nodo' style='animation-delay:3s'/>
+<text x='526' y='269' text-anchor='middle' class='nodot' style='animation-delay:3s'>04</text>
+<text x='526' y='330' text-anchor='middle' class='etq' style='animation-delay:3s'>enrich</text>
+<text x='526' y='352' text-anchor='middle' class='peq' style='opacity:.85'>columnas nuevas</text>
+<text x='526' y='376' text-anchor='middle' class='ruta' style='animation-delay:3s'>04_enrich</text>
+<circle cx='674' cy='260' r='38' fill='none' stroke='#FBBF24' stroke-width='2' class='eco' style='animation-delay:4s'/>
+<circle cx='674' cy='260' r='38' stroke-width='2' class='nodo' style='animation-delay:4s'/>
+<text x='674' y='269' text-anchor='middle' class='nodot' style='animation-delay:4s'>05</text>
+<text x='674' y='330' text-anchor='middle' class='etq' style='animation-delay:4s'>integrate</text>
+<text x='674' y='352' text-anchor='middle' class='peq' style='opacity:.85'>une fuentes y rondas</text>
+<text x='674' y='376' text-anchor='middle' class='ruta' style='animation-delay:4s'>05_integrate</text>
+<circle cx='823' cy='260' r='38' fill='none' stroke='#FBBF24' stroke-width='2' class='eco' style='animation-delay:5s'/>
+<circle cx='823' cy='260' r='38' stroke-width='2' class='nodo' style='animation-delay:5s'/>
+<text x='823' y='269' text-anchor='middle' class='nodot' style='animation-delay:5s'>06</text>
+<text x='823' y='330' text-anchor='middle' class='etq' style='animation-delay:5s'>indicators</text>
+<text x='823' y='352' text-anchor='middle' class='peq' style='opacity:.85'>calcula indicadores</text>
+<text x='823' y='376' text-anchor='middle' class='ruta' style='animation-delay:5s'>06_final</text>
+<circle cx='971' cy='260' r='38' fill='none' stroke='#FBBF24' stroke-width='2' class='eco' style='animation-delay:6s'/>
+<circle cx='971' cy='260' r='38' stroke-width='2' class='nodo' style='animation-delay:6s'/>
+<text x='971' y='269' text-anchor='middle' class='nodot' style='animation-delay:6s'>07</text>
+<text x='971' y='330' text-anchor='middle' class='etq' style='animation-delay:6s'>analysis</text>
+<text x='971' y='352' text-anchor='middle' class='peq' style='opacity:.85'>lo que se entrega</text>
+<text x='971' y='376' text-anchor='middle' class='ruta' style='animation-delay:6s'>outputs/07</text>
+<circle cx='1120' cy='260' r='38' fill='none' stroke='#FBBF24' stroke-width='2' class='eco' style='animation-delay:7s'/>
+<circle cx='1120' cy='260' r='38' stroke-width='2' class='nodo' style='animation-delay:7s'/>
+<text x='1120' y='269' text-anchor='middle' class='nodot' style='animation-delay:7s'>08</text>
+<text x='1120' y='330' text-anchor='middle' class='etq' style='animation-delay:7s'>publish</text>
+<text x='1120' y='352' text-anchor='middle' class='peq' style='opacity:.85'>Sheets y Drive</text>
+<text x='1120' y='376' text-anchor='middle' class='ruta' style='animation-delay:7s'>destino</text>
+<g class='viaja'><circle cx='80' cy='260' r='16' fill='#FBBF24' fill-opacity='.25'/><circle cx='80' cy='260' r='9' fill='#FBBF24'/></g>
+<circle cx='53' cy='482' r='5' fill='#FBBF24'/>
+<text x='68' y='487' style='font:400 14px Segoe UI, Ubuntu, system-ui, sans-serif;fill:#D1FAE5'>Corre a mano con <tspan style='font-family:ui-monospace, Consolas, monospace;fill:#FDE68A'>completo.yml</tspan> o en local con <tspan style='font-family:ui-monospace, Consolas, monospace;fill:#FDE68A'>00_master.R</tspan>. Las etapas que no se usan se borran sin correr los números.</text>
+</g></svg>
