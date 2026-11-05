@@ -6,13 +6,25 @@ window.ENCUESTAS = {
   p1: {
     pregunta: 'Para ti, un pipeline end to end es…',
     opciones: [
-      'Descargar la encuesta y limpiarla',
-      'Descargar, auditar, limpiar y subir al dashboard',
-      'Todo lo que pasa desde la fuente hasta una decisión',
-      'No estoy seguro'
+      'Un script que descarga, limpia y arma el reporte',
+      'La cadena automática que va de la fuente al dashboard',
+      'Todo el recorrido del dato, desde la fuente hasta quien decide',
+      'Los workflows que corren solos en GitHub Actions'
     ],
     correcta: 2,
-    explicacion: 'Un pipeline end to end va desde la fuente hasta la decisión. Lo que vemos en el dashboard es solo la última milla: hoy vamos a recorrer todo el camino.'
+    explicacion: 'Un pipeline end to end va desde la fuente hasta la decisión. El dashboard es solo la última milla, un solo script no es un pipeline y los workflows solo deciden cuándo corre.'
+  },
+  // p1b: la segunda pregunta de entrada (se llama así para no renumerar las demás)
+  p1b: {
+    pregunta: 'A mitad del campo cambia una regla de limpieza. ¿Qué se vuelve a correr?',
+    opciones: [
+      'Todo, desde la descarga',
+      'Solo la limpieza',
+      'La limpieza y todo lo que depende de ella',
+      'Nada: se corrige a mano en la base final'
+    ],
+    correcta: 2,
+    explicacion: 'No hace falta volver a descargar: cada etapa guarda su salida. Se corre la limpieza y lo que viene después, porque usa lo que ella produce. Corregir a mano la base final no deja rastro.'
   },
   p2: {
     pregunta: 'En GitHub Actions el pipeline no puede leer el Sheet: "permiso denegado". ¿Qué falta?',

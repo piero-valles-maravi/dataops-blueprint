@@ -54,6 +54,24 @@ p,h1,h2,h3{margin:0}
 .estrella{position:relative;height:500px}
 /* analysis: la tabla de tres columnas, script y resultado */
 .t16{font-size:18px}
+/* import: un ejemplo sencillo y uno complejo */
+.imp-ej{padding:22px 26px;background:var(--blanco);box-shadow:inset 0 0 0 2px var(--navy);display:flex;flex-direction:column;gap:16px}
+.imp-c{background:var(--navy);color:var(--paper);box-shadow:none;border-top-left-radius:32px}
+.imp-cab{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 16px}
+.imp-cab .k{font-size:16px;font-weight:700;letter-spacing:.1em;color:var(--coral)}
+.imp-cab b{font-size:28px;white-space:nowrap}
+.imp-cab .n{margin-left:auto;font-size:18px;color:var(--gris)}
+.imp-c .imp-cab .n{color:var(--peri)}
+.imp-fila{display:flex;align-items:center;gap:14px}
+.imp-f{padding:10px 16px;box-shadow:inset 0 0 0 2px var(--coral);display:flex;flex-direction:column}
+.imp-f b{font-size:22px}
+.imp-f i,.imp-grid i{font-style:normal;font-size:17px;color:var(--gris)}
+.imp-s{padding:12px 16px;background:var(--navy);color:var(--paper);font-size:19px}
+.imp-fl{font-size:30px;color:var(--coral)}
+.imp-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.imp-grid div{padding:12px 16px;box-shadow:inset 0 0 0 1px var(--peri);display:flex;flex-direction:column;gap:4px}
+.imp-grid b{font-size:21px;color:var(--coral)}
+.imp-grid i{color:var(--paper)}
 /* monitoreo: pipeline vs workflow */
 .pw{margin-top:20px;padding:18px 22px;box-shadow:inset 0 0 0 2px var(--navy);display:flex;flex-direction:column;gap:12px}
 .pw-k{font-size:16px;font-weight:700;letter-spacing:.1em;color:var(--coral)}
@@ -333,6 +351,7 @@ body:hover #nav{opacity:1}
 
 <!-- ================================================================ 2 -->
 <section class="slide claro" id="s2" data-encuesta="p1" data-numero="1"></section>
+<section class="slide claro" id="s2b" data-encuesta="p1b" data-numero="2"></section>
 
 <!-- ================================================================ 3 -->
 <section class="slide claro" id="s3">
@@ -413,7 +432,7 @@ body:hover #nav{opacity:1}
 </section>
 
 <!-- ================================================================ 7 -->
-<section class="slide claro" id="s7">
+<section class="slide claro" id="s7" data-pasos="1">
   <div class="mapa" data-etapa="1"></div><div class="regla2"></div>
   <div class="izq">
     <div class="kicker a">BLOQUE 1 · INGESTA · 01 IMPORT</div>
@@ -422,7 +441,7 @@ body:hover #nav{opacity:1}
     <p class="insight a" style="--d:.25s">Al importar <b>no se corrige nada</b>: lo que llega mal tiene que quedar a la vista.</p>
     <p class="a" style="--d:2.6s;font-size:28px;color:var(--gris);margin-top:30px;line-height:1.4">…pero ¿cómo entra el script a SurveyCTO o a Drive <b style="color:var(--navy)">sin pedirle la contraseña a nadie?</b></p>
   </div>
-  <div class="der">
+  <div class="der ejA">
     <div style="display:flex;gap:40px;align-items:center;height:400px">
       <div style="display:flex;flex-direction:column;gap:22px;width:330px">
         <div class="caja a ai" style="--d:.5s;height:110px"><div style="font-size:26px;font-weight:700">La encuesta</div><div style="font-size:19px;color:var(--gris)">SurveyCTO, por la API</div></div>
@@ -449,6 +468,29 @@ body:hover #nav{opacity:1}
       <span class="a" style="--d:2.8s;padding:8px 14px;box-shadow:inset 0 0 0 2px var(--navy)">.csv</span>
       <span class="a" style="--d:2.9s;padding:8px 14px;background:var(--navy);color:var(--paper)">Sheet</span>
     </div>
+  </div>
+  <div class="der ejB" style="display:flex;flex-direction:column;gap:22px">
+    <div style="font-size:20px;font-weight:700;letter-spacing:.1em;color:var(--gris)">DOS PROYECTOS REALES</div>
+    <div class="imp-ej">
+      <div class="imp-cab"><span class="k">SENCILLO</span><b>EMCESA · campo</b><span class="n">1 fuente · 1 script</span></div>
+      <div class="imp-fila">
+        <div class="imp-f"><b>SurveyCTO</b><i>la encuesta, por la API</i></div>
+        <div class="imp-fl">→</div>
+        <div class="imp-s mono">01_importar.R</div>
+        <div class="imp-fl">→</div>
+        <div class="imp-s mono">data/01_raw/</div>
+      </div>
+    </div>
+    <div class="imp-ej imp-c">
+      <div class="imp-cab"><span class="k">COMPLEJO</span><b>Tigo · Jóvenes Conectados</b><span class="n">7 fuentes · 9 scripts · 4 formas de llegar</span></div>
+      <div class="imp-grid">
+        <div><b>Google Sheets</b><i>MEC 2025 · MEC 2026 · RCE</i></div>
+        <div><b>APIs</b><i>SurveyCTO (RCA) · Amplify (ROF) · Coursera, con Python</i></div>
+        <div><b>Base de datos</b><i>Chatwoot: 7 tablas de PostgreSQL</i></div>
+        <div><b>Drive</b><i>el clean congelado de las fuentes que ya no cambian</i></div>
+      </div>
+    </div>
+    <div style="font-size:22px;color:var(--gris)">En los dos, la misma regla: <b style="color:var(--navy)">un script por fuente, y nada se corrige al importar.</b></div>
   </div>
 </section>
 
@@ -477,7 +519,7 @@ body:hover #nav{opacity:1}
 </section>
 
 <!-- ================================================================ 9 -->
-<section class="slide claro" id="s9" data-encuesta="p2" data-numero="2"></section>
+<section class="slide claro" id="s9" data-encuesta="p2" data-numero="3"></section>
 
 <!-- ================================================================ 10 -->
 <section class="slide claro" id="s10">
@@ -541,7 +583,7 @@ body:hover #nav{opacity:1}
 </section>
 
 <!-- ================================================================ 12 -->
-<section class="slide claro" id="s12" data-encuesta="p3" data-numero="3"></section>
+<section class="slide claro" id="s12" data-encuesta="p3" data-numero="4"></section>
 
 <!-- ================================================================ 13 -->
 <section class="slide claro" id="s13">
@@ -887,7 +929,7 @@ body:hover #nav{opacity:1}
 </section>
 
 <!-- ================================================================ 21 -->
-<section class="slide claro" id="s21" data-encuesta="p4" data-numero="4"></section>
+<section class="slide claro" id="s21" data-encuesta="p4" data-numero="5"></section>
 
 <!-- ================================================================ 22 -->
 <section class="slide claro" id="s22">
@@ -932,7 +974,7 @@ body:hover #nav{opacity:1}
 </section>
 
 <!-- ================================================================ 23 -->
-<section class="slide claro" id="s23" data-encuesta="p5,p6" data-numero="5"></section>
+<section class="slide claro" id="s23" data-encuesta="p5,p6" data-numero="6"></section>
 
 <!-- ================================================================ 24 -->
 <section class="slide oscuro" id="s24">
