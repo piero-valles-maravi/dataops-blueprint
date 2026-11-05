@@ -61,6 +61,13 @@ window.ENCUESTAS = {
     correcta: null,
     explicacion: ''
   },
+  p7: {
+    pregunta: 'Después del taller: ¿qué te llevas para tu próximo proyecto?',
+    abierta: true,
+    opciones: [],
+    correcta: null,
+    explicacion: 'Esto es lo que el equipo se lleva. Lo que se repite es lo que conviene escribir como skill.'
+  },
   p6: {
     pregunta: '¿Qué etapa te genera más dudas?',
     opciones: ['01 import', '02 audit', '03 clean', '04 enrich', '05 integrate',
