@@ -2,7 +2,15 @@
 // de voto del celular (votar.html): se escriben una sola vez, acá.
 //   correcta     el índice de la opción correcta, o null si no hay una
 //   explicacion  lo que se muestra al cerrar la votación, junto a la respuesta
+//   abierta      true si se responde con texto libre, sin opciones
 window.ENCUESTAS = {
+  p0: {
+    pregunta: 'En pocas palabras: ¿qué es para ti un pipeline de datos?',
+    abierta: true,
+    opciones: [],
+    correcta: null,
+    explicacion: 'Así lo vemos hoy. La próxima pregunta pone estas ideas a prueba.'
+  },
   p1: {
     pregunta: 'Para ti, un pipeline end to end es…',
     opciones: [
@@ -13,18 +21,6 @@ window.ENCUESTAS = {
     ],
     correcta: 2,
     explicacion: 'Un pipeline end to end va desde la fuente hasta la decisión. El dashboard es solo la última milla, un solo script no es un pipeline y los workflows solo deciden cuándo corre.'
-  },
-  // p1b: la segunda pregunta de entrada (se llama así para no renumerar las demás)
-  p1b: {
-    pregunta: '¿Qué hace que un proceso de datos sea reproducible?',
-    opciones: [
-      'Que cada paso esté documentado en un manual',
-      'Que se guarde una copia de la base final en Drive',
-      'Que cualquiera pueda rehacerlo desde la fuente y llegar a lo mismo',
-      'Que lo haga siempre la misma persona, con el mismo cuidado'
-    ],
-    correcta: 2,
-    explicacion: 'Un manual o una copia de la base final no permiten rehacer el camino, y depender de una persona es justo lo contrario. Por eso el pipeline guarda lo que llega tal cual, corre con scripts y no tiene pasos a mano.'
   },
   p2: {
     pregunta: 'En GitHub Actions el pipeline no puede leer el Sheet: "permiso denegado". ¿Qué falta?',

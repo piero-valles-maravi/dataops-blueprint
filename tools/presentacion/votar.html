@@ -20,6 +20,8 @@
   button.op{display:block;width:100%;min-height:56px;margin:0 0 12px;padding:14px 16px;text-align:left;font:500 17px Geologica,system-ui,sans-serif;color:var(--navy);background:#FFFFFF;border:2px solid var(--navy);border-radius:0;cursor:pointer}
   button.op:active{transform:translateY(1px)}
   button.op[aria-pressed="true"]{background:var(--navy);color:var(--paper)}
+  input.libre{display:block;width:100%;min-height:56px;margin:0 0 12px;padding:14px 16px;font:500 17px Geologica,system-ui,sans-serif;color:var(--navy);background:#FFFFFF;border:2px solid var(--navy);border-radius:0}
+  button.enviar{text-align:center;background:var(--coral);border-color:var(--coral);font-weight:700}
   .gracias{padding:14px 16px;background:var(--teal);font-weight:500}
   .espera{text-align:center;padding:60px 10px;color:var(--gris);font-size:18px}
   .espera b{display:block;color:var(--navy);font-size:22px;margin-bottom:8px}
@@ -65,6 +67,17 @@
       b.className = 'bloque';
       b.innerHTML = '<h1></h1><div class="linea"></div>';
       b.querySelector('h1').textContent = e.pregunta;
+      if (e.abierta) {
+        // pregunta abierta: un campo de texto y un botón para enviar
+        b.insertAdjacentHTML('beforeend', '<input class="libre" type="text" maxlength="60" placeholder="Escribe tu respuesta"><button class="op enviar" type="button">Enviar</button>');
+        const campo = b.querySelector('.libre');
+        const enviar = function () {
+          const texto = normalizar(campo.value);
+          if (texto) votar(id, texto, b, b.querySelector('.enviar'));
+        };
+        b.querySelector('.enviar').addEventListener('click', enviar);
+        campo.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') enviar(); });
+      }
       e.opciones.forEach(function (texto, i) {
         const boton = document.createElement('button');
         boton.className = 'op';
@@ -78,13 +91,21 @@
     });
   }
 
+  // una respuesta libre se guarda en minúsculas y sin espacios ni puntos de más,
+  // para que "ETL." y "etl" cuenten como la misma
+  function normalizar(texto) {
+    return texto.toLowerCase().replace(/\s+/g, ' ').trim().replace(/[.!¡¿?]+$/, '').trim().slice(0, 60);
+  }
+
   // manda el voto; text/plain evita el preflight que Apps Script no responde
   function votar(id, opcion, bloque, boton) {
     bloque.querySelectorAll('button.op').forEach(function (x) { x.setAttribute('aria-pressed', 'false'); });
     boton.setAttribute('aria-pressed', 'true');
     let aviso = bloque.querySelector('.gracias');
     if (!aviso) { aviso = document.createElement('div'); aviso.className = 'gracias'; bloque.appendChild(aviso); }
-    aviso.textContent = 'Voto enviado. Puedes cambiarlo tocando otra opción.';
+    aviso.textContent = typeof opcion === 'string'
+      ? 'Respuesta enviada. Puedes cambiarla escribiendo otra.'
+      : 'Voto enviado. Puedes cambiarlo tocando otra opción.';
     if (!URL_VOTOS) return;
     fetch(URL_VOTOS, {
       method: 'POST',

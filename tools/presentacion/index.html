@@ -54,6 +54,45 @@ p,h1,h2,h3{margin:0}
 .estrella{position:relative;height:500px}
 /* analysis: la tabla de tres columnas, script y resultado */
 .t16{font-size:18px}
+/* el blueprint: el repo, dónde va cada cosa y las skills */
+.bp-repo{position:absolute;left:120px;top:350px;width:760px;height:500px;padding:40px;background:var(--navy);color:var(--paper);border-top-left-radius:48px;display:flex;flex-direction:column;gap:16px}
+.bp-repo .k,.bp-trae .k,.bp-mas .k{font-size:17px;font-weight:700;letter-spacing:.1em;color:var(--coral)}
+.bp-repo .nom{font-size:48px;font-weight:700}
+.bp-repo .url{font-size:20px;color:var(--peri)}
+.bp-repo .chips,.bp-trae .chips{display:flex;flex-wrap:wrap;gap:10px}
+.bp-repo .chips span{padding:8px 14px;box-shadow:inset 0 0 0 2px var(--peri);font-size:19px}
+.bp-repo .chips .uno{background:var(--coral);color:var(--navy);box-shadow:none;font-weight:700}
+.bp-repo .d{margin-top:auto;font-size:22px;line-height:1.45;color:var(--paper)}
+.bp-num{position:absolute;left:960px;right:120px;top:350px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.bp-num div{height:190px;padding:24px;background:var(--blanco);box-shadow:inset 0 0 0 2px var(--navy);display:flex;flex-direction:column;justify-content:center;gap:8px}
+.bp-num b{font-size:76px;line-height:1;color:var(--coral)}
+.bp-num span{font-size:20px;color:var(--gris)}
+.bp-trae{position:absolute;left:960px;right:120px;top:770px;display:flex;flex-direction:column;gap:12px}
+.bp-trae .chips span{padding:8px 14px;box-shadow:inset 0 0 0 2px var(--navy);font-size:18px}
+.bp-trae i{font-style:normal;font-size:16px}
+.bp-esp{position:absolute;left:120px;top:340px;width:1020px;display:flex;flex-direction:column}
+.bp-esp .cab,.bp-esp .f{display:grid;grid-template-columns:260px 60px 1fr;align-items:center}
+.bp-esp .cab{padding-bottom:10px;border-bottom:2px solid var(--navy);font-size:17px;font-weight:700;letter-spacing:.1em;color:var(--gris)}
+.bp-esp .f{height:54px;border-bottom:1px dotted var(--borde)}
+.bp-esp .f .mono{font-size:21px;font-weight:700}
+.bp-esp .f i{font-style:normal;font-size:26px;color:var(--coral);text-align:center}
+.bp-esp .f .d{justify-self:start;padding:4px 12px;background:var(--teal);font-weight:400}
+.bp-esp .f .o{justify-self:start;padding:4px 12px;background:var(--coral);font-weight:400}
+.bp-mas{position:absolute;left:1220px;right:120px;top:340px;display:flex;flex-direction:column;gap:14px}
+.bp-mas div:not(.k){padding:14px 18px;box-shadow:inset 0 0 0 2px var(--navy);display:flex;flex-direction:column;gap:4px}
+.bp-mas .mono{font-size:20px;font-weight:700}
+.bp-mas i{font-style:normal;font-size:17px;color:var(--gris)}
+.bp-cad{position:absolute;left:120px;top:350px;width:640px;display:flex;flex-direction:column;align-items:stretch;gap:6px}
+.bp-cad div{padding:28px 26px;box-shadow:inset 0 0 0 2px var(--navy);display:flex;flex-direction:column;gap:6px}
+.bp-cad div.uno{background:var(--navy);color:var(--paper);box-shadow:none;border-top-left-radius:28px}
+.bp-cad div.uno i{color:var(--peri)}
+.bp-cad .mono{font-size:24px;font-weight:700}
+.bp-cad i{font-style:normal;font-size:20px;color:var(--gris)}
+.bp-cad b{font-size:32px;color:var(--coral);text-align:center;line-height:1}
+.bp-sk{position:absolute;left:840px;right:120px;top:350px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.bp-sk div{min-height:112px;justify-content:center;padding:16px 22px;background:var(--blanco);box-shadow:inset 0 0 0 1px var(--borde);border-left:6px solid var(--coral);display:flex;flex-direction:column;gap:6px}
+.bp-sk .mono{font-size:22px;font-weight:700}
+.bp-sk i{font-style:normal;font-size:19px;color:var(--gris)}
 /* pipeline vs workflows: los dos diagramas del README */
 .pw-col{position:absolute;top:340px;width:820px;display:flex;flex-direction:column;gap:14px}
 .pw-cab{display:flex;align-items:baseline;gap:16px;padding-bottom:10px;border-bottom:2px solid var(--navy)}
@@ -232,6 +271,8 @@ p,h1,h2,h3{margin:0}
 .tabla th{text-align:left;font-size:17px;letter-spacing:.08em;padding:0 16px 14px 0;border-bottom:2px solid var(--navy)}
 .tabla td{padding:18px 16px 18px 0;border-bottom:2px dotted var(--navy);vertical-align:top;line-height:1.35}
 .tabla td.g{color:var(--gris)}
+.t19{font-size:20px}
+.t19 td{padding:12px 16px 12px 0}
 
 /* encuestas */
 .enc-cab{position:absolute;left:0;top:0;right:0;height:115px;display:flex}
@@ -239,6 +280,13 @@ p,h1,h2,h3{margin:0}
 .enc-cab .tit{flex:1;background:var(--coral);border-bottom-left-radius:32px;display:flex;align-items:center;padding-left:48px;font-size:24px;font-weight:700;letter-spacing:.12em}
 .enc-preg{position:absolute;left:120px;top:186px;width:1080px;font-size:60px;font-weight:700;line-height:1.12}
 .enc-ops{position:absolute;left:120px;top:400px;width:1080px;display:flex;flex-direction:column;gap:28px}
+/* pregunta abierta: la nube de respuestas */
+.enc-nube{position:absolute;left:120px;top:400px;width:1080px;height:560px;display:flex;flex-wrap:wrap;align-content:flex-start;align-items:baseline;gap:14px 18px;overflow:hidden}
+.enc-nube .pal{padding:6px 16px;box-shadow:inset 0 0 0 2px var(--navy);font-weight:700;line-height:1.2}
+.enc-nube .pal.top{background:var(--coral);box-shadow:none}
+.enc-nube .pal i{margin-left:10px;font-style:normal;font-size:18px;font-weight:500;color:var(--gris)}
+.enc-res .top-ab{margin:0;padding-left:34px;display:flex;flex-direction:column;gap:12px;font-size:30px;font-weight:700}
+.enc-res .top-ab li::marker{color:var(--coral)}
 .op .fila{display:flex;align-items:baseline;gap:16px}
 .op .letra{font-size:26px;font-weight:700;width:36px}
 .op .texto{font-size:26px;color:var(--gris);flex:1}
@@ -358,8 +406,8 @@ body:hover #nav{opacity:1}
 </section>
 
 <!-- ================================================================ 2 -->
-<section class="slide claro" id="s2" data-encuesta="p1" data-numero="1"></section>
-<section class="slide claro" id="s2b" data-encuesta="p1b" data-numero="2"></section>
+<section class="slide claro" id="s2" data-encuesta="p0" data-numero="1"></section>
+<section class="slide claro" id="s2b" data-encuesta="p1" data-numero="2"></section>
 
 <!-- ================================================================ 3 -->
 <section class="slide claro" id="s3">
@@ -402,23 +450,6 @@ body:hover #nav{opacity:1}
   <div class="banda idea a" style="--d:2.7s">Lo que vemos en el dashboard es <b>&nbsp;la última milla</b>. Antes, otras etapas convierten datos en resultados.</div>
 </section>
 
-<!-- ================================================================ 4b -->
-<section class="slide claro" id="s4b">
-  <div class="kicker a" style="position:absolute;left:120px;top:64px">LO QUE NO SE VE · DOS COSAS DISTINTAS</div>
-  <h1 class="preg m a" style="--d:.1s;position:absolute;left:120px;top:104px">¿El pipeline y el workflow son lo mismo?</h1>
-  <p class="insight a" style="--d:.25s;position:absolute;left:120px;top:200px;width:1680px;font-size:28px">El <b>pipeline</b> dice <b>qué</b> se le hace al dato; el <b>workflow</b> dice <b>cuándo</b> corre y <b>qué parte</b> del pipeline.</p>
-  <div class="pw-col a" style="--d:.5s;left:120px">
-    <div class="pw-cab"><b>El pipeline</b><span class="mono">src/</span></div>
-    <img src="assets/flujo_pipeline.svg" alt="El pipeline completo en ocho etapas">
-    <div class="pw-pie">Ocho etapas, un script cada una. Es el mismo en todos los proyectos.</div>
-  </div>
-  <div class="pw-col a" style="--d:.9s;left:980px">
-    <div class="pw-cab"><b>Los workflows</b><span class="mono">.github/workflows/</span></div>
-    <img src="assets/flujo_monitoreo.svg" alt="El flujo de monitoreo">
-    <div class="pw-pie"><span class="mono">hourly.yml</span> y <span class="mono">daily.yml</span> corren una parte durante el campo; <span class="mono">completo.yml</span>, todo al cierre.</div>
-  </div>
-</section>
-
 <!-- ================================================================ 5 -->
 <section class="slide claro" id="s5">
   <div class="kicker a" style="position:absolute;left:120px;top:110px">EL PROCESO DE UN VISTAZO</div>
@@ -434,6 +465,23 @@ body:hover #nav{opacity:1}
       <div style="font-size:18px;font-weight:700;letter-spacing:.12em;opacity:.8">BLOQUE 4</div><div style="font-size:56px;font-weight:700">Publicar</div><div style="font-size:26px;line-height:1.4">Se lleva cada cosa a su destino. No se calcula nada.</div></div>
   </div>
   <p class="insight a" style="--d:1.4s;position:absolute;left:120px;top:860px;width:1500px">Todo proyecto, de una encuesta o de diez fuentes, pasa por <b>estos cuatro bloques</b>.</p>
+</section>
+
+<!-- ================================================================ 4b -->
+<section class="slide claro" id="s4b">
+  <div class="kicker a" style="position:absolute;left:120px;top:64px">EL PROCESO DE UN VISTAZO · DOS COSAS DISTINTAS</div>
+  <h1 class="preg m a" style="--d:.1s;position:absolute;left:120px;top:104px">¿El pipeline y el workflow son lo mismo?</h1>
+  <p class="insight a" style="--d:.25s;position:absolute;left:120px;top:200px;width:1680px;font-size:28px">El <b>pipeline</b> dice <b>qué</b> se le hace al dato; el <b>workflow</b> dice <b>cuándo</b> corre y <b>qué parte</b> del pipeline.</p>
+  <div class="pw-col a" style="--d:.5s;left:120px">
+    <div class="pw-cab"><b>El pipeline</b><span class="mono">src/</span></div>
+    <img src="assets/flujo_pipeline.svg" alt="El pipeline completo en ocho etapas">
+    <div class="pw-pie">Ocho etapas, un script cada una. Es el mismo en todos los proyectos.</div>
+  </div>
+  <div class="pw-col a" style="--d:.9s;left:980px">
+    <div class="pw-cab"><b>Los workflows</b><span class="mono">.github/workflows/</span></div>
+    <img src="assets/flujo_monitoreo.svg" alt="El flujo de monitoreo">
+    <div class="pw-pie"><span class="mono">hourly.yml</span> y <span class="mono">daily.yml</span> corren una parte durante el campo; <span class="mono">completo.yml</span>, todo al cierre.</div>
+  </div>
 </section>
 
 <!-- ================================================================ 6 -->
@@ -826,16 +874,17 @@ body:hover #nav{opacity:1}
 
 <!-- ================================================================ 19 -->
 <section class="slide claro" id="s19">
-  <div class="kicker a" style="position:absolute;left:120px;top:96px">BLOQUE 4 · PUBLICAR · DOS FORMAS DE MOSTRAR DATOS</div>
-  <h1 class="preg m a" style="--d:.1s;position:absolute;left:120px;top:142px">¿Looker o una página propia?</h1>
-  <p class="a" style="--d:.25s;position:absolute;left:120px;top:250px;width:1600px;font-size:32px;font-weight:500;color:var(--gris)">Looker sirve para mirar el día a día; una página propia, para contar una historia con nuestra marca. <b style="color:var(--navy)">Ninguna de las dos calcula.</b></p>
-  <table class="tabla" style="position:absolute;left:120px;top:370px;width:1680px;font-size:22px">
+  <div class="kicker a" style="position:absolute;left:120px;top:96px">BLOQUE 4 · PUBLICAR · LOOKER VS HTML</div>
+  <h1 class="preg m a" style="--d:.1s;position:absolute;left:120px;top:142px">¿Looker ha muerto?</h1>
+  <p class="a" style="--d:.25s;position:absolute;left:120px;top:250px;width:1600px;font-size:32px;font-weight:500;color:var(--gris)">No: Looker sirve para mirar el día a día; una página HTML, para contar una historia con nuestra marca. <b style="color:var(--navy)">Ninguna de las dos calcula.</b></p>
+  <table class="tabla t19" style="position:absolute;left:120px;top:370px;width:1680px">
     <thead><tr class="a" style="--d:.35s"><th style="width:280px"></th><th>LOOKER STUDIO</th><th>PÁGINA HTML · tools/dashboard/</th></tr></thead>
     <tbody>
       <tr class="a ai" style="--d:.5s"><td><b>Para qué</b></td><td class="g">el monitoreo y el avance, todos los días</td><td class="g">resultados para el cliente, informes interactivos</td></tr>
       <tr class="a ai" style="--d:.75s"><td><b>Lee de</b></td><td class="g">un Google Sheet que escribe 08_publish_sheets</td><td class="g">los CSV que exporta el pipeline a tools/dashboard/datos/</td></tr>
       <tr class="a ai" style="--d:1s"><td><b>Diseño</b></td><td class="g">el de Looker</td><td class="g">la línea gráfica de la marca</td></tr>
-      <tr class="a ai" style="--d:1.25s"><td><b>Se publica en</b></td><td class="g">el link de Looker</td><td class="g">GitHub Pages</td></tr>
+      <tr class="a ai" style="--d:1.1s"><td><b>Cuesta armarla</b></td><td class="g">poco: se arma arrastrando gráficos</td><td class="g">mucho: consume muchos tokens, porque se diseña con Claude Design</td></tr>
+      <tr class="a ai" style="--d:1.3s"><td><b>Se publica en</b></td><td class="g">el link de Looker, con los permisos de la cuenta de Google</td><td class="g">GitHub Pages, con el repo público; si no, un servidor propio</td></tr>
       <tr class="a ai" style="--d:1.5s"><td><b>Ejemplo</b></td><td class="g">el avance diario de un levantamiento: encuestas por día, cuotas y alertas por encuestador</td><td class="g"><b style="color:var(--navy)">US-PY Engagement Index</b> · <a href="https://lvisalotequi.github.io/Paraguay_Index/" target="_blank" rel="noopener" class="mono" style="color:var(--coral)">lvisalotequi.github.io/Paraguay_Index</a></td></tr>
     </tbody>
   </table>
@@ -955,6 +1004,80 @@ body:hover #nav{opacity:1}
 
 <!-- ================================================================ 21 -->
 <section class="slide claro" id="s21" data-encuesta="p4" data-numero="5"></section>
+
+<!-- ================================================================ repo 1 -->
+<section class="slide claro" id="sr1">
+  <div class="kicker a" style="position:absolute;left:120px;top:64px">EL BLUEPRINT · 1 DE 3</div>
+  <h1 class="preg m a" style="--d:.1s;position:absolute;left:120px;top:104px">¿Hay que armar todo esto en cada proyecto?</h1>
+  <p class="insight a" style="--d:.25s;position:absolute;left:120px;top:200px;width:1680px;font-size:28px">No: <b>todo lo que vimos ya existe</b> en un repo plantilla. Se clona y se empieza.</p>
+  <div class="bp-repo a ae" style="--d:.5s">
+    <div class="k">EL REPO PLANTILLA</div>
+    <div class="mono nom">dataops-blueprint</div>
+    <div class="mono url">github.com/piero-valles-maravi/dataops-blueprint</div>
+    <div class="chips"><span class="uno">Use this template</span><span>licencia MIT</span></div>
+    <div class="d">Un proyecto nuevo nace de un clic: el repo se copia entero, con su estructura, sus scripts y sus workflows.</div>
+  </div>
+  <div class="bp-num">
+    <div class="a ai" style="--d:.8s"><b>8</b><span>etapas, con su carpeta en src/ y en data/</span></div>
+    <div class="a ai" style="--d:1s"><b>21</b><span>scripts de ejemplo, listos para adaptar</span></div>
+    <div class="a ai" style="--d:1.2s"><b>4</b><span>workflows: por hora, diario, completo y el dashboard</span></div>
+    <div class="a ai" style="--d:1.4s"><b>7</b><span>skills: cómo se hace cada tarea</span></div>
+  </div>
+  <div class="bp-trae a" style="--d:1.7s">
+    <div class="k">Y YA VIENE ARMADO</div>
+    <div class="chips"><span>funciones comunes: <i class="mono">guardar_etapa()</i>, <i class="mono">env_requerido()</i></span><span>el dashboard HTML</span><span>el disparador de Apps Script</span><span>esta presentación</span></div>
+  </div>
+</section>
+
+<!-- ================================================================ repo 2 -->
+<section class="slide claro" id="sr2">
+  <div class="kicker a" style="position:absolute;left:120px;top:64px">EL BLUEPRINT · 2 DE 3</div>
+  <h1 class="preg m a" style="--d:.1s;position:absolute;left:120px;top:104px">¿Dónde va cada cosa?</h1>
+  <p class="insight a" style="--d:.25s;position:absolute;left:120px;top:200px;width:1680px;font-size:28px">El número de la etapa <b>es el mismo en src/, data/ y outputs/</b>: cada script escribe solo en su carpeta.</p>
+  <div class="bp-esp a" style="--d:.4s">
+    <div class="cab"><span>EL CÓDIGO · src/</span><span></span><span>LO QUE ESCRIBE</span></div>
+    <div class="f a ai" style="--d:.55s"><span class="mono">01_import/</span><i>→</i><span class="mono d">data/01_raw/</span></div>
+    <div class="f a ai" style="--d:.65s"><span class="mono">02_audit/</span><i>→</i><span class="mono d">data/02_audit/</span></div>
+    <div class="f a ai" style="--d:.75s"><span class="mono">03_clean/</span><i>→</i><span class="mono d">data/03_clean/</span></div>
+    <div class="f a ai" style="--d:.85s"><span class="mono">04_enrich/</span><i>→</i><span class="mono d">data/04_enrich/</span></div>
+    <div class="f a ai" style="--d:.95s"><span class="mono">05_integrate/</span><i>→</i><span class="mono d">data/05_integrate/</span></div>
+    <div class="f a ai" style="--d:1.05s"><span class="mono">06_indicators/</span><i>→</i><span class="mono d">data/06_final/</span></div>
+    <div class="f a ai" style="--d:1.15s"><span class="mono">07_analysis/</span><i>→</i><span class="mono o">outputs/07_analysis/</span></div>
+    <div class="f a ai" style="--d:1.25s"><span class="mono">08_publish/</span><i>→</i><span class="mono o">outputs/08_publish/ · Sheets · Drive</span></div>
+    <div class="f a ai" style="--d:1.35s"><span class="mono">monitoring/</span><i>→</i><span class="mono o">outputs/monitoring/</span></div>
+  </div>
+  <div class="bp-mas">
+    <div class="k a" style="--d:1.5s">Y ADEMÁS</div>
+    <div class="a ai" style="--d:1.6s"><span class="mono">sources/</span><i>lo que entra a mano: instrumento, referencias, correcciones, plantillas</i></div>
+    <div class="a ai" style="--d:1.7s"><span class="mono">.github/workflows/</span><i>cuándo corre cada parte del pipeline</i></div>
+    <div class="a ai" style="--d:1.8s"><span class="mono">tools/</span><i>el dashboard, el Apps Script y esta presentación</i></div>
+    <div class="a ai" style="--d:1.9s"><span class="mono">.secrets/</span><i>las llaves: nunca se suben a git</i></div>
+    <div class="a ai" style="--d:2s"><span class="mono">.claude/</span><i>el contexto del proyecto y las skills</i></div>
+  </div>
+</section>
+
+<!-- ================================================================ repo 3 -->
+<section class="slide claro" id="sr3">
+  <div class="kicker a" style="position:absolute;left:120px;top:64px">EL BLUEPRINT · 3 DE 3 · LAS SKILLS</div>
+  <h1 class="preg m a" style="--d:.1s;position:absolute;left:120px;top:104px">¿Cómo sabe Claude cómo trabajamos?</h1>
+  <p class="insight a" style="--d:.25s;position:absolute;left:120px;top:200px;width:1680px;font-size:28px">Las skills son <b>las reglas del equipo, escritas una vez</b>: Claude las lee antes de cada tarea, y una persona nueva también.</p>
+  <div class="bp-cad">
+    <div class="a ai" style="--d:.5s"><span class="mono">CLAUDE.md</span><i>el índice: qué skill leer para cada tarea</i></div>
+    <b class="a" style="--d:.7s">↓</b>
+    <div class="uno a ai" style="--d:.9s"><span class="mono">.claude/skills/</span><i>cómo se hace cada tarea, paso a paso</i></div>
+    <b class="a" style="--d:1.1s">↓</b>
+    <div class="a ai" style="--d:1.3s"><span class="mono">CONTEXTO_PROYECTO.md</span><i>el estado del proyecto y su bitácora; se actualiza al terminar cada tarea</i></div>
+  </div>
+  <div class="bp-sk">
+    <div class="a ai" style="--d:1.5s"><span class="mono">project_structure</span><i>dónde va cada script, carpeta o archivo</i></div>
+    <div class="a ai" style="--d:1.6s"><span class="mono">code_style</span><i>antes de escribir o editar un script de R</i></div>
+    <div class="a ai" style="--d:1.7s"><span class="mono">audit</span><i>antes de escribir 02_audit o una alerta</i></div>
+    <div class="a ai" style="--d:1.8s"><span class="mono">data_cleaning</span><i>antes de limpiar o normalizar una fuente</i></div>
+    <div class="a ai" style="--d:1.9s"><span class="mono">readme</span><i>antes de escribir el README y su banner</i></div>
+    <div class="a ai" style="--d:2s"><span class="mono">linea_grafica_equilibrium</span><i>antes de cualquier entregable con la marca</i></div>
+    <div class="a ai" style="--d:2.1s"><span class="mono">linea_grafica_global_americans</span><i>para la marca Global Americans</i></div>
+  </div>
+</section>
 
 <!-- ================================================================ 22 -->
 <section class="slide claro" id="s22">
@@ -1102,7 +1225,8 @@ body:hover #nav{opacity:1}
     preg.className = 'enc-preg a';
     preg.textContent = e.pregunta;
     const ops = document.createElement('div');
-    ops.className = 'enc-ops';
+    // una pregunta abierta muestra una nube con las respuestas, sin opciones
+    ops.className = e.abierta ? 'enc-nube' : 'enc-ops';
     e.opciones.forEach(function (t, i) {
       const o = document.createElement('div');
       o.className = 'op a ai' + (e.correcta === i ? ' correcta' : '');
@@ -1217,6 +1341,8 @@ body:hover #nav{opacity:1}
     s.querySelectorAll('.enc').forEach(function (b) {
       const id = b.getAttribute('data-id');
       const c = conteo[id] || {};
+      const nube = b.querySelector('.enc-nube');
+      if (nube) { totalMax = Math.max(totalMax, pintarNube(nube, c)); return; }
       const ops = b.querySelectorAll('.op');
       let total = 0, max = 0;
       ops.forEach(function (o) { const v = c[o.getAttribute('data-op')] || 0; total += v; max = Math.max(max, v); });
@@ -1233,6 +1359,47 @@ body:hover #nav{opacity:1}
     if (n) n.textContent = 'n = ' + totalMax + ' respuestas · ' + (s.classList.contains('cerrada') ? 'votación cerrada' : 'en vivo');
   }
 
+  // las frases casi nunca coinciden: la nube cuenta sus palabras, sin las vacías
+  // ni las de la propia pregunta, que todos repetirían
+  const PALABRAS_VACIAS = ('de la el los las un una unos unas y o u e en a al del que para por con se es son ' +
+    'su sus lo le les como mas más pero no sin sobre entre cada todo toda todos todas este esta esto eso ese esa ' +
+    'hay ser hace hacer forma tipo cosa algo mi tu nos muy ya desde hasta donde cuando pipeline pipelines dato datos').split(' ');
+  function contarPalabras(c) {
+    const p = {};
+    Object.keys(c).forEach(function (frase) {
+      const vistas = {};
+      frase.toLowerCase().split(/[^a-záéíóúüñ0-9]+/).forEach(function (w) {
+        if (w.length < 3 || PALABRAS_VACIAS.indexOf(w) >= 0 || vistas[w]) return;
+        vistas[w] = true;
+        p[w] = (p[w] || 0) + c[frase];
+      });
+    });
+    return p;
+  }
+
+  // las respuestas de una pregunta abierta: las palabras más repetidas, más grandes y primero
+  function pintarNube(nube, frases) {
+    let total = 0;
+    Object.keys(frases).forEach(function (k) { total += frases[k]; });
+    const c = contarPalabras(frases);
+    const resp = Object.keys(c).sort(function (a, b) { return c[b] - c[a]; }).slice(0, 30);
+    const max = resp.length ? c[resp[0]] : 1;
+    nube.innerHTML = '';
+    resp.forEach(function (t, i) {
+      const el = document.createElement('span');
+      el.className = 'pal' + (i === 0 ? ' top' : '');
+      el.style.fontSize = (22 + 26 * c[t] / max) + 'px';
+      el.textContent = t;
+      if (c[t] > 1) {
+        const n = document.createElement('i');
+        n.textContent = '×' + c[t];
+        el.appendChild(n);
+      }
+      nube.appendChild(el);
+    });
+    return total;
+  }
+
   // el panel que reemplaza al QR al cerrar la votación
   function panelResultado(s) {
     let p = s.querySelector('.enc-res');
@@ -1241,6 +1408,21 @@ body:hover #nav{opacity:1}
     const conteo = s.ultimoConteo || {};
     const e = window.ENCUESTAS[ids[0]];
     p.innerHTML = '';
+
+    if (e.abierta) {
+      // una pregunta abierta: las tres palabras más repetidas
+      const c = contarPalabras(conteo[ids[0]] || {});
+      const top = Object.keys(c).sort(function (a, b) { return c[b] - c[a]; }).slice(0, 3);
+      p.innerHTML = '<div class="k">LO MÁS REPETIDO</div><ol class="top-ab"></ol><div class="sep"></div><div class="exp"></div>';
+      top.forEach(function (t) {
+        const li = document.createElement('li');
+        li.textContent = t;
+        p.querySelector('.top-ab').appendChild(li);
+      });
+      if (!top.length) p.querySelector('.top-ab').textContent = 'sin respuestas';
+      p.querySelector('.exp').textContent = e.explicacion;
+      return;
+    }
 
     if (ids.length === 1 && e.correcta !== null) {
       // una pregunta con respuesta correcta: la letra, el texto, el porqué y cuántos acertaron
@@ -1314,10 +1496,18 @@ body:hover #nav{opacity:1}
 
   // votos simulados para probar sin Apps Script
   const simulados = {};
+  const RESPUESTAS_ENSAYO = ['un flujo de datos automatizado', 'automatizar la limpieza', 'el proceso etl',
+    'limpiar y procesar los datos', 'el flujo de la fuente al dashboard', 'scripts que corren en cadena',
+    'un proceso ordenado', 'procesar la encuesta y limpiarla', 'flujo para limpiar datos'];
   function simular(ids) {
     ids.split(',').forEach(function (id) {
       const e = window.ENCUESTAS[id];
       simulados[id] = simulados[id] || {};
+      if (e.abierta) {
+        const t = RESPUESTAS_ENSAYO[Math.floor(Math.random() * RESPUESTAS_ENSAYO.length)];
+        simulados[id][t] = (simulados[id][t] || 0) + 1;
+        return;
+      }
       const i = Math.random() < 0.5 && e.correcta !== null ? e.correcta : Math.floor(Math.random() * e.opciones.length);
       simulados[id][i] = (simulados[id][i] || 0) + 1;
     });
