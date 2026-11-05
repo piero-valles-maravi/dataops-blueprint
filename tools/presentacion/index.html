@@ -54,6 +54,53 @@ p,h1,h2,h3{margin:0}
 .estrella{position:relative;height:500px}
 /* analysis: la tabla de tres columnas, script y resultado */
 .t16{font-size:18px}
+/* aplicación práctica: el taller del dashboard de monitoreo */
+.ta-pasos{position:absolute;left:120px;right:120px;top:600px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:2px solid var(--peri)}
+.ta-pasos div{padding:28px 24px;border-right:2px dotted var(--peri);display:flex;flex-direction:column;gap:10px}
+.ta-pasos div:last-child{border-right:0}
+.ta-pasos b{font-size:56px;line-height:1;color:var(--coral)}
+.ta-pasos span{font-size:26px;font-weight:700;line-height:1.25}
+.ta-pasos i{font-style:normal;font-size:20px;color:var(--peri)}
+.ta-col{position:absolute;top:340px;display:flex;flex-direction:column;gap:16px}
+.ta-k{display:flex;align-items:center;gap:14px;font-size:18px;font-weight:700;letter-spacing:.1em;color:var(--gris)}
+.ta-k b{width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:var(--coral);color:var(--navy);font-size:22px;letter-spacing:0}
+.ta-term{padding:20px 22px;background:var(--navy);color:var(--paper);font-size:18px;white-space:nowrap}
+.ta-term span{color:var(--coral);margin-right:10px}
+.ta-nota{font-size:20px;color:var(--gris)}
+.ta-reto{margin-top:30px;padding:22px 26px;border-left:8px solid var(--coral);background:var(--blanco);font-size:24px;line-height:1.4;color:var(--gris)}
+.ta-reto b{color:var(--navy)}
+.ta-arch{padding:22px 26px;background:var(--blanco);box-shadow:inset 0 0 0 2px var(--navy);display:flex;flex-direction:column;gap:8px}
+.ta-arch .n{font-size:26px;font-weight:700}
+.ta-arch .d{font-size:19px;color:var(--gris)}
+.ta-cifras{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:6px}
+.ta-cifras span{display:flex;flex-direction:column;font-size:16px;color:var(--gris)}
+.ta-cifras b{font-size:38px;line-height:1.1;color:var(--coral)}
+.ta-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.ta-chips span{padding:6px 12px;background:var(--teal);font-size:17px}
+.ta-ficha{position:absolute;left:120px;top:340px;width:1100px;background:var(--blanco);box-shadow:inset 0 0 0 2px var(--navy)}
+.ta-ficha .cab{display:flex;justify-content:space-between;padding:16px 26px;background:var(--navy);color:var(--paper);font-size:20px}
+.ta-ficha .cab .mono{font-weight:700}
+.ta-ficha .sec{display:flex;gap:18px;padding:18px 26px;border-bottom:1px dotted var(--borde)}
+.ta-ficha .sec:last-child{border-bottom:0}
+.ta-ficha .sec>b{flex:none;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:var(--coral);font-size:22px}
+.ta-ficha strong{display:block;font-size:24px}
+.ta-ficha i{font-style:normal;font-size:19px;color:var(--gris)}
+.ta-cols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
+.ta-cols span{padding:8px 10px;box-shadow:inset 0 0 0 1px var(--peri);font-size:16px;line-height:1.3}
+.ta-guia{position:absolute;left:1300px;right:120px;top:340px;display:flex;flex-direction:column;gap:14px}
+.ta-guia .k{font-size:17px;font-weight:700;letter-spacing:.1em;color:var(--coral)}
+.ta-guia div:not(.k){padding:18px 22px;background:var(--navy);color:var(--paper);font-size:22px;font-weight:700;line-height:1.3;border-top-left-radius:20px}
+.ta-prompt{padding:24px 28px;background:var(--navy);color:var(--paper);font-size:19px;line-height:1.5;display:flex;flex-direction:column;gap:10px}
+.ta-prompt p{margin:0}
+.ta-prompt span{color:var(--durazno)}
+.ta-prompt u{text-decoration:none;color:var(--navy);background:var(--coral);padding:0 8px}
+.ta-sal{padding:18px 22px;box-shadow:inset 0 0 0 2px var(--navy);display:flex;flex-direction:column;gap:6px}
+.ta-sal strong{font-size:22px}
+.ta-sal .mono{font-size:19px;font-weight:700}
+.ta-sal i{font-style:normal;font-size:18px;color:var(--gris)}
+.ta-sal.uno{background:var(--coral);box-shadow:none}
+.ta-sal.uno i{color:var(--navy)}
+.ta-fl{font-size:30px;line-height:1;color:var(--coral);text-align:center}
 /* el blueprint: el repo, dónde va cada cosa y las skills */
 .bp-repo{position:absolute;left:120px;top:350px;width:760px;height:500px;padding:40px;background:var(--navy);color:var(--paper);border-top-left-radius:48px;display:flex;flex-direction:column;gap:16px}
 .bp-repo .k,.bp-trae .k,.bp-mas .k{font-size:17px;font-weight:700;letter-spacing:.1em;color:var(--coral)}
@@ -91,7 +138,7 @@ p,h1,h2,h3{margin:0}
 .bp-cad b{font-size:32px;color:var(--coral);text-align:center;line-height:1}
 .bp-sk{position:absolute;left:840px;right:120px;top:350px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 .bp-sk div{min-height:112px;justify-content:center;padding:16px 22px;background:var(--blanco);box-shadow:inset 0 0 0 1px var(--borde);border-left:6px solid var(--coral);display:flex;flex-direction:column;gap:6px}
-.bp-sk .mono{font-size:22px;font-weight:700}
+.bp-sk .mono{font-size:20px;font-weight:700;overflow-wrap:anywhere}
 .bp-sk i{font-style:normal;font-size:19px;color:var(--gris)}
 /* pipeline vs workflows: los dos diagramas del README */
 .pw-col{position:absolute;top:340px;width:820px;display:flex;flex-direction:column;gap:14px}
@@ -1069,13 +1116,13 @@ body:hover #nav{opacity:1}
     <div class="a ai" style="--d:1.3s"><span class="mono">CONTEXTO_PROYECTO.md</span><i>el estado del proyecto y su bitácora; se actualiza al terminar cada tarea</i></div>
   </div>
   <div class="bp-sk">
-    <div class="a ai" style="--d:1.5s"><span class="mono">project_structure</span><i>dónde va cada script, carpeta o archivo</i></div>
-    <div class="a ai" style="--d:1.6s"><span class="mono">code_style</span><i>antes de escribir o editar un script de R</i></div>
-    <div class="a ai" style="--d:1.7s"><span class="mono">audit</span><i>antes de escribir 02_audit o una alerta</i></div>
-    <div class="a ai" style="--d:1.8s"><span class="mono">data_cleaning</span><i>antes de limpiar o normalizar una fuente</i></div>
-    <div class="a ai" style="--d:1.9s"><span class="mono">readme</span><i>antes de escribir el README y su banner</i></div>
-    <div class="a ai" style="--d:2s"><span class="mono">linea_grafica_equilibrium</span><i>antes de cualquier entregable con la marca</i></div>
-    <div class="a ai" style="--d:2.1s"><span class="mono">linea_grafica_global_americans</span><i>para la marca Global Americans</i></div>
+    <div class="a ai" style="--d:1.5s"><span class="mono">skill_project_structure.md</span><i>dónde va cada script, carpeta o archivo</i></div>
+    <div class="a ai" style="--d:1.6s"><span class="mono">skill_code_style.md</span><i>antes de escribir o editar un script de R</i></div>
+    <div class="a ai" style="--d:1.7s"><span class="mono">skill_audit.md</span><i>antes de escribir 02_audit o una alerta</i></div>
+    <div class="a ai" style="--d:1.8s"><span class="mono">skill_data_cleaning.md</span><i>antes de limpiar o normalizar una fuente</i></div>
+    <div class="a ai" style="--d:1.9s"><span class="mono">skill_readme.md</span><i>antes de escribir el README y su banner</i></div>
+    <div class="a ai" style="--d:2s"><span class="mono">skill_linea_grafica_equilibrium.md</span><i>antes de cualquier entregable con la marca</i></div>
+    <div class="a ai" style="--d:2.1s"><span class="mono">skill_linea_grafica_global_americans.md</span><i>para la marca Global Americans</i></div>
   </div>
 </section>
 
@@ -1110,13 +1157,13 @@ body:hover #nav{opacity:1}
   <div class="banda" style="height:170px;gap:22px;font-size:20px">
     <div class="a" style="--d:2.7s;font-size:18px;font-weight:700;letter-spacing:.12em;color:var(--coral);width:200px;line-height:1.3;flex:none">LAS SKILLS: CÓMO SE HACE CADA TAREA</div>
     <div class="skills">
-      <span class="a" style="--d:2.9s">project_structure</span>
-      <span class="a" style="--d:3s">code_style</span>
-      <span class="a" style="--d:3.1s">audit</span>
-      <span class="a" style="--d:3.2s">data_cleaning</span>
-      <span class="a" style="--d:3.3s">readme</span>
-      <span class="a" style="--d:3.4s">linea_grafica_equilibrium</span>
-      <span class="a" style="--d:3.5s">linea_grafica_global_americans</span>
+      <span class="a" style="--d:2.9s">skill_project_structure.md</span>
+      <span class="a" style="--d:3s">skill_code_style.md</span>
+      <span class="a" style="--d:3.1s">skill_audit.md</span>
+      <span class="a" style="--d:3.2s">skill_data_cleaning.md</span>
+      <span class="a" style="--d:3.3s">skill_readme.md</span>
+      <span class="a" style="--d:3.4s">skill_linea_grafica_equilibrium.md</span>
+      <span class="a" style="--d:3.5s">skill_linea_grafica_global_americans.md</span>
     </div>
   </div>
 </section>
@@ -1138,6 +1185,100 @@ body:hover #nav{opacity:1}
   <div style="position:absolute;left:120px;right:0;bottom:0;height:170px;background:var(--paper);border-top-left-radius:64px;display:flex;align-items:center;gap:36px;padding:0 120px 0 80px;color:var(--navy)">
     <div class="qr" data-qr-url="https://github.com/piero-valles-maravi/dataops-blueprint" style="width:130px;height:130px;padding:8px;box-shadow:inset 0 0 0 2px var(--navy)"></div>
     <div><div style="font-size:30px;font-weight:700">El repositorio y el explorador</div><div class="mono" style="font-size:22px;color:var(--gris)">github.com/piero-valles-maravi/dataops-blueprint</div></div>
+  </div>
+</section>
+
+<!-- ================================================================ taller 1 -->
+<section class="slide oscuro" id="ta1">
+  <img src="assets/logo_tagline_blanco.svg" alt="Equilibrium" style="position:absolute;left:120px;top:96px;height:64px">
+  <div class="kicker a" style="position:absolute;left:120px;top:250px">APLICACIÓN PRÁCTICA</div>
+  <h1 class="a" style="--d:.15s;position:absolute;left:120px;top:300px;width:1560px;font-size:96px;font-weight:700;line-height:1.05">Ahora les toca <span style="color:var(--coral)">construir</span></h1>
+  <p class="a" style="--d:.3s;position:absolute;left:120px;top:428px;width:1500px;font-size:34px;line-height:1.35;color:var(--durazno)">La primera plantilla del dashboard de monitoreo: diseñada por el equipo, hecha con el blueprint.</p>
+  <div class="ta-pasos">
+    <div class="a cic" style="--d:.5s;--dur:10s;--c:1s"><b>1</b><span>Clonar el repo</span><i>5 min</i></div>
+    <div class="a cic" style="--d:.65s;--dur:10s;--c:3s"><b>2</b><span>Explorar la base cruda y su diccionario</span><i>10 min</i></div>
+    <div class="a cic" style="--d:.8s;--dur:10s;--c:5s"><b>3</b><span>Diseñar en grupos, en una ficha</span><i>25 min</i></div>
+    <div class="a cic" style="--d:.95s;--dur:10s;--c:7s"><b>4</b><span>Integrar las ideas y escribir el prompt</span><i>15 min</i></div>
+    <div class="a cic" style="--d:1.1s;--dur:10s;--c:9s"><b>5</b><span>Correrlo: la primera versión</span><i>10 min</i></div>
+  </div>
+</section>
+
+<!-- ================================================================ taller 2 -->
+<section class="slide claro" id="ta2">
+  <div class="kicker a" style="position:absolute;left:120px;top:64px">APLICACIÓN PRÁCTICA · PASOS 1 Y 2</div>
+  <h1 class="preg m a" style="--d:.1s;position:absolute;left:120px;top:104px">¿Con qué vamos a trabajar?</h1>
+  <p class="insight a" style="--d:.25s;position:absolute;left:120px;top:200px;width:1680px;font-size:28px">La base viene <b>sucia a propósito</b>: antes de diseñar el dashboard, hay que saber qué puede salir mal en el campo.</p>
+  <div class="ta-col a" style="--d:.45s;left:120px;width:830px">
+    <div class="ta-k"><b>1</b>CLONAR EL REPO</div>
+    <div class="ta-term mono"><span>$</span> git clone https://github.com/piero-valles-maravi/dataops-blueprint.git</div>
+    <div class="ta-nota">o, para un proyecto nuevo, <b>Use this template</b> en GitHub.</div>
+    <div class="ta-k" style="margin-top:34px"><b>2</b>ABRIR LA CARPETA DEL TALLER</div>
+    <div class="ta-term mono" style="background:var(--blanco);color:var(--navy);box-shadow:inset 0 0 0 2px var(--navy)">tools/presentacion/taller/</div>
+    <div class="ta-reto a" style="--d:1.4s"><b>¿Cuántos problemas encuentran?</b> Hay más de quince, de tipos distintos.</div>
+  </div>
+  <div class="ta-col" style="left:980px;right:120px">
+    <div class="ta-arch a ai" style="--d:.7s">
+      <div class="mono n">base_cruda.csv</div>
+      <div class="d">Las encuestas tal como las exporta SurveyCTO</div>
+      <div class="ta-cifras"><span><b>2.000</b>encuestas</span><span><b>25</b>variables</span><span><b>20</b>encuestadores</span><span><b>21</b>días de campo</span></div>
+    </div>
+    <div class="ta-arch a ai" style="--d:.95s">
+      <div class="mono n">diccionario.xlsx</div>
+      <div class="d">Lo que cada variable debería tener</div>
+      <div class="ta-chips"><span>variables</span><span>encuestadores</span><span>cuotas</span><span>distritos</span></div>
+    </div>
+    <div class="ta-arch a ai" style="--d:1.2s">
+      <div class="mono n">ficha_grupo.md</div>
+      <div class="d">La ficha que llena cada grupo en el paso 3</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ taller 3 -->
+<section class="slide claro" id="ta3">
+  <div class="kicker a" style="position:absolute;left:120px;top:64px">APLICACIÓN PRÁCTICA · PASO 3 · EN GRUPOS</div>
+  <h1 class="preg m a" style="--d:.1s;position:absolute;left:120px;top:104px">¿Qué debe tener sí o sí el dashboard?</h1>
+  <p class="insight a" style="--d:.25s;position:absolute;left:120px;top:200px;width:1680px;font-size:28px">Cada grupo diseña su dashboard de monitoreo en una ficha: <b>primero la historia de cada pestaña</b>, después los gráficos.</p>
+  <div class="ta-ficha a" style="--d:.45s">
+    <div class="cab"><span class="mono">ficha_grupo.md</span><span>Grupo ___</span></div>
+    <div class="sec a ai" style="--d:.7s"><b>1</b><div><strong>Lo que sí o sí debe tener</strong><i>máximo cinco cosas: si falta una, no sirve para monitorear</i></div></div>
+    <div class="sec a ai" style="--d:.9s"><b>2</b><div><strong>Las pestañas</strong><i>una por fila:</i>
+      <div class="ta-cols"><span>Objetivo: qué historia cuenta</span><span>Quién la mira y qué decide</span><span>Gráficos y tablas</span><span>Variables del diccionario</span></div></div></div>
+    <div class="sec a ai" style="--d:1.1s"><b>3</b><div><strong>Lo que comparten todas</strong><i>los filtros, cada cuánto se actualiza, cómo se muestra una alerta</i></div></div>
+    <div class="sec a ai" style="--d:1.3s"><b>4</b><div><strong>Cómo se ve</strong><i>un boceto de la pestaña principal</i></div></div>
+  </div>
+  <div class="ta-guia">
+    <div class="k a" style="--d:1.5s">PREGUNTAS PARA EMPEZAR</div>
+    <div class="a ai" style="--d:1.65s">¿Vamos bien con las cuotas?</div>
+    <div class="a ai" style="--d:1.8s">¿Qué encuestador necesita atención hoy?</div>
+    <div class="a ai" style="--d:1.95s">¿Qué alertas faltan validar?</div>
+    <div class="a ai" style="--d:2.1s">¿Podemos confiar en los datos de hoy?</div>
+  </div>
+</section>
+
+<!-- ================================================================ taller 4 -->
+<section class="slide claro" id="ta4">
+  <div class="kicker a" style="position:absolute;left:120px;top:64px">APLICACIÓN PRÁCTICA · PASOS 4 Y 5</div>
+  <h1 class="preg m a" style="--d:.1s;position:absolute;left:120px;top:104px">¿Quién escribe el prompt?</h1>
+  <p class="insight a" style="--d:.25s;position:absolute;left:120px;top:200px;width:1680px;font-size:28px">El equipo: <b>junta las ideas de todos los grupos en un solo prompt</b>, y una sola persona lo corre.</p>
+  <div class="ta-col a" style="--d:.45s;left:120px;width:1020px">
+    <div class="ta-k"><b>4</b>EL PROMPT, ENTRE TODOS</div>
+    <div class="ta-prompt mono">
+      <p>Lee <span>.claude/skills/skill_linea_grafica_equilibrium.md</span> y el diccionario <span>tools/presentacion/taller/diccionario.xlsx</span>.</p>
+      <p>Crea una plantilla de dashboard de monitoreo en HTML, en <span>tools/dashboard_monitoreo/index.html</span>, que lea <span>tools/presentacion/taller/base_cruda.csv</span>.</p>
+      <p>Debe tener sí o sí: <u>[ … ]</u></p>
+      <p>Las pestañas, cada una con su objetivo: <u>[ … ]</u></p>
+      <p>Los filtros comunes: <u>[ … ]</u></p>
+      <p>Los problemas de la base se marcan, no se borran: <u>[ … ]</u></p>
+    </div>
+  </div>
+  <div class="ta-col" style="left:1220px;right:120px">
+    <div class="ta-k a" style="--d:1s"><b>5</b>UNO LO CORRE</div>
+    <div class="ta-sal a ai" style="--d:1.2s"><strong>Con Claude Code, en pantalla</strong><i>el resto mira y corrige en voz alta</i></div>
+    <div class="ta-fl a" style="--d:1.4s">↓</div>
+    <div class="ta-sal uno a ai" style="--d:1.6s"><span class="mono">tools/dashboard_monitoreo/</span><i>la primera versión de la plantilla, en el repo</i></div>
+    <div class="ta-fl a" style="--d:1.8s">↓</div>
+    <div class="ta-sal a ai" style="--d:2s"><span class="mono">skill_dashboard_monitoreo.md</span><i>lo que se acordó, escrito para el próximo proyecto</i></div>
   </div>
 </section>
 
