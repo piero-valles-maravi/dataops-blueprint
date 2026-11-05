@@ -16,15 +16,15 @@ window.ENCUESTAS = {
   },
   // p1b: la segunda pregunta de entrada (se llama así para no renumerar las demás)
   p1b: {
-    pregunta: 'A mitad del campo cambia una regla de limpieza. ¿Qué se vuelve a correr?',
+    pregunta: '¿Qué hace que un proceso de datos sea reproducible?',
     opciones: [
-      'Todo, desde la descarga',
-      'Solo la limpieza',
-      'La limpieza y todo lo que depende de ella',
-      'Nada: se corrige a mano en la base final'
+      'Que cada paso esté documentado en un manual',
+      'Que se guarde una copia de la base final en Drive',
+      'Que cualquiera pueda rehacerlo desde la fuente y llegar a lo mismo',
+      'Que lo haga siempre la misma persona, con el mismo cuidado'
     ],
     correcta: 2,
-    explicacion: 'No hace falta volver a descargar: cada etapa guarda su salida. Se corre la limpieza y lo que viene después, porque usa lo que ella produce. Corregir a mano la base final no deja rastro.'
+    explicacion: 'Un manual o una copia de la base final no permiten rehacer el camino, y depender de una persona es justo lo contrario. Por eso el pipeline guarda lo que llega tal cual, corre con scripts y no tiene pasos a mano.'
   },
   p2: {
     pregunta: 'En GitHub Actions el pipeline no puede leer el Sheet: "permiso denegado". ¿Qué falta?',
